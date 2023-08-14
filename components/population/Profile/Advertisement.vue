@@ -5,7 +5,7 @@
       <figure class="mb-4">
         <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
       </figure>
-      <h6 class="text-4xl text-blue-100 font-bold mb-4 text-center">Aún no publicas
+      <h6 class="text-4xl text-primary-100 font-bold mb-4 text-center">Aún no publicas
         <span class="text-primary-100">nada.</span>
       </h6>
       <div class="flex justify-center mb-4">
@@ -70,7 +70,7 @@
           <figure class="mb-4">
             <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
           </figure>
-          <h6 class="text-xl text-blue-100 font-bold mb-4 text-center">No tienes anuncios activos</h6>
+          <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios activos</h6>
         </div>
       </div>
       <!-- Expirados -->
@@ -92,7 +92,7 @@
           <figure class="mb-4">
             <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
           </figure>
-          <h6 class="text-xl text-blue-100 font-bold mb-4 text-center">No tienes anuncios expirados</h6>
+          <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios expirados</h6>
         </div>
       </div>
       <!-- Revision -->
@@ -112,7 +112,7 @@
           <figure class="mb-4">
             <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
           </figure>
-          <h6 class="text-xl text-blue-100 font-bold mb-4 text-center">No tienes anuncios en revision</h6>
+          <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios en revision</h6>
         </div>
       </div>
       <!-- Rechazados -->
@@ -134,7 +134,7 @@
           <figure class="mb-4">
             <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
           </figure>
-          <h6 class="text-xl text-blue-100 font-bold mb-4 text-center">No tienes anuncios rechazados</h6>
+          <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios rechazados</h6>
         </div>
       </div>
       <!-- Inactivos -->
@@ -176,7 +176,7 @@
           <figure class="mb-4">
             <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
           </figure>
-          <h6 class="text-xl text-blue-100 font-bold mb-4 text-center">No tienes anuncios inactivos</h6>
+          <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios inactivos</h6>
         </div>
       </div>
       <!-- Borrados -->
@@ -220,7 +220,7 @@
           <figure class="mb-4">
             <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
           </figure>
-          <h6 class="text-xl text-blue-100 font-bold mb-4 text-center">No tienes anuncios borrados</h6>
+          <h6 class="text-xl text-primary-100 font-bold mb-4 text-center">No tienes anuncios borrados</h6>
         </div>
       </div>
       <div class="flex justify-center my-8">

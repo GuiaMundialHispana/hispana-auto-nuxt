@@ -175,20 +175,15 @@ export default {
       config:useRuntimeConfig(),
       types:[
         {
-          getPath: '/search?type=All',
-          getType: 'All',
-          name: 'Todo'
+          getPath: '/search?type=New',
+          getType: 'New',
+          name: 'Nuevo'
         },
         {
-          getPath: '/sales?type=Sale',
-          getType: 'Sale',
-          name: 'Comprar'
+          getPath: '/sales?type=Used',
+          getType: 'Used',
+          name: 'Usado'
         },
-        {
-          getPath: '/rent?type=Rent',
-          getType: 'Rent',
-          name: 'Rentar'
-        }
       ],
       dropdownLists: {
         location: false,

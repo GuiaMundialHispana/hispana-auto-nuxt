@@ -2,7 +2,7 @@
   <header>
     <div class='w-full mx-auto flex items-center justify-between xl:px-14 px-4'>
       <NuxtLink to="/">
-        <figure>
+        <figure class="mr-3">
           <img src='/img/logo-header.png' alt='Hispana Homes' class="lg:w-32 w-24 object-contain">
         </figure>
       </NuxtLink>
@@ -107,7 +107,6 @@
 </template>
 
 <script>
-// import menu from '~/assets/mocks/Header';
 import { useAuthStore } from '~/stores/Auth';
 import { useUserStore } from '~/stores/User';
 export default {
@@ -116,32 +115,35 @@ export default {
     return {
       auth: useAuthStore(),
       user: useUserStore(),
-
       viewport: useViewport(),
       showMenu: false,
       userDropdown: false,
       displayModal: false,
       menu: [
-        {
-          name: 'Todos',
-          route: '/search?type=All',
-        },
-        {
-          name: 'Comprar',
-          route: '/sales?type=Sale',
-        },
-        {
-          name: 'Alquilar',
-          route: '/rent?type=Rent',
-        },
-        {
-          name: 'Contacto',
-          route: '/contact'
-        },
-        {
-          name: 'Planes',
-          route: '/plans'
-        },
+      {
+        name: 'Comprar',
+        route: '/sales?type=buy',
+      },
+      {
+        name: 'Vender',
+        route: '/rent?type=sell',
+      },
+      {
+        name: 'Destacados',
+        route: '/featured'
+      },
+      {
+        name: 'Contacto',
+        route: '/contact'
+      },
+      {
+        name: 'Calcula tu préstamo',
+        route: '/plans'
+      },
+      {
+        name: 'Planes',
+        route: '/plans'
+      }
       ]
     }
   },

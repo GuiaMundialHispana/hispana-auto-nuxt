@@ -1,7 +1,14 @@
 <template>
   <article>
     <AtomsPropertyPlans class="property-type-component" :planType="plantype" planPosition="top" />
-    <AtomsPropertyLocation class="property-location-component" :location="property.address" />
+    <AtomsButtons
+      btn-type="btn-icon"
+      icon-name="general/favorite"
+      class="favorite-button"
+      :class="{active: property.is_favorite}"
+      @click="toggleFavorite()"
+      v-if="$route.fullPath != '/profile?tab=anuncio'"
+    />
     <Swiper
       :modules="[SwiperFreeMode, SwiperNavigation]"
       :effect="'fade'"
@@ -41,7 +48,7 @@
           query: {
             property_id: propertyId
           }
-        }" class="h-[305px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
+        }" class="h-[254px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
           <img
             :src="`https://seal-app-4mhut.ondigitalocean.app/${image.image}`"
             :alt="property.name"
@@ -90,9 +97,7 @@ export default {
 article {
   @apply rounded-2xl p-2 w-full sm:w-[350px] bg-neutral-white shadow-sm border border-gray-10 relative;
 
-  & .property-type-component { @apply absolute right-2 z-10 top-2 rounded-tr-lg; }
-
-  & .property-location-component { @apply absolute top-3 left-3 z-10; }
+  & .property-type-component { @apply absolute left-2 z-10 top-2 rounded-tl-lg; }
 
   & nav {
     @apply hidden absolute top-1/2 z-10 w-full justify-between px-4; 
@@ -113,8 +118,13 @@ article {
     @apply relative;
     @apply before:absolute before:top-0 before:left-0 before:w-full before:h-full before:z-[5] before:rounded-lg;
     &::before {
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 72.76%, #000 100%);
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 60%, #000 100%);
     }
+  }
+
+  .favorite-button {
+    @apply absolute right-4 top-4 z-[5] bg-neutral-white border border-primary-50 hover:bg-primary-90 text-[#ADADAD] hover:text-neutral-white !important;
+    &.active { @apply bg-primary-100 text-neutral-white hover:bg-primary-90 !important; }
   }
 }
 </style>

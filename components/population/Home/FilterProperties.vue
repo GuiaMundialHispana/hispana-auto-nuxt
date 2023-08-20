@@ -1,6 +1,5 @@
 <template>
   <div class="absolute left-0 bottom-[-6%] text-[#232323] z-10">
-    <!-- <MoleculesFilterStatusProperties class="filterStatus-tabs-lg"/> -->
     <div class="flex items-center overflow-hidden rounded-lg border-2 border-gray-100 bg-neutral-white text-[#232323] shadow-sm w-fit flex-none filterStatus-tabs-lg">
       <AtomsButtons
         v-for="(btn,i) in types"
@@ -12,90 +11,19 @@
     </div>
     <div class="filter-home-wrapper">
       <div class="h-full flex justify-center">
-        <button class="filter-btn" @click="toggleList('location')">
+        <button class="filter-btn" @click="toggleList('brand')">
           <div class="icon-container">
-            <AtomsIcon class="text-primary-100" name="general/location" :size=20 />
+            <AtomsIcon class="text-primary-100" name="general/car" :size=20 />
           </div>
           <div>
-            <h2>Ubicación</h2>
+            <h2>Marca</h2>
             <p>
-              Selecciona el Sector 
+              Todas las marcas 
               <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
             </p>
           </div>
         </button>
-        <OnClickOutside @trigger="toggleList('location')" class="dropdown w-[240px]" v-if="dropdownLists.location">
-          <button class="sector-filter-btn" :class="{'active': dropdownLists.country}" @click="toggleList('country')">
-            Pais <AtomsIcon class="text-primary-100" name="arrows/arrow-down" :size=16></AtomsIcon>
-          </button>
-          <OnClickOutside @trigger="toggleList('country')" v-if="dropdownLists.country">
-            <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[283px]">
-              <label class="checkbox-labels" :for="country.name" v-for="country in countries" :key="country">
-                <input
-                  type="radio"
-                  class="checkbox"
-                  name="country"
-                  v-model="country_id"
-                  :value="country.id"
-                  :id="country.name"
-                >
-                {{ country.name }}
-              </label>
-            </div>
-          </OnClickOutside>
-          <button v-if="states.length > 0" class="sector-filter-btn" :class="{'active': dropdownLists.sector}" @click="toggleList('sector')">
-            Ciudad <AtomsIcon class="text-primary-100" name="arrows/arrow-down" :size=16 />
-          </button>
-          <OnClickOutside @trigger="toggleList('sector')" v-if="dropdownLists.sector">
-            <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-              <label class="checkbox-labels" :for="sector.name" v-for="sector in states" :key="sector">
-                <input
-                  type="radio"
-                  class="checkbox"
-                  name="sector"
-                  v-model="state_id"
-                  :value="sector.id"
-                  :id="sector.name"
-                >
-                {{ sector.name }}
-              </label>
-            </div>
-          </OnClickOutside>
-          <button v-if="cities.length > 0" class="sector-filter-btn" :class="{'active': dropdownLists.city}" @click="toggleList('city')">
-            Sector <AtomsIcon class="text-primary-100" name="arrows/arrow-down" :size=16></AtomsIcon>
-          </button>
-          <OnClickOutside @trigger="toggleList('city')" v-if="dropdownLists.city" >
-            <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-              <label class="checkbox-labels" :for="city.name" v-for="city in cities" :key="city">
-                <input
-                  type="radio"
-                  class="checkbox"
-                  name="city"
-                  v-model="city_id"
-                  :value="city.id"
-                  :id="city.name"
-                >
-                {{ city.name }}
-              </label>
-            </div>
-          </OnClickOutside>
-        </OnClickOutside>
-      </div>
-      <!-- Categoria -->
-      <span class="buttons-separation"></span>
-      <div class="flex justify-center">
-        <button class="filter-btn" :class="{'active': dropdownLists.propertyType}" @click="toggleList('propertyType')">
-          <div class="icon-container">
-            <AtomsIcon class="text-primary-100" name="general/property" :size=20 />
-          </div>
-          <div>
-            <h2>Tipo de propiedad</h2>
-            <p>Selecciona el tipo de propiedad
-              <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
-            </p>
-          </div>
-        </button>
-        <OnClickOutside @trigger="toggleList('propertyType')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.propertyType">
+        <OnClickOutside @trigger="toggleList('brand')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.brand">
           <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
             <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
               <input
@@ -111,9 +39,104 @@
           </div>
         </OnClickOutside>
       </div>
-      <!-- Precio -->
+      <!-- Modelo -->
+      <span class="buttons-separation"></span>
+      <div class="flex justify-center">
+        <button class="filter-btn" :class="{'active': dropdownLists.model}" @click="toggleList('model')">
+          <div class="icon-container">
+            <AtomsIcon class="text-primary-100" name="general/car_model" :size=20 />
+          </div>
+          <div>
+            <h2>Modelo</h2>
+            <p>Todos los modelos
+              <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
+            </p>
+          </div>
+        </button>
+        <OnClickOutside @trigger="toggleList('model')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.model">
+          <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+            <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
+              <input
+                type="radio"
+                class="checkbox"
+                name="category"
+                v-model="category_id"
+                :value="category.id"
+                :id="category.name"
+              >
+              {{ category.name }}
+            </label>
+          </div>
+        </OnClickOutside>
+      </div>
+      <!-- Versión -->
+      <span class="buttons-separation" v-show="viewport.isGreaterThan('xl')"></span>
+      <div class="flex justify-center" v-show="viewport.isGreaterThan('xl')">
+        <button class="filter-btn" :class="{'active': dropdownLists.version}" @click="toggleList('version')">
+          <div class="icon-container">
+            <AtomsIcon class="text-primary-100" name="general/car_version" :size=20 />
+          </div>
+          <div>
+            <h2>Versión</h2>
+            <p>Todas las versiones
+              <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
+            </p>
+          </div>
+        </button>
+        <OnClickOutside @trigger="toggleList('version')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.version">
+          <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
+            <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
+              <input
+                type="radio"
+                class="checkbox"
+                name="category"
+                v-model="category_id"
+                :value="category.id"
+                :id="category.name"
+              >
+              {{ category.name }}
+            </label>
+          </div>
+        </OnClickOutside>
+      </div>
+      <!-- Año -->
       <span class="buttons-separation"></span>
       <div class="h-full flex justify-center">
+        <button class="filter-btn" :class="{'active': dropdownLists.year}" @click="toggleList('year')">
+          <div class="icon-container">
+          <AtomsIcon class="text-primary-100" name="general/calendar" :size=20 />
+        </div>
+        <div>
+          <h2>Año</h2>
+          <p>Años del vehículo
+            <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
+          </p>
+        </div>
+        </button>
+        <OnClickOutside @trigger="toggleList('year')" v-if="dropdownLists.year" class="dropdown w-[238px] h-fit">
+          <p>
+            Año
+          </p>
+          <MultiRangeSlider class="mx-auto mt-[14px] w-[200px]"
+            baseClassName="multi-range-slider-bar-only"
+            :min="minYear"
+            :max="maxYear"
+            :step="1"
+            :ruler="false"
+            :label="false"
+            :minValue="minYearValue"
+            :maxValue="maxYearValue"
+            @input="UpdateYears"
+          />
+          <p class="whitespace-normal text-sm font-medium">
+            Desde <b>{{ minYearValue }}</b>
+            hasta <b>{{ maxYearValue }}</b>
+          </p>
+        </OnClickOutside>
+      </div>
+      <!-- Precio -->
+      <span class="buttons-separation" v-show="viewport.isGreaterThan('lg')"></span>
+      <div class="h-full flex justify-center" v-show="viewport.isGreaterThan('lg')">
         <button class="filter-btn" :class="{'active': dropdownLists.priceRange}" @click="toggleList('priceRange')">
           <div class="icon-container">
           <AtomsIcon class="text-primary-100" name="general/price" :size=20 />
@@ -142,12 +165,12 @@
             :step="priceRangeSteps"
             :ruler="false"
             :label="false"
-            :minValue="barMinValue"
-            :maxValue="barMaxValue"
-            @input="UpdateValues"
+            :minValue="priceMinValue"
+            :maxValue="priceMaxValue"
+            @input="UpdatePriceValues"
           />
           <p class="whitespace-normal text-sm font-medium">
-            Desde <b>{{picked}}${{ showBarMinValue }}</b>
+            Desde <b>{{picked}}${{ showPriceMaxValue }}</b>
             hasta <b>{{picked}}${{ showBarMaxValue }}</b>+
             {{publishedBooksMessage  }}
           </p>
@@ -163,6 +186,7 @@
 
 <script setup>
   import { OnClickOutside } from '@vueuse/components';
+  const viewport = useViewport();
 </script>
 
 <script>
@@ -186,17 +210,15 @@ export default {
         },
       ],
       dropdownLists: {
-        location: false,
-        propertyType: false,
+        brand: false,
+        model: false,
+        version: false,
+        year: false,
         priceRange: false,
-        country: false,
-        city: false,
-        municipality: false, 
-        sector: false,
       },
-      barMinValue:0,
-      barMaxValue:10000000,
-      showBarMinValue: '0',
+      priceMinValue:0,
+      priceMaxValue:10000000,
+      showPriceMaxValue: '0',
       showBarMaxValue:"10,000,000",
       maxPrice: 50000000,
       countries: [],
@@ -210,6 +232,10 @@ export default {
       picked:'RD',
       price:'',
       priceRangeSteps: 500000,
+      minYear: 1998,
+      maxYear: 2024,
+      minYearValue: 2007,
+      maxYearValue: 2021,
       bedroomQuantity:0,
       bathroomQuantity:0,
       parkingLotQuantity:0,
@@ -224,12 +250,16 @@ export default {
     MultiRangeSlider
   },
   methods: {
-    UpdateValues(e) {
-      this.barMinValue = e.minValue;
-      this.barMaxValue = e.maxValue;
-      this.showBarMinValue = this.barMinValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.showBarMaxValue = this.barMaxValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.price = this.barMinValue.toString() + '-' + this.barMaxValue.toString();
+    UpdatePriceValues(e) {
+      this.priceMinValue = e.minValue;
+      this.priceMaxValue = e.maxValue;
+      this.showPriceMaxValue = this.priceMinValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.showBarMaxValue = this.priceMaxValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.price = this.priceMinValue.toString() + '-' + this.priceMaxValue.toString();
+    },
+    UpdateYears(e) {
+      this.minYearValue = e.minValue;
+      this.maxYearValue = e.maxValue;
     },
     toggleList(list) {
       if (this.dropdownLists[list]) {
@@ -269,16 +299,16 @@ export default {
     picked(newPicked) {
       this.queryBody.price_type = newPicked;
       if (newPicked === 'USD') {
-        this.barMinValue = 0,
-        this.barMaxValue = 1000000,
-        this.showBarMinValue = '0';
+        this.priceMinValue = 0,
+        this.priceMaxValue = 1000000,
+        this.showPriceMaxValue = '0';
         this.showBarMaxValue = '1,000,000';
         this.maxPrice = 3000000;
         this.priceRangeSteps = 50000;
       } else{
-        this.barMinValue = 0,
-        this.barMaxValue = 10000000,
-        this.showBarMinValue = '0';
+        this.priceMinValue = 0,
+        this.priceMaxValue = 10000000,
+        this.showPriceMaxValue = '0';
         this.showBarMaxValue = '10,000,000';
         this.maxPrice = 50000000;
         this.priceRangeSteps = 500000;

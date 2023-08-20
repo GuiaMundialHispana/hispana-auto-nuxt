@@ -61,24 +61,6 @@
         </NuxtLink>
       </SwiperSlide>
       <AtomsPropertyPlans class="absolute bottom-0 right-0 z-10" />
-      <!-- <nav v-if="property.images">
-        <AtomsButtons
-          btn-type="btn-icon"
-          btn-size="xsmall"
-          btn-style="outline-gray"
-          icon-name="arrows/arrow-left"
-          :icon-size=15
-          class="prev"
-        />
-        <AtomsButtons
-          btn-type="btn-icon"
-          btn-size="xsmall"
-          btn-style="outline-gray"
-          icon-name="arrows/arrow-right"
-          :icon-size=15
-          class="next"
-        />
-      </nav> -->
     </Swiper>
     <NuxtLink :to="{
       path: `/search/${property.name}`,
@@ -87,14 +69,6 @@
       }
     }">
       <p class="property-title">{{property.name }}</p>
-      <p class="address">
-        <AtomsIcon
-          name="general/share-location"
-          :size=20
-          class="text-primary-100 mr-2.5 pt-1"
-        />
-        {{ property.address }}
-      </p>
       <!-- Caracteristicas -->
       <MoleculesCharacteristics class="my-3"
         :bedroom="property.bedroom"
@@ -103,11 +77,10 @@
         :area="property.solar_meters"
       />
       <!-- Price -->
-      <p class="price-title">Desde:</p>
-      <p class="price">US${{showParsedPrice(property.price_us)}}</p>
-      <!-- <p class="price">
-        RD${{showParsedPrice(property.price)}}
-      </p> -->
+      <div class="flex items-center gap-2">
+        <p class="price-title">Desde:</p>
+        <p class="price">US${{showParsedPrice(property.price_us)}}</p>
+      </div>
     </NuxtLink>
   </article>
 </template>

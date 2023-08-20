@@ -30,28 +30,28 @@
         disableOnInteraction: true,
       }">
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="vip" />
+        <MoleculesFeaturedVehicles plantype="vip" />
       </SwiperSlide>
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="exclusive" />
+        <MoleculesFeaturedVehicles plantype="exclusive" />
       </SwiperSlide>
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="silver" />
+        <MoleculesFeaturedVehicles plantype="silver" />
       </SwiperSlide>
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="vip" />
+        <MoleculesFeaturedVehicles plantype="vip" />
       </SwiperSlide>
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="vip" />
+        <MoleculesFeaturedVehicles plantype="vip" />
       </SwiperSlide>
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="exclusive" />
+        <MoleculesFeaturedVehicles plantype="exclusive" />
       </SwiperSlide>
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="silver" />
+        <MoleculesFeaturedVehicles plantype="silver" />
       </SwiperSlide>
       <SwiperSlide>
-        <MoleculesFeaturedProperties plantype="vip" />
+        <MoleculesFeaturedVehicles plantype="vip" />
       </SwiperSlide>
     </Swiper> -->
   </div>

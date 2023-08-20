@@ -34,8 +34,8 @@ export default {
 span {
   @apply min-w-[117px] text-neutral-white font-semibold text-base px-5 py-1 h-10 flex items-center justify-center uppercase;
   /* Positions */
-  &.top { @apply rounded-bl-2xl top-0; }
-  &.bottom { @apply rounded-tl-2xl bottom-0; }
+  &.top { @apply rounded-br-2xl top-0; }
+  &.bottom { @apply rounded-tr-2xl bottom-0; }
 
   /* Status */
   &.silver { background: linear-gradient(104.59deg, #D9D9D9 8.17%, #ADADAD 51.17%, #FFFFFF 120.16%); }

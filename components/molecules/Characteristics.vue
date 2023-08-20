@@ -1,21 +1,15 @@
 <template>
   <div class="flex items-center gap-x-5">
-    <!--  -->
-    <div class="flex items-center">
-      <AtomsIcon name="general/bed" :size=20 class="text-primary-100 mr-2" />
-      <p class="text-sm text-neutral-black">{{bedroom}}</p>
+    <div class="flex items-center w-fit bg-neutral-10 rounded-lg px-2">
+      {{year}}
     </div>
     <div class="flex items-center">
-      <AtomsIcon name="general/bathtub" :size=20 class="text-primary-100 mr-2" />
-      <p class="text-sm text-neutral-black">{{bath}}</p>
+      <AtomsIcon name="general/mileage" :size=24 class="text-primary-90 mr-1" />
+      <p class="text-sm text-[#828282] whitespace-nowrap">{{showParsedMlieage(mileage)}} km</p>
     </div>
     <div class="flex items-center">
-      <AtomsIcon name="general/car" :size=20 class="text-primary-100 mr-2" />
-      <p class="text-sm text-neutral-black">{{parking}}</p>
-    </div>
-    <div class="flex items-center">
-      <AtomsIcon name="general/area" :size=20 class="text-primary-100 mr-2" />
-      <p class="text-sm text-neutral-black">{{area}}</p>
+      <AtomsIcon name="general/car_location" :size=24 class="text-primary-90 mr-1" />
+      <p class="text-sm text-[#828282]">{{location}}</p>
     </div>
   </div>
 </template>
@@ -24,22 +18,23 @@
 export default {
   name: 'characteristics',
   props: {
-    bedroom: {
+    year: {
       type: Number,
-      default: 0
+      default: 2023
     },
-    bath: {
+    mileage: {
       type: Number,
-      default: 0
+      default: 5248
     },
-    parking: {
-      type: Number,
-      default: 0
+    location: {
+      type: String,
+      default: 'Santo Domingo'
     },
-    area: {
-      type: Number,
-      default: 0
-    }
+  },
+  methods: {
+    showParsedMlieage(mileage) {
+      return mileage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
   }
 }
 </script>

@@ -34,7 +34,7 @@
 	border-radius: 4px
 }
 .multi-range-slider-bar-only .bar-inner {
-	background-color: #FF2625;
+	background-color: #293451;
 	display: flex;
 	flex-grow: 1;
 	flex-shrink: 1;
@@ -50,7 +50,7 @@
 	width: 50%;
 }
 .multi-range-slider-bar-only .thumb {
-	background-color: #FF2625;
+	background-color: #293451;
 	position: relative;
 	z-index: 1;
 	cursor: pointer;
@@ -61,7 +61,7 @@
 	position: absolute;
 	width: 14px;
 	height: 14px;
-	border: solid 2px #FF2625;
+	border: solid 2px #293451;
 	border-radius: 100%;
 	z-index: 1;
 	margin: -5px;

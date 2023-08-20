@@ -1,80 +1,13 @@
 <template>
   <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
-    <!-- Direccion -->
-    <div class="filter-content flex-row relative">
-      <button class="flex gap-2.5 filter-btn w-full" @click="toggleList('location')" :class="{'active': dropdownLists.location}">
-        <AtomsIcon name="general/sector" class="text-primary-100" :size=20  />
-        <p>{{ country_name != '' ? country_name : 'Ubicacion'}}</p>
-        <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
-      </button>
-      <OnClickOutside @trigger="toggleList('location')" class="dropdown w-full sm:w-[240px] h-fit z-20" v-if="dropdownLists.location">
-        <button class="sector-filter-btn" :class="{'active': dropdownLists.country}" @click="toggleList('country')">
-          Pais <AtomsIcon class="text-primary-100" name="arrows/arrow-down" :size=16></AtomsIcon>
-        </button>
-        <OnClickOutside @trigger="toggleList('country')" v-if="dropdownLists.country">
-          <div class="dropdown-wrapper scrollbar min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="country.name" v-for="country in countries" :key="country">
-              <input
-                type="radio"
-                class="checkbox"
-                name="country"
-                v-model="country_id"
-                :value="country.id"
-                :id="country.name"
-                @click="country_name = country.name"
-              >
-              {{ country.name }}
-            </label>
-          </div>
-        </OnClickOutside>
-        <!--  -->
-        <button v-if="states.length > 0" class="sector-filter-btn" :class="{'active': dropdownLists.sector}" @click="toggleList('sector')">
-          Ciudad <AtomsIcon class="text-primary-100" name="arrows/arrow-down" :size=16 />
-        </button>
-        <OnClickOutside @trigger="toggleList('sector')" v-if="dropdownLists.sector">
-          <div class="dropdown-wrapper scrollbar min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="sector.name" v-for="sector in states" :key="sector">
-              <input
-                type="radio"
-                class="checkbox"
-                name="sector"
-                v-model="state_id"
-                :value="sector.id"
-                :id="sector.name"
-              >
-              {{ sector.name }}
-            </label>
-          </div>
-        </OnClickOutside>
-        <!--  -->
-        <button v-if="cities.length > 0" class="sector-filter-btn" :class="{'active': dropdownLists.city}" @click="toggleList('city')">
-          Sector <AtomsIcon class="text-primary-100" name="arrows/arrow-down" :size=16></AtomsIcon>
-        </button>
-        <OnClickOutside @trigger="toggleList('city')" v-if="dropdownLists.city">
-          <div class="dropdown-wrapper scrollbar min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="city.name" v-for="city in cities" :key="city">
-              <input
-                type="radio"
-                class="checkbox"
-                name="city"
-                v-model="city_id"
-                :value="city.id"
-                :id="city.name"
-              >
-              {{ city.name }}
-            </label>
-          </div>
-        </OnClickOutside>
-      </OnClickOutside>
-    </div>
-    <!-- Tipo de inmueble -->
+    <!-- Marca -->
     <div class="filter-content items-center">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('propertyType')" :class="{'active': dropdownLists.propertyType}">
-        <AtomsIcon name="general/property" class="text-primary-100" :size=20  />
-        <p>{{ property_name != '' ? property_name : 'Inmueble' }}</p>
+      <button class="flex gap-2.5 filter-btn" @click="toggleList('brand')" :class="{'active': dropdownLists.brand}">
+        <AtomsIcon name="general/car" class="text-primary-100" :size=20  />
+        <p>{{ property_name != '' ? property_name : 'Marca' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('propertyType')" v-if="dropdownLists.propertyType" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside @trigger="toggleList('brand')" v-if="dropdownLists.brand" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
             <input type="radio" class="checkbox" :value="category.id" :id="category.name" v-model="selectedCategories" @click="property_name = category.name">
@@ -83,94 +16,83 @@
         </div>
       </OnClickOutside>
     </div>
-    <!-- Habitaciones -->
-    <div class="filter-content">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('bedroom')" :class="{'active': dropdownLists.bedroom}">
-        <AtomsIcon name="general/bed" class="text-primary-100" :size=20  />
-        <p>{{ bedroomQuantity != 0 ? bedroomQuantity : 'Habitaciones' }}</p>
+    <!-- Modelo -->
+    <div class="filter-content items-center">
+      <button class="flex gap-2.5 filter-btn" @click="toggleList('model')" :class="{'active': dropdownLists.model}">
+        <AtomsIcon name="general/car_model" class="text-primary-100" :size=20  />
+        <p>{{ property_name != '' ? property_name : 'Modelo' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('bedroom')" v-if="dropdownLists.bedroom" class="dropdown text-sm leading-[22px] 2xl:absolute top-[95%] mt-[5px] h-fit 2xl:w-[220px] w-full" >
-        <p class="mb-[5px]">Cantidad de habitaciones</p>
-        <div class="flex flex-nowrap">
-          <label class="property-quantity-btn" :class="{'active':(bedroomQuantity == 1)}">
-            <input type="radio" value='1' v-model="bedroomQuantity">1
-          </label>
-          <label class="property-quantity-btn" :class="{'active': (bedroomQuantity == 2)}">
-            <input type="radio" value='2' v-model="bedroomQuantity">2
-          </label>
-          <label class="property-quantity-btn" :class="{'active': (bedroomQuantity == 3)}">
-            <input type="radio" value='3' v-model="bedroomQuantity">3
-          </label>
-          <label class="property-quantity-btn" :class="{'active': (bedroomQuantity == 4)}">
-            <input type="radio" value='4' v-model="bedroomQuantity">4<span class="text-primary-100">+</span>
+      <OnClickOutside @trigger="toggleList('model')" v-if="dropdownLists.model" class="dropdown w-full sm:w-[230px] h-fit">
+        <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
+          <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
+            <input type="radio" class="checkbox" :value="category.id" :id="category.name" v-model="selectedCategories" @click="property_name = category.name">
+            {{category.name}}
           </label>
         </div>
       </OnClickOutside>
     </div>
-    <!-- Bathroom -->
-    <div class="filter-content">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('bathroom')" :class="{'active': dropdownLists.bathroom}">
-        <AtomsIcon name="general/bathtub" class="text-primary-100" :size=20  />
-        <p>{{ bathroomQuantity != 0 ? bathroomQuantity : 'Baños' }}</p>
+    <!-- Versión -->
+    <div class="filter-content items-center">
+      <button class="flex gap-2.5 filter-btn" @click="toggleList('version')" :class="{'active': dropdownLists.version}">
+        <AtomsIcon name="general/car_version" class="text-primary-100" :size=20  />
+        <p>{{ property_name != '' ? property_name : 'Versión' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('bathroom')" v-if="dropdownLists.bathroom"  class="dropdown text-sm leading-[22px] 2xl:absolute top-[95%] mt-[5px] h-fit w-full 2xl:w-[170px]" >
-        <p class="mb-[5px]">Cantidad de baños</p>
-        <div class="flex flex-nowrap">
-          <label class="property-quantity-btn" :class="{'active':(bathroomQuantity == 1)}">
-            <input type="radio" value=1 v-model="bathroomQuantity">1
-          </label>
-          <label class="property-quantity-btn" :class="{'active': (bathroomQuantity == 2)}">
-            <input type="radio" value=2 v-model="bathroomQuantity">2
-          </label>
-          <label class="property-quantity-btn" :class="{'active': (bathroomQuantity == 3)}">
-            <input type="radio" value=3 v-model="bathroomQuantity">3<span class="text-primary-100">+</span>
+      <OnClickOutside @trigger="toggleList('version')" v-if="dropdownLists.version" class="dropdown w-full sm:w-[230px] h-fit">
+        <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
+          <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
+            <input type="radio" class="checkbox" :value="category.id" :id="category.name" v-model="selectedCategories" @click="property_name = category.name">
+            {{category.name}}
           </label>
         </div>
       </OnClickOutside>
     </div>
-    <!-- Parking -->
-    <div class="filter-content">
-      <button class="flex relative gap-2.5 filter-btn" @click="toggleList('parkingLot')" :class="{'active': dropdownLists.parkingLot}">
-        <AtomsIcon name="general/car" class="text-primary-100" :size=20  />
-        <p>{{ parkingLotQuantity != 0 ? parkingLotQuantity : 'Parqueo' }}</p>
+    <!-- Año -->
+    <div class="filter-content items-center">
+      <button class="flex gap-2.5 filter-btn" @click="toggleList('year')" :class="{'active': dropdownLists.year}">
+        <AtomsIcon name="general/calendar" class="text-primary-100" :size=20  />
+        <p>{{ property_name != '' ? property_name : 'Año' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('parkingLot')" v-if="dropdownLists.parkingLot" class="dropdown text-sm leading-[22px] 2xl:absolute top-[95%] mt-[5px] h-fit w-full 2xl:w-[190px]" >
-        <p class="mb-[5px]">Cantidad de parqueos</p>
-        <div class="flex">
-          <label class="property-quantity-btn" :class="{'active':(parkingLotQuantity == 1)}">
-            <input type="radio" value=1 v-model="parkingLotQuantity">1
-          </label>
-          <label class="property-quantity-btn" :class="{'active': (parkingLotQuantity == 2)}">
-            <input type="radio" value=2 v-model="parkingLotQuantity">2
-          </label>
-          <label class="property-quantity-btn" :class="{'active': (parkingLotQuantity == 3)}">
-            <input type="radio" value=3 v-model="parkingLotQuantity">3<span class="text-primary-100">+</span>
-          </label>
-        </div>
-      </OnClickOutside>
+      <OnClickOutside @trigger="toggleList('year')" v-if="dropdownLists.year" class="dropdown w-[238px] h-fit">
+        <p>
+          Año
+        </p>
+        <MultiRangeSlider class="mx-auto mt-[14px] w-[200px]"
+          baseClassName="multi-range-slider-bar-only"
+          :min="minYear"
+          :max="maxYear"
+          :step="1"
+          :ruler="false"
+          :label="false"
+          :minValue="minYearValue"
+          :maxValue="maxYearValue"
+          @input="UpdateYears"
+        />
+        <p class="whitespace-normal text-sm font-medium">
+          Desde <b>{{ minYearValue }}</b>
+          hasta <b>{{ maxYearValue }}</b>
+        </p>
+        </OnClickOutside>
     </div>
     <!-- Price -->
     <div class="filter-content">
       <button class="flex gap-2.5 filter-btn" @click="toggleList('priceRange')" :class="{'active': dropdownLists.priceRange}">
         <AtomsIcon name="general/price" class="text-primary-100" :size=20  />
-        <p>Rango de precio</p>
-        <!-- <p>{{ showBarMinValue > 0 ? `${showBarMinValue}-${showBarMaxValue}` : 'Rango de precio' }}</p> -->
+        <p>Precio</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
       <OnClickOutside @trigger="toggleList('priceRange')" v-if="dropdownLists.priceRange" class="dropdown md:w-[238px] h-fit">
         <p class="flex justify-between text-base text-neutral-black">
           Precio
           <label for="RD" class="price-btn ml-auto">
-            <input type="radio" id="RD" value="RD" name="currency" v-model="picked" checked>
+            <input type="radio" id="RD" value="RD" name="currency" v-model="currency_picked" checked>
           </label>
           <label for="USD" class="price-btn">
-            <input type="radio" id="USD" value="USD" name="currency" v-model="picked">
+            <input type="radio" id="USD" value="USD" name="currency" v-model="currency_picked">
           </label>
         </p>
-        <!--  -->
         <MultiRangeSlider class="mx-auto mt-[14px] md:w-[200px]"
           baseClassName="multi-range-slider-bar-only"
           :min="0"
@@ -178,45 +100,60 @@
           :step="priceRangeSteps"
           :ruler="false"
           :label="false"
-          :minValue="barMinValue"
-          :maxValue="barMaxValue"
-          @input="UpdateValues"
+          :minValue="priceMinValue"
+          :maxValue="priceMaxValue"
+          @input="UpdatePrice"
         />
         <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
-          Desde <b>{{picked}}${{ showBarMinValue }}</b>
-          hasta <b>{{picked}}${{ showBarMaxValue }}</b>+
+          Desde <b>{{currency_picked}}${{ showpriceMinValue }}</b>
+          hasta <b>{{currency_picked}}${{ showpriceMaxValue }}</b>+
           {{publishedBooksMessage  }}
         </p>
       </OnClickOutside>
     </div>
-    <!-- status -->
-    <div class="filter-content" :class="{'modal-open': dropdownLists.status}">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('status')" :class="{'active': dropdownLists.status}">
-        <AtomsIcon name="general/status" class="text-primary-100" :size=20  />
-        <p>{{ status != '' ? status : 'Estado' }}</p>
+    <!-- Mileage -->
+    <div class="filter-content">
+      <button class="flex gap-2.5 filter-btn" @click="toggleList('mileageRange')" :class="{'active': dropdownLists.mileageRange}">
+        <AtomsIcon name="general/mileage" class="text-primary-100" :size=20  />
+        <p>Kilometraje</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('status')" v-if="dropdownLists.status" class="dropdown w-full sm:w-[230px] h-fit">
-        <div class="dropdown-wrapper border-none scrollbar mt-[5px] min-h-max max-h-[273px]">
-          <label class="checkbox-labels" for="New">
-            <input type="radio" class="checkbox" name="status" v-model="status" value="New" id="New">
-            Nuevo
+      <OnClickOutside @trigger="toggleList('mileageRange')" v-if="dropdownLists.mileageRange" class="dropdown md:w-[238px] h-fit">
+        <p class="flex justify-between text-base text-neutral-black">
+          Kilometraje
+          <label for="KM" class="price-btn ml-auto mileage-btn">
+            <input type="radio" id="KM" value="KM" name="mileage" v-model="mileage_picked" checked>
           </label>
-          <label class="checkbox-labels" for="Used">
-            <input type="radio" class="checkbox" name="status" v-model="status" value="Used" id="Used">
-            Usado
+          <label for="M" class="price-btn mileage-btn">
+            <input type="radio" id="M" value="M" name="mileage" v-model="mileage_picked">
           </label>
-        </div>
+        </p>
+        <MultiRangeSlider class="mx-auto mt-[14px] md:w-[200px]"
+          baseClassName="multi-range-slider-bar-only"
+          :min="0"
+          :max="maxMileage"
+          :step="5000"
+          :ruler="false"
+          :label="false"
+          :minValue="mileageMinValue"
+          :maxValue="mileageMaxValue"
+          @input="UpdateMileage"
+        />
+        <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
+          Desde <b>{{ showMileageMinValue }} {{mileage_picked}}</b>
+          hasta <b>{{ showMileageMaxValue }} {{mileage_picked}}</b>+
+          {{publishedBooksMessage  }}
+        </p>
       </OnClickOutside>
     </div>
-    <!-- Featured -->
+    <!-- Category -->
     <div class="filter-content">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('other')" :class="{'active': dropdownLists.other}">
-        <AtomsIcon name="general/tune" class="text-primary-100" :size=20 />
-        <p>Otros</p>
+      <button class="flex gap-2.5 filter-btn" @click="toggleList('category')" :class="{'active': dropdownLists.category}">
+        <AtomsIcon name="general/car_category" class="text-primary-100" :size=20 />
+        <p>Categoria</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('other')" v-if="dropdownLists.other" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside @trigger="toggleList('category')" v-if="dropdownLists.category" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label class="checkbox-labels" :for="feature.name" v-for="feature in features" :key="feature">
             <input type="checkbox" class="checkbox" :value="feature.id" :id="feature.name" v-model="seletedFeatured">
@@ -229,10 +166,6 @@
       <p class="xl:hidden mr-3 font-semibold">Borrar filtros</p>
       <AtomsIcon name="general/close" :size=17  />
     </button>
-    <!-- <button @click="clearFilter();" v-if="filter" class="flex items-center">
-      <p class="xl:hidden mr-3 font-semibold">Borrar filtros</p>
-      <AtomsIcon name="general/close" :size=17  />
-    </button> -->
   </div>
 </template>
 
@@ -248,20 +181,20 @@ export default {
       route: useRoute(),
       config:useRuntimeConfig(),
       dropdownLists: {
-        location: false,
-        propertyType: false,
+        brand: false,
+        model: false,
+        version: false,
+        year: false,
         priceRange: false,
+        mileageRange: false,
         country: false,
-        city: false,
-        municipality: false, 
-        sector: false,
         status: false,
-        other: false
+        category: false
       },
-      barMinValue:0,
-      barMaxValue:10000000,
-      showBarMinValue: '0',
-      showBarMaxValue:"10,000,000",
+      priceMinValue:0,
+      priceMaxValue:10000000,
+      showpriceMinValue: '0',
+      showpriceMaxValue:"10,000,000",
       maxPrice: 50000000,
       countries: [],
       country_id:0,
@@ -272,31 +205,52 @@ export default {
       city_id:0,
       states:[],
       state_id:0,
-      picked:'RD',
+      currency_picked:'RD',
       price:'',
       priceRangeSteps: 500000,
-      bedroomQuantity:0,
-      bathroomQuantity:0,
-      parkingLotQuantity:0,
       status:'',
       queryBody: {},
       filter:true,
       features: [],
       seletedFeatured: [],
       categories: [],
-      selectedCategories: []
+      selectedCategories: [],
+      minYear: 1998,
+      maxYear: 2024,
+      minYearValue: 2007,
+      maxYearValue: 2021,
+      year: '',
+      mileage: '',
+      mileage_picked: 'KM',
+      maxMileage: 150000,
+      mileageMinValue: 0,
+      mileageMaxValue: 50000,
+      showMileageMinValue: '0',
+      showMileageMaxValue: "50,000",
     }
   },
   components: {
     MultiRangeSlider
   },
   methods: {
-    UpdateValues(e) {
-      this.barMinValue = e.minValue;
-      this.barMaxValue = e.maxValue;
-      this.showBarMinValue = this.barMinValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.showBarMaxValue = this.barMaxValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.price = this.barMinValue.toString() + '-' + this.barMaxValue.toString();
+    UpdatePrice(e) {
+      this.priceMinValue = e.minValue;
+      this.priceMaxValue = e.maxValue;
+      this.showpriceMinValue = this.priceMinValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.showpriceMaxValue = this.priceMaxValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.price = this.priceMinValue.toString() + '-' + this.priceMaxValue.toString();
+    },
+    UpdateYears(e) {
+      this.minYearValue = e.minValue;
+      this.maxYearValue = e.maxValue;
+      this.year = this.minYearValue.toString() + '-' + this.maxYearValue.toString();
+    },
+    UpdateMileage(e) {
+      this.mileageMinValue = e.minValue;
+      this.mileageMaxValue = e.maxValue;
+      this.showMileageMinValue = this.mileageMinValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.showMileageMaxValue = this.mileageMaxValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.mileage = this.mileageMinValue.toString() + '-' + this.mileageMaxValue.toString();
     },
     toggleList(list) {
       if (this.dropdownLists[list]) {
@@ -337,7 +291,7 @@ export default {
       // this.country_id = null;
       // this.state_id = null;
       // this.city_id = null;
-      // this.picked = null;
+      // this.currency_picked = null;
       // this.status = null;
       delete this.queryBody.bedroom;
       delete this.queryBody.bathroom;
@@ -346,7 +300,7 @@ export default {
       delete this.queryBody.country_id;
       delete this.queryBody.town_id;
       delete this.queryBody.city_id;
-      delete this.queryBody.picked;
+      delete this.queryBody.currency_picked;
       delete this.queryBody.price;
       delete this.queryBody.feature_ids;
       delete this.queryBody.property_category_id;
@@ -357,21 +311,21 @@ export default {
     }
   },
   watch: {
-    picked(newPicked) {
+    currency_picked(newPicked) {
       this.queryBody.price_type = newPicked;
       this.$emit('sendProperties', this.queryBody);
       if (newPicked === 'USD') {
-        this.barMinValue = 0,
-        this.barMaxValue = 1000000,
-        this.showBarMinValue = '0';
-        this.showBarMaxValue = '1,000,000';
+        this.priceMinValue = 0,
+        this.priceMaxValue = 1000000,
+        this.showpriceMinValue = '0';
+        this.showpriceMaxValue = '1,000,000';
         this.maxPrice = 3000000;
         this.priceRangeSteps = 50000;
       } else{
-        this.barMinValue = 0,
-        this.barMaxValue = 10000000,
-        this.showBarMinValue = '0';
-        this.showBarMaxValue = '10,000,000';
+        this.priceMinValue = 0,
+        this.priceMaxValue = 10000000,
+        this.showpriceMinValue = '0';
+        this.showpriceMaxValue = '10,000,000';
         this.maxPrice = 50000000;
         this.priceRangeSteps = 500000;
       }
@@ -423,7 +377,7 @@ export default {
     this.getCountries();
     this.getFeatures();
     this.getCategories();
-    this.queryBody.price_type = this.picked;
+    this.queryBody.price_type = this.currency_picked;
   }
 }
 </script>
@@ -447,11 +401,10 @@ export default {
 /*  */
 
 .filter-btn {
-  @apply flex justify-between w-full items-center border-2 rounded-lg border-gray-100 mt-2.5 font-normal text-sm leading-[22px] h-10 px-2.5 first:mt-0 hover:bg-primary-50 hover:border-primary-100 bg-neutral-white whitespace-nowrap mx-auto text-neutral-black !important;
+  @apply flex justify-between w-full 2xl:w-[160px] items-center border-2 rounded-lg border-gray-100 mt-2.5 font-normal text-sm leading-[22px] h-10 px-2.5 first:mt-0 hover:bg-primary-50 hover:border-primary-100 bg-neutral-white whitespace-nowrap mx-auto text-neutral-black !important;
   &.active { @apply border-primary-100 bg-neutral-white !important; }
   & p { @apply flex-none !important; }
 }
-
 .price-btn {
   @apply cursor-pointer select-none flex items-center font-normal text-xs;
 
@@ -472,6 +425,14 @@ export default {
 
 .price-btn:last-child {
   & input { @apply after:content-['USD'] rounded-tl-none rounded-bl-none; }
+}
+
+.mileage-btn:first-child {
+  & input { @apply after:content-['KM'] border-r-0 rounded-tr-none rounded-br-none; }
+}
+
+.mileage-btn:last-child {
+  & input { @apply after:content-['M'] rounded-tl-none rounded-bl-none; }
 }
 
 .filter-content {

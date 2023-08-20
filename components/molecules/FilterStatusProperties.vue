@@ -1,8 +1,7 @@
 <template>
   <div class="flex items-center overflow-hidden rounded-lg border-2 border-gray-100 bg-neutral-white text-[#232323] shadow-sm w-fit flex-none">
     <NuxtLink class="btn" :class="{active: $route.query.type === 'All'}" to="/search?type=All">Usado</NuxtLink>
-    <NuxtLink class="btn btn-2" :class="{active: $route.query.type === 'Sale'}" to="/sales?type=Sale">jhajfhja</NuxtLink>
-    <NuxtLink class="btn" :class="{active: $route.query.type === 'Rent'}" to="/rent?type=Rent">Rentar</NuxtLink>
+    <NuxtLink class="btn " :class="{active: $route.query.type === 'Rent'}" to="/rent?type=Rent">Rentar</NuxtLink>
   </div>
 </template>
 
@@ -12,6 +11,4 @@
     @apply bg-primary-100 text-neutral-white font-semibold !important;
   }
 }
-
-.btn-2 { @apply border-l-2 border-r-2 border-solid border-primary-100 !important ; }
 </style>

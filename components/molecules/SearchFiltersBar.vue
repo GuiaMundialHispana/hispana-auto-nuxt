@@ -142,7 +142,6 @@
         <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
           Desde <b>{{ showMileageMinValue }} {{mileage_picked}}</b>
           hasta <b>{{ showMileageMaxValue }} {{mileage_picked}}</b>+
-          {{publishedBooksMessage  }}
         </p>
       </OnClickOutside>
     </div>

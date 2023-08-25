@@ -8,56 +8,30 @@
           <p class="text-neutral-black text-base font-normal">
             Precio
             <br>
-            <span class="text-primary-100 xl:text-[28px] text-xl xl:leading-[28px] font-semibold mt-2">US${{ showParsedPrice(property.price_us) }}</span>
-            <!-- <br /> -->
-            <!-- <span class="text-primary-100 xl:text-[28px] text-xl xl:leading-[28px] font-semibold mt-2">RD${{ showParsedPrice(property.price) }}</span> -->
+            <span class="text-primary-100 xl:text-[28px] text-xl xl:leading-[28px] font-semibold mt-2">US${{ showParsedNumber(property.price_us) }}</span>
           </p>
           <a href="#loan" class="btn-loan">
             <AtomsIcon class="mr-2.5" name="general/price" :size=18 />
             Calcula tu préstamo
           </a>
         </div>
-        <!-- Caracteristicas -->
-        <div class="md:flex xl:justify-start justify-center grid grid-cols-2 items-center flex-wrap xl:gap-x-16 md:gap-6 gap-2 md:mb-8 mb-2">
-          <!--  -->
-          <div class="flex items-center">
-            <AtomsIcon name="general/bed" :size=20 class="text-primary-100 mr-1" />
-            <p class="xl:text-base text-xs text-neutral-black font-semibold">
-              {{ property.bedroom }} Habitaciones
-            </p>
-          </div>
-          <div class="flex items-center">
-            <AtomsIcon name="general/bathtub" :size=20 class="text-primary-100 mr-1" />
-            <p class="xl:text-base text-xs text-neutral-black font-semibold">
-              {{ property.bathroom }} Baños
-            </p>
-          </div>
-          <div class="flex items-center">
-            <AtomsIcon name="general/car" :size=20 class="text-primary-100 mr-1" />
-            <p class="xl:text-base text-xs text-neutral-black font-semibold">
-              {{ property.parking }} Parqueos
-            </p>
-          </div>
-          <div class="flex items-center">
-            <AtomsIcon name="general/area" :size=20 class="text-primary-100 mr-1" />
-            <p class="xl:text-base text-xs text-neutral-black font-semibold">
-              {{property.solar_meters}} m2 de construcción
-            </p>
-          </div>
-        </div>
         <!-- Estado -->
         <ul class="short-information">
-          <li class="md:border-r border-primary-100 xl:pr-14 md:pr-8">
-            <AtomsIcon name="general/share-location" :size=19 class="text-primary-100 mr-2.5" />
-            {{ property.address }}
+          <li class="md:border-r border-primary-100 xl:px-14 md:px-8 px-4 bg-primary-100 text-neutral-white rounded-lg">
+            <AtomsIcon name="general/calendar_month" :size=19 class="text-primary-90 mr-2.5" />
+            <!-- TODO: informacion estatica -->
+            Año de fabricación: 2024
           </li>
           <li class="md:border-r border-primary-100 xl:px-14 md:px-8">
-            <AtomsIcon name="general/status" :size=19 class="text-primary-100 mr-2.5" />
-            Estado: {{ property.property_status === 'New' ? 'Nuevo' : 'Usado' }}
+            <AtomsIcon name="general/mileage" :size=19 class="text-primary-100 mr-2.5" />
+            <!-- TODO: cambiar price por la variable para el millaje -->
+            {{ showParsedNumber(property.price_us) }} km
           </li>
           <li class="xl:pl-14 md:pl-8">
-            <AtomsIcon name="general/calendar_month" :size=19 class="text-primary-100 mr-2.5" />
-            Entrega: 2024
+            <AtomsIcon name="general/share-location" :size=19 class="text-primary-100 mr-2.5" />
+            <!-- TODO: informacion estatica -->
+            Santo Domingo
+            <!-- {{ property.address }} -->
           </li>
         </ul>
       </div>
@@ -87,58 +61,95 @@
         </a>
       </div>
     </div>
+    
     <!-- Caracteristicas -->
-    <div class="pb-[76px] md:pt-16 pt-8 2xl:max-w-[1440px] mx-auto" v-if="property.features.length > 0">
-      <h2 class="text-[28px] leading-[28px] font-semibold md:mb-12 mb-8">Características</h2>
-      <div class="grid lg:grid-cols-2 gap-4 overflow-hidden items-start">
-        <!-- <ul class="characteristics-table">
-          <li v-if="property.meters">
-            <h3>Superficie total</h3>
-            <p>{{property.meters}} m2</p>
-          </li>
-          <li v-if="property.terrace_meters">
-            <h3>Superficie Construida</h3>
-            <p>{{property.terrace_meters}} m2</p>
-          </li>
-          <li v-if="property.bedroom">
-            <h3>Dormitorios</h3>
-            <p>{{property.bedroom}}</p>
-          </li>
-          <li v-if="property.bathroom">
-            <h3>Baños</h3>
-            <p>{{property.bathroom}}</p>
-          </li>
-          <li v-if="property.parking">
-            <h3>Parqueo</h3>
-            <p>{{property.parking}}</p>
-          </li>
-        </ul> -->
-        <ul class="characteristics-table">
-          <li v-for="feat in property.features" :key="feat">
-            <h3>{{feat.name}}</h3>
-          </li>
-        </ul>
-      </div>
+    <div class="pb-[56px] md:pt-16 pt-8 2xl:max-w-[1440px] mx-auto" v-if="property.features.length > 0">
+      <h2 class="text-[28px] leading-[28px] font-semibold mb-8">Características</h2>
+        <div class="characteristics-wrapper">
+          <!-- TODO: Informacion estatica -->
+          <div>
+            <AtomsIcon name="general/car" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Marca
+              <span>Nissan</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/car_model" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Modelo
+              <span>GT-R Nismo</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/car_color" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Color exterior
+              <span>Blanco</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/car_interior" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Color interior
+              <span>Negro</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/ac_unit" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Aire acondicionado
+              <span>Si</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/car_category" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Tracción
+              <span>4x4</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/fuel" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Combustible
+              <span>Gasolina</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/transmission" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Transmisión
+              <span>Manual</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/engine" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Motor
+              <span>6.0 Litros turbo</span>
+            </p>
+          </div>
+          <div>
+            <AtomsIcon name="general/shield" :size=42 class="text-primary-100 mr-1" />
+            <p>
+              Bolsa de aire
+              <span>Si</span>
+            </p>
+          </div>
+        </div>
     </div>
     <!-- Description -->
-    <div class="pb-12 md:pt-8 2xl:max-w-[1440px] mx-auto">
-      <h2 class="text-[28px] leading-[28px] font-semibold mb-8">Descripción del inmueble</h2>
+    <div class="pb-8 md:pt-8 2xl:max-w-[1440px] mx-auto">
+      <h2 class="text-[28px] leading-[28px] font-semibold mb-8">Descripción del vehículo</h2>
       <p class="text-sm text-neutral-black font-normal">{{ property.description }}</p>
-    </div>
-    <!-- Location -->
-    <div class="2xl:max-w-[1440px] mx-auto">
-      <h2 class="text-[28px] leading-[28px] font-semibold mb-7">Ubicación</h2>
-      <ClientOnly>
-        <iframe class="w-full rounded-lg h-96" :src="renderMap"></iframe>
-      </ClientOnly>
-      <!-- <iframe class="w-full rounded-lg h-96" :src="renderMap"></iframe> -->
     </div>
   </section>
 </template>
 
 <script>
 export default {
-  name: 'PropertyInformation',
+  name: 'VehicleInformation',
   props: {
     property: {
       type: Object,
@@ -161,10 +172,10 @@ export default {
     }
   },
   methods: {
-    showParsedPrice(price) {
-      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    showParsedNumber(number) {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
-  }
+  },
 }
 </script>
 
@@ -194,7 +205,7 @@ export default {
 }
 
 /* .characteristics-table {
-  @apply rounded-lg border border-[#ADADAD];
+  @apply rounded-lg border border-[#ADADAD] ;
 
   & li {
     @apply grid grid-cols-2;
@@ -212,14 +223,26 @@ export default {
 }
 
 .short-information {
-  @apply max-w-4xl md:p-2.5 md:flex justify-center grid grid-cols-2 md:gap-0 gap-2 md:items-center md:flex-row flex-col bg-[#FFF6F6] rounded;
+  @apply max-w-4xl p-2.5 md:flex justify-center grid sm:grid-cols-2 md:gap-0 gap-2 md:items-center md:flex-row flex-col bg-[#E5FEFF] rounded-lg;
 
   & li {
-    @apply md:h-11 h-8 flex items-center md:justify-center xl:text-base text-xs text-neutral-black font-semibold;
+    @apply md:h-11 h-8 flex items-center justify-center xl:text-base text-xs font-semibold whitespace-nowrap;
   }
 }
-
 .contact-whatsapp {
   @apply inline-flex rounded-lg justify-center items-center no-underline cursor-pointer duration-300 focus:outline-none text-sm px-4 bg-primary-100 border hover:border-primary-90 hover:bg-primary-90 text-neutral-white h-8;
+}
+
+.characteristics-wrapper{
+  @apply grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-x-16 md:gap-y-20 gap-y-10 md:mb-8 mb-2;
+  & div{
+    @apply flex items-center gap-3 whitespace-nowrap mr-5;
+    & p {
+      @apply text-base text-neutral-black font-semibold flex flex-col text-start;
+      & span {
+        @apply text-neutral-20 text-sm font-normal 
+      }
+    }
+  }
 }
 </style>

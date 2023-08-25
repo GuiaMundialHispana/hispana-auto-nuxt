@@ -23,8 +23,8 @@ export default {
   ],
   directAccess: [
     {
-      name: 'Hispana Auto',
-      route: '/Under-construction'
+      name: 'Hispana Home',
+      route: 'https://hispana-home-nuxt-eight.vercel.app/'
     },
     {
       name: 'Hispana Negocios',

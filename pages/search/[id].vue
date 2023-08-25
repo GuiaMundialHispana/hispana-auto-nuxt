@@ -1,15 +1,15 @@
 <template>
   <div v-if="property">
-    <PopulationSearchDetailPropertySlides
+    <PopulationSearchDetailVehicleSlides
       :plan-type="property.plan_id"
       :images="property.property.images"
     />
-    <PopulationSearchDetailPropertyInformation
+    <PopulationSearchDetailVehicleInformation
       :property="property.property"
       :user="property.user"
     />
-    <PopulationSearchDetailPropertyLoan :property="property.property" class="md:px-14 px-4" />
-    <OrganismExploreProperties :property_id='property.plan_id' />
+    <PopulationSearchDetailVehicleLoan :property="property.property" class="md:px-14 px-4" />
+    <OrganismExploreVehicles :property_id='property.plan_id' />
   </div>
   <div class="p-16" v-if="pending">
     <OrganismSkeleton class="w-16 h-5" />
@@ -32,7 +32,6 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${r
 });
 
 console.log(property)
-
 
 definePageMeta({
   middleware: ["not-found"]

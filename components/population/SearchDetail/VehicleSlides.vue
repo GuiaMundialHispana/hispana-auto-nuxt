@@ -10,7 +10,7 @@
       :thumbs="{ swiper: thumbsSwiper }"
       :modules="[SwiperNavigation,SwiperThumbs]"
       class="swiper-hero">
-        <!-- TODO Eeliminar statitc route image env -->
+        <!-- TODO Eliminar statitc route image env -->
         <swiper-slide
           @click="showModal = true"
           v-for="image in images" :key="image"

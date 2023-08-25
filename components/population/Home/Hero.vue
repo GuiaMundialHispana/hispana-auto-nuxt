@@ -12,7 +12,7 @@
         linkTo="/search?type=All" 
         btn-size="large" 
         class="my-5 font-semibold">
-        Buscar propiedades
+        Buscar vehículos
       </AtomsLink>
     </div>
   </section>

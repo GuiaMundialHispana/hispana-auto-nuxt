@@ -87,7 +87,7 @@ function send_plan(id,pictures) {
   <div class="flex justify-center">
     <AtomsLink link-to="/plans" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
   </div>
-  <nav class="control-steps-postProperty">
+  <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

@@ -309,7 +309,7 @@ watch(price,(new_price) => {
       <textarea type="text" v-model="use_posts.description" placeholder="Descripcion de la propiedad"></textarea>
     </div>
   </div>
-  <nav class="control-steps-postProperty">
+  <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

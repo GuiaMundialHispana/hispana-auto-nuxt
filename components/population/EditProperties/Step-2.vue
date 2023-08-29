@@ -58,7 +58,7 @@ const emit = defineEmits(['back', 'nexts'])
       {{ category.name }}
     </label>
   </div>
-  <nav class="control-steps-postProperty">
+  <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

@@ -100,60 +100,51 @@ async function createAdvertisement() {
       <div class="steps-wrapper">
         <div class="active">
           <span>1</span>
-          <p>Vender o alquilar</p>
-        </div>
-        <hr class="md:hidden border-[#bababa] border w-3" :class="[{progress: step >= 2}]">
-        <div :class="[{active: step >= 2}]">
-          <span>2</span>
           <p>Categoría</p>
         </div>
-        <hr class="md:hidden border-[#bababa] border w-3" :class="[{progress: step >= 3}]">
+        <hr class="progress-bar" :class="[{progress: step >= 2}]">
         <div  :class="[{active: step >= 3}]">
-          <span>3</span>
+          <span>2</span>
           <p>Paquete</p>
         </div>
-        <hr class="md:hidden border-[#bababa] border w-3" :class="[{progress: step >= 4}]">
+        <hr class="progress-bar" :class="[{progress: step >= 3}]">
         <div :class="[{active: step >= 4}]">
-          <span>4</span>
+          <span>3</span>
           <p>Detalles</p>
         </div>
-        <hr class="md:hidden border-[#bababa] border w-3" :class="[{active: step >= 5}]">
+        <hr class="progress-bar" :class="[{progress: step >= 4}]">
         <div :class="[{active: step >= 5}]">
-          <span>5</span>
+          <span>4</span>
           <p>Fotos</p>
         </div>
-        <hr class="md:hidden border-[#bababa] border w-3" :class="[{active: step === 6}]">
+        <hr class="progress-bar" :class="[{progress: step === 5}]">
         <div class="last-step">
-          <!-- <span>&#x2713</span> -->
+          <AtomsIcon name="general/slim-check" />
           <p>Finalizado</p>
-          <hr class="hidden lg:block border-primary-100 border w-12 ml-2" :class="[{'w-20': step === 6}]">
-          <img v-if="step < 6" class="hidden lg:block w-[177px]" src="/img/property-post.png" alt="Property">
+          <hr class="hidden lg:block border-primary-90 border w-12 ml-2" :class="[{'w-20': step === 5}]">
+          <img v-if="step < 5" class="hidden lg:block w-[177px]" :src="`/img/PostVehicle/step-${step}.png`" alt="Property">
         </div>
       </div>
     </nav>
     <!-- 1 -->
     <KeepAlive>
-      <PopulationPostPropertiesStep1 v-if="step === 1" @nexts="step = 2" />
+      <PopulationPostVehicleStep1 v-if="step === 1" @nexts="step = 2" />
     </KeepAlive>
     <!-- 2 -->
     <KeepAlive>
-      <PopulationPostPropertiesStep2 v-if="step === 2" @nexts="step = 3" @back="step--" />
+      <PopulationPostVehicleStep2 v-if="step === 2" @nexts="step = 3" @back="step--" />
     </KeepAlive>
     <!-- 3 -->
     <KeepAlive>
-      <PopulationPostPropertiesStep3 v-if="step === 3" @nexts="step = 4" @back="step--" />
+      <PopulationPostVehicleStep3 v-if="step === 3" @nexts="step = 4" @back="step--" />
     </KeepAlive>
     <!-- 4 -->
     <KeepAlive>
-      <PopulationPostPropertiesStep4 v-if="step === 4" @nexts="step = 5" @back="step--" />
+      <PopulationPostVehicleStep4 v-if="step === 4" @back="step--" />
     </KeepAlive>
     <!-- 5 -->
-    <KeepAlive>
-      <PopulationPostPropertiesStep5 v-if="step === 5" @back="step--" />
-    </KeepAlive>
-    <!-- 6 -->
-    <PopulationPostPropertiesStep6 v-if="step === 6" />
-    <nav class="control-steps-postProperty">
+    <PopulationPostVehicleStep5 v-if="step === 5" />
+    <nav class="control-steps-PostVehicle">
       <AtomsButtons v-if="step === 5" @click="createAdvertisement()">
         Crear Anuncio
       </AtomsButtons>
@@ -163,7 +154,7 @@ async function createAdvertisement() {
 
 <style lang="postcss" scoped>
 .steps-wrapper {
-  @apply flex justify-between  items-center lg:h-48 h-20 w-fit mx-auto lg:px-8;
+  @apply flex justify-center items-center lg:h-48 h-20 w-full max-w-[1440px] mx-auto md:px-8;
   & div{
     @apply flex items-center flex-none whitespace-nowrap gap-2 lg:pl-5 md:pl-3 first:pl-0;
     & p {
@@ -174,10 +165,16 @@ async function createAdvertisement() {
     }
   }
 }
+.progress-bar{
+  @apply border-[#bababa] border w-3 md:w-full md:ml-5
+}
+.progress{
+  @apply border-primary-90
+}
 
 .active {
   & p{ @apply text-neutral-black !important; }
-  & span{ @apply text-neutral-white bg-primary-100 border-none !important; }
+  & span{ @apply text-neutral-white bg-primary-90 border-none !important; }
 }
 
 .last-step {

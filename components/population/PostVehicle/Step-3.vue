@@ -202,19 +202,13 @@ function save_data() {
         </button>
       </div>
     </div>
-    <!-- Map -->
-    <div class="col-span-3">
-      <ClientOnly>
-        <PopulationPostPropertiesMap @send-location="getAddress"/>
-      </ClientOnly>
-    </div>
     <!-- Direccion -->
-    <div class="col-span-3">
+    <!-- <div class="col-span-3">
       <label class="w-full sm:mb-2 mb-5">
       Direccion
       <input class="form-control" readonly v-model="address" placeholder="Direccion" type="text">
     </label>
-    </div>
+    </div> -->
     <!-- Pais -->
     <label class="w-full sm:mb-2 mb-5">
       País
@@ -302,7 +296,7 @@ function save_data() {
       <textarea type="text" v-model="description" placeholder="Descripcion de la propiedad"></textarea>
     </div>
   </div>
-  <nav class="control-steps-postProperty">
+  <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>

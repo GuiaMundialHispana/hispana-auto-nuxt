@@ -5,18 +5,23 @@ import { usePostsStore } from '~/stores/Post';
 const use_posts = usePostsStore();
 const config = useRuntimeConfig();
 const currencyTab = ref(true);
+const mileageTab = ref(true);
 const name = ref('');
 let price = ref(Number);
 let price_us = ref(Number);
 let price_temp = ref(Number);
-const bedrooms = ref(Number);
-const bathrooms = ref(Number);
-const parking = ref(Number);
-const meter = ref(Number);
-const meter_2 = ref(Number);
+let mileage_temp = ref(Number);
+let mileage_km = ref(Number);
+let mileage_m = ref(Number);
+let mileage = ref(Number);
+// const bedrooms = ref(Number);
+// const bathrooms = ref(Number);
+// const parking = ref(Number);
+// const meter = ref(Number);
+// const meter_2 = ref(Number);
 const description = ref('');
-const property_status = ref('');
-const propertyStatus = [
+const vehicle_status = ref('');
+const vehicleStatus = [
   {
     name: 'Nuevo',
     value: 'New'
@@ -41,6 +46,7 @@ let lat = null;
 let log = null;
 let address = ref('');
 let pricePlaceholder = ref('pesos dominicanos');
+let mileagePlaceholder = ref('Kilómetros (KM)');
 let priceInput = ref('');
 
 let countriesApi = await $fetch('generals/countries', {
@@ -135,6 +141,27 @@ watch(currencyTab,(new_value) => {
   }
 });
 
+watch(mileageTab,(new_value) => {
+  mileage_temp.value = 0;
+  mileage_km.value = 0;
+  mileage_m.value = 0;
+  if (new_value === true) {
+    mileagePlaceholder = "Kilómetros (KM)";
+  } else{
+    mileagePlaceholder = "Millas (M)";
+  }
+});
+
+watch(mileage_temp,(new_mileage) => {
+  if (mileageTab.value === true) {
+    mileage_km.value = parseInt(new_mileage);
+    mileage_m.value = parseInt(new_mileage / 1.6);
+  } else {
+    mileage_m.value = parseInt(new_mileage);
+    mileage_km.value = parseInt(new_mileage * 1.6);
+  }
+});
+
 watch(price_temp,(new_price) => {
   if (currencyTab.value === true) {
     price.value = parseInt(new_price);
@@ -152,16 +179,16 @@ function save_data() {
   use_posts.lat = lat;
   use_posts.log = log;
   use_posts.address = address.value;
-  use_posts.country = country.value;
-  use_posts.sector = sector.value;;
-  use_posts.city = city.value;
-  use_posts.bedrooms = bedrooms.value;;
-  use_posts.bathrooms = bathrooms.value;;
+  // use_posts.country = country.value;
+  // use_posts.sector = sector.value;;
+  // use_posts.city = city.value;
+  // use_posts.bedrooms = bedrooms.value;;
+  // use_posts.bathrooms = bathrooms.value;;
   use_posts.parking = parking.value;
-  use_posts.property_status = property_status.value;;
+  use_posts.vehicle_status = vehicle_status.value;;
   use_posts.feature = feature.value;
-  use_posts.meter = meter.value;
-  use_posts.meter_2 = meter_2.value;
+  // use_posts.meter = meter.value;
+  // use_posts.meter_2 = meter_2.value;
   use_posts.description = description.value;
 };
 
@@ -169,132 +196,208 @@ function save_data() {
 
 <template>
   <h4 class="mt-11 mb-7 text-center">
-    Cuéntanos sobre tu <span class="text-primary-100">inmueble</span>
+    Cuéntanos sobre tu <span class="text-primary-90">vehículo </span>
   </h4>
-  <div class="mx-4 px-4 md:px-8 sm:grid sm:grid-cols-3 sm:mx-auto gap-4 max-w-[995px]">
-    <!-- Nombre -->
-    <label class="col-span-3 sm:mb-2 mb-5">
-      Nombre del proyecto
-      <input class="form-control" v-model="name" placeholder="Nombre del proyecto" type="text">
+  <div class="mx-4 px-4 md:px-8 sm:grid sm:grid-cols-2 sm:mx-auto gap-4 max-w-[995px]">
+    <!-- Titulo -->
+    <label class="col-span-2 sm:mb-2 mb-5">
+      Título de la publicación
+      <input class="form-control" v-model="name" placeholder="Escriba el título" type="text">
     </label>
-    <!-- Price -->
-    <div class="flex col-span-3 sm:mb-2 mb-5">
-      <label class="w-full">
-        Precio
-        <input
-          class="form-control"
-          v-model="priceInput" 
-          @blur="currencyFormat"
-          @input="validateInput"
-          :placeholder="`Precio en `+ pricePlaceholder"
-        >
-      </label>
-      <div class="flex items-center ml-2.5">
-        <button 
-          class="price-btn border-l rounded-l-md" 
-          :class="{'active': currencyTab}" 
-          @click="currencyTab = true">RD
-        </button>
-        <button 
-          class="price-btn border-r rounded-r-md" 
-          :class="{'active': !currencyTab}" 
-          @click="currencyTab = false">USD
-        </button>
-      </div>
+    <!-- Descripcion -->
+    <div class="flex flex-col col-span-2">
+      <label for="description">Descripción</label>
+      <textarea id="description" type="text" v-model="description" placeholder="Descripcion de la propiedad"></textarea>
     </div>
-    <!-- Direccion -->
-    <!-- <div class="col-span-3">
+    <div class="col-span-2 gap-4 sm:grid grid-cols-2">
+      <!-- Marca -->
       <label class="w-full sm:mb-2 mb-5">
-      Direccion
-      <input class="form-control" readonly v-model="address" placeholder="Direccion" type="text">
-    </label>
-    </div> -->
-    <!-- Pais -->
-    <label class="w-full sm:mb-2 mb-5">
-      País
-      <select class="form-control col-span-3" v-model="country">
-        <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-        {{ country.name }}
-        </option>
-      </select>
-    </label>
-    <!-- Ciudad -->
-    <label class="w-full sm:mb-2 mb-5" v-if="displaySector">
-      Ciudad
-      <select class="form-control col-span-3" v-model="sector">
-        <option v-for="sector in sectors[0]" :value="sector.id" :key="sector.id" class="option-label">
-        {{ sector.name }}
-        </option>
-      </select>
-    </label>
-    <!-- Sector -->
-    <label class="w-full sm:mb-2 mb-5" v-if="displayCity">
-      Sector
-      <select class="form-control" v-model="city">
-        <option v-for="item in cities[0]" :value="item.id" :key="item.id" class="option-label">
-        {{ item.name }}
-        </option>
-      </select>
-    </label>
-    <!-- Habitaciones, banos, parqueos -->
-    <div class="col-span-3 gap-4 sm:grid grid-cols-2">
-      <label class="w-full sm:mb-2 mb-5">
-        Habitaciones
-        <input class="form-control" v-model="bedrooms" placeholder="Cantidad de habitaciones" type="number">
+        Marca
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
       </label>
+      <!-- Modelo -->
       <label class="w-full sm:mb-2 mb-5">
-        Baños
-        <input class="form-control" v-model="bathrooms" placeholder="Cantidad de baños" type="number">
+        Modelo
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
       </label>
-      <label class="w-full sm:mb-2 mb-5">
-        Parqueos
-        <input class="form-control" v-model="parking" placeholder="Cantidad de parqueos" type="number">
-      </label>
-      <div class="mb-5 sm:mb-0">
-        <label for="propertyStatus" class="mb-2">Estado</label>
-        <select class="form-control" v-model="property_status" id="propertyStatus">
-          <option v-for="status in propertyStatus" :key="status" :value="status.value" class="option-label">
+      <!-- Price -->
+      <div class="flex sm:mb-2 mb-5">
+        <label class="w-full">
+          Precio
+          <input
+            class="form-control"
+            v-model="priceInput" 
+            @blur="currencyFormat"
+            @input="validateInput"
+            :placeholder="`Precio en `+ pricePlaceholder"
+          >
+        </label>
+        <div class="flex items-center ml-2">
+          <button 
+            class="value-toggle_btn border-l rounded-l-md" 
+            :class="{'active': currencyTab}" 
+            @click="currencyTab = true">RD
+          </button>
+          <button 
+            class="value-toggle_btn border-r rounded-r-md" 
+            :class="{'active': !currencyTab}" 
+            @click="currencyTab = false">USD
+          </button>
+        </div>
+      </div>
+      <!-- Estado -->
+      <label for="vehicleStatus" class="mb-2">Estado
+        <select class="form-control" v-model="vehicle_status" id="vehicleStatus">
+          <option v-for="status in vehicleStatus" :key="status" :value="status.value" class="option-label">
             {{ status.name }}
           </option>
         </select>
+      </label>
+      <!-- Map -->
+      <div class="col-span-2">
+        <ClientOnly>
+          <PopulationPostVehicleMap @send-location="getAddress"/>
+        </ClientOnly>
       </div>
-    </div>
-    <!-- Amenidades -->
-    <div class="col-span-3">
-      <label for="amenities" class="mb-2">Otras amenidades</label>
-      <div class="amenities-wrapper scrollbar">
-        <label 
-          v-for="item in features"
-          :value="item.id"
-          :key="item" 
-          id="amenities" 
-          class="checkbox-labels">
-          <input 
-            type="checkbox"
-            class="checkbox"
-            v-model="feature"
-            :value="item.id"
-          >
+      <!-- ubicacion -->
+        <label class="w-full sm:mb-2 mb-5 col-span-2">
+        Ubicación
+        <input class="form-control" readonly v-model="address" placeholder="Direccion" type="text">
+      </label>
+      <!-- Pais -->
+      <label class="w-full sm:mb-2 mb-5">
+        País
+        <select class="form-control col-span-3" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Ciudad -->
+      <label class="w-full sm:mb-2 mb-5">
+        Ciudad
+        <select class="form-control col-span-3" v-model="sector" :disabled="!displaySector">
+          <option v-for="sector in sectors[0]" :value="sector.id" :key="sector.id" class="option-label">
+          {{ sector.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Sector -->
+      <label class="w-full sm:mb-2 mb-5">
+        Sector
+        <select class="form-control" v-model="city" :disabled="!displayCity">
+          <option v-for="item in cities[0]" :value="item.id" :key="item.id" class="option-label">
           {{ item.name }}
+          </option>
+        </select>
+      </label>
+
+      <!-- Kilometraje -->
+      <div class="flex sm:mb-2 mb-5">
+        <label class="w-full">
+          Kilometraje
+          <input
+          type="number"
+            class="form-control"
+            v-model="mileage_temp" 
+            :placeholder="`Kilometraje en `+ mileagePlaceholder"
+          >
         </label>
+        <div class="flex items-center ml-2">
+          <button 
+            class="value-toggle_btn border-l rounded-l-md" 
+            :class="{'active': mileageTab}" 
+            @click="mileageTab = true">KM
+          </button>
+          <button 
+            class="value-toggle_btn border-r rounded-r-md" 
+            :class="{'active': !mileageTab}" 
+            @click="mileageTab = false">M
+          </button>
+        </div>
       </div>
-    </div>
-    <!-- Superficie de construccion y total -->
-    <div class="col-span-3 w-full gap-4 sm:flex sm:mb-2 mb-5">
-      <label class="w-full mb-5 sm:mb-0">
-        Superficie de construcción
-        <input class="form-control" v-model="meter" placeholder="Metros²" type="number">
+      <!-- Color exterior -->
+      <label class="w-full sm:mb-2 mb-5">
+        Color exterior
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
       </label>
-      <label class="w-full">
-        Superficie de total
-        <input class="form-control" v-model="meter_2" placeholder="Metros²" type="number">
+      <!-- Color Interior -->
+      <label class="w-full sm:mb-2 mb-5">
+        Color interior
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Aire acondicionado -->
+      <label class="w-full sm:mb-2 mb-5">
+        Aire acondicionado
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Tracciön -->
+      <label class="w-full sm:mb-2 mb-5">
+        Tracción
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Transmisión -->
+      <label class="w-full sm:mb-2 mb-5">
+        Transmisión
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Motor -->
+      <label class="w-full sm:mb-2 mb-5">
+        Motor
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Bolsa de aire -->
+      <label class="w-full sm:mb-2 mb-5">
+        Bolsa de aire
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
+      </label>
+      <!-- Combustible -->
+      <label class="w-full sm:mb-2 mb-5">
+        Combustible
+        <select class="form-control col-span-2" v-model="country">
+          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
+          {{ country.name }}
+          </option>
+        </select>
       </label>
     </div>
-    <!-- Descripcion -->
-    <div class="flex flex-col col-span-3">
-      <label>Descripción</label>
-      <textarea type="text" v-model="description" placeholder="Descripcion de la propiedad"></textarea>
-    </div>
+    
   </div>
   <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
@@ -313,10 +416,10 @@ label {
   @apply flex flex-col font-normal text-sm text-opacity-[0.85] gap-2;
 }
 .form-control {
-  @apply h-8 w-full border border-[#D9D9D9] text-sm rounded-md px-3 placeholder:text-opacity-25 placeholder:font-normal focus:outline-primary-100;
+  @apply h-8 w-full border border-[#D9D9D9] text-sm rounded-md px-3 placeholder:text-opacity-25 placeholder:font-normal focus:outline-primary-100 disabled:cursor-not-allowed disabled:bg-neutral-10;
 }
 .select-multiple { @apply h-40; }
-.price-btn {
+.value-toggle_btn {
   @apply border-y border-gray-300 text-primary-100 w-[37px] h-8 text-[12px] mb-0 mt-auto ;
   &.active { @apply bg-primary-100 text-neutral-white border-none; }
 }
@@ -356,4 +459,5 @@ textarea {
     @apply border-[10px] border-solid border-neutral-white rounded-full bg-[#C1C1C1];
   }
 }
+
 </style>

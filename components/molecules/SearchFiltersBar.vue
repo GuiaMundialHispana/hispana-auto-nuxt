@@ -217,8 +217,6 @@ export default {
       status:'',
       queryBody: {},
       filter:true,
-      features: [],
-      seletedFeatured: [],
       categories: [],
       selectedCategories: [],
       minYear: 1998,
@@ -273,10 +271,6 @@ export default {
         }
       });
     },
-    async getFeatures() {
-      const featuresApi = await $fetch(this.config.public.API+'generals/features');
-      this.features = featuresApi.results;
-    },
     async getCategories() {
       const categoriesApi = await $fetch(this.config.public.API+'generals/categories');
       this.categories = categoriesApi.results;
@@ -296,7 +290,6 @@ export default {
       delete this.queryBody.city_id;
       delete this.queryBody.currency_picked;
       delete this.queryBody.price;
-      delete this.queryBody.feature_ids;
       delete this.queryBody.property_category_id;
       this.country_name = '';
       this.property_name = '';
@@ -345,10 +338,6 @@ export default {
       this.queryBody.price = price;
       this.$emit('sendProperties', this.queryBody);
     },
-    seletedFeatured(newItemSelected) {
-      this.queryBody.feature_ids = newItemSelected;
-      this.$emit('sendProperties', this.queryBody);
-    },
     selectedCategories(newItemSelected) {
       this.queryBody.property_category_id = newItemSelected;
       this.$emit('sendProperties', this.queryBody);
@@ -356,7 +345,6 @@ export default {
   },
   mounted() {
     this.getCountries();
-    this.getFeatures();
     this.getCategories();
     this.queryBody.price_type = this.currency_picked;
   }

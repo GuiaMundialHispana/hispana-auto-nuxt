@@ -100,16 +100,17 @@ let showFilters = ref(false);
 const { data, pending } = await useLazyFetch('advertisements/search', {
   method: 'GET',
   baseURL: config.public.API,
+  params: {
+    condition: useRoute().query.type
+  },
   transform:(data) => {
     let response = data.results.data;
     response.forEach(element => {
       properties.push(element)
     });
   },
-  query: route.query
+  // query: route.query
 });
-
-console.log(properties)
 
 function getFilterResults(e) {
   test = e;

@@ -204,14 +204,14 @@ export default {
           name: 'Todos'
         },
         {
-          getPath: '/sales?type=New',
+          getPath: '/search?type=New',
           getType: 'New',
-          name: 'Nuevo'
+          name: 'Nuevos'
         },
         {
-          getPath: '/used?type=Used',
+          getPath: '/search?type=Used',
           getType: 'Used',
-          name: 'Usado'
+          name: 'Usados'
         },
       ],
       dropdownLists: {

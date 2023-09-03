@@ -122,11 +122,7 @@ export default {
       menu: [
       {
         name: 'Comprar',
-        route: '/sales?type=buy',
-      },
-      {
-        name: 'Vender',
-        route: '/rent?type=sell',
+        route: '/search?type=All',
       },
       {
         name: 'Destacados',

@@ -154,9 +154,16 @@
       </button>
       <OnClickOutside @trigger="toggleList('category')" v-if="dropdownLists.category" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
-          <label class="checkbox-labels" :for="feature.name" v-for="feature in features" :key="feature">
-            <input type="checkbox" class="checkbox" :value="feature.id" :id="feature.name" v-model="seletedFeatured">
-            {{feature.name}}
+          <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
+            <input
+              type="radio"
+              class="checkbox"
+              name="category"
+              v-model="category_id"
+              :value="category.id"
+              :id="category.name"
+            >
+            {{ category.name }}
           </label>
         </div>
       </OnClickOutside>
@@ -283,18 +290,6 @@ export default {
       this.cities = citiesApi.results.data;
     },
     clearFilter() {
-      // this.price = '';
-      // this.bedroomQuantity = 0;
-      // this.bathroomQuantity = null;
-      // this.parkingLotQuantity = null;
-      // this.country_id = null;
-      // this.state_id = null;
-      // this.city_id = null;
-      // this.currency_picked = null;
-      // this.status = null;
-      delete this.queryBody.bedroom;
-      delete this.queryBody.bathroom;
-      delete this.queryBody.parking;
       delete this.queryBody.property_status;
       delete this.queryBody.country_id;
       delete this.queryBody.town_id;
@@ -305,7 +300,6 @@ export default {
       delete this.queryBody.property_category_id;
       this.country_name = '';
       this.property_name = '';
-      this.bedroomQuantity = 0;
       this.$emit('sendProperties', this.queryBody);
     }
   },
@@ -328,18 +322,6 @@ export default {
         this.maxPrice = 50000000;
         this.priceRangeSteps = 500000;
       }
-    },
-    bedroomQuantity(bedroomQuantity) {
-      this.queryBody.bedroom = bedroomQuantity;
-      this.$emit('sendProperties', this.queryBody);
-    },
-    bathroomQuantity(bathroomQuantity) {
-      this.queryBody.bathroom = bathroomQuantity;
-      this.$emit('sendProperties', this.queryBody);
-    },
-    parkingLotQuantity(parkingLotQuantity) {
-      this.queryBody.parking = parkingLotQuantity;
-      this.$emit('sendProperties', this.queryBody);
     },
     status(status) {
       this.queryBody.property_status = status;

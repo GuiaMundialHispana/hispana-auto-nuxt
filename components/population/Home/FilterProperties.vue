@@ -199,12 +199,17 @@ export default {
       config:useRuntimeConfig(),
       types:[
         {
-          getPath: '/search?type=New',
+          getPath: '/search?type=All',
+          getType: 'All',
+          name: 'Todos'
+        },
+        {
+          getPath: '/sales?type=New',
           getType: 'New',
           name: 'Nuevo'
         },
         {
-          getPath: '/sales?type=Used',
+          getPath: '/used?type=Used',
           getType: 'Used',
           name: 'Usado'
         },
@@ -236,9 +241,6 @@ export default {
       maxYear: 2024,
       minYearValue: 2007,
       maxYearValue: 2021,
-      bedroomQuantity:0,
-      bathroomQuantity:0,
-      parkingLotQuantity:0,
       status:'',
       queryBody: {},
       sendPath: '/search?type=All',

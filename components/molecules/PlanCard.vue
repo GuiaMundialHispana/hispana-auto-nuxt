@@ -1,7 +1,7 @@
 <template>
   <div class="plan-wrapper">
     <!-- plan.id != 4 &&   -->
-    <span class="user-quantity" v-if="$route.path === '/PostProperty' || $route.path === '/postProperty' || $route.path === '/edit-property'">
+    <span class="user-quantity" v-if="$route.path === '/PostVehicle' || $route.path === '/PostVehicle' || $route.path === '/edit-property'">
       {{ userQuantity }}
     </span>
     <span class="plan-category" :class="[renderPlanText]">{{ plan.name }}</span>
@@ -42,7 +42,7 @@
       </AtomsButtons>
     </div>
     <div class="my-4 w-full">
-      <slot v-if="seleccionado && $route.path != '/PostProperty'" />
+      <slot v-if="seleccionado && $route.path != '/PostVehicle'" />
       <!-- plan.id != 4 || userQuantity != 0-->
       <AtomsButtons 
         @click="payment()"
@@ -52,7 +52,7 @@
       </AtomsButtons>
     </div>
     <div v-if="!seleccionado">
-      <AtomsButtons v-if="$route.path === '/PostProperty' || $route.path === '/postProperty'  || $route.path === '/edit-property'"
+      <AtomsButtons v-if="$route.path === '/PostVehicle' || $route.path === '/PostVehicle'  || $route.path === '/edit-property'"
         btn-style="outline-gray"
         class="my-1 w-full"
         :class="{active: active}"
@@ -61,7 +61,7 @@
         Seleccionar
       </AtomsButtons>
     </div>
-    <p class="price" v-if="plan.id != 4  && $route.path != '/PostProperty' && $route.path != 'postProperty' && $route.path != '/edit-property'">
+    <p class="price" v-if="plan.id != 4  && $route.path != '/PostVehicle' && $route.path != 'PostVehicle' && $route.path != '/edit-property'">
       <span class="text-base"> RD$ </span>{{ plan.price  }}
     </p>
     <p v-if="plan.id === 4" class="free-price mt-4">

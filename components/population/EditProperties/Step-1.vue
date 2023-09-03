@@ -32,7 +32,7 @@ const emit = defineEmits(['nexts'])
       </label>
     </div>
   </div>
-  <nav class="control-steps-postProperty">
+  <nav class="control-steps-PostVehicle">
     <AtomsLink btn-style="outline-primary" link-to="/profile?tab=anuncio">
       Cancelar
     </AtomsLink>

@@ -210,7 +210,7 @@ watch(price,(new_price) => {
     <!-- Map -->
     <div class="col-span-3">
       <ClientOnly>
-        <PopulationEditPropertiesMap :lat="use_posts.lat" :long="use_posts.log" @send-location="getAddress"/>
+        <PopulationEditVehiclesMap :lat="use_posts.lat" :long="use_posts.log" @send-location="getAddress"/>
       </ClientOnly>
     </div>
     <!-- Direccion -->

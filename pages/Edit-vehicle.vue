@@ -86,7 +86,7 @@ async function createAdvertisement() {
     form.append('images[' + index + ']',element.image);
   });
 
-  // images = arregloe de string de las imagenes que recibo
+  // images = arreglode string de las imagenes que recibo
   // image = campo donde mando la imagen como portada
   // new_images = array de FILES de las nuevas imagenes
   // new_image = la imagen de portada que debe ser un FILE cuando cambian la imagen de portada
@@ -201,19 +201,19 @@ async function createAdvertisement() {
     </nav>
     <!-- 1 -->
     <KeepAlive>
-      <PopulationEditPropertiesStep1 v-if="step === 1" @nexts="step = 2" />
+      <PopulationEditVehiclesStep1 v-if="step === 1" @nexts="step = 2" />
     </KeepAlive>
     <!-- 2 -->
     <KeepAlive>
-      <PopulationEditPropertiesStep2 v-if="step === 2" @nexts="step = 3" @back="step--" />
+      <PopulationEditVehiclesStep2 v-if="step === 2" @nexts="step = 3" @back="step--" />
     </KeepAlive>
     <!-- 3 -->
     <KeepAlive>
-      <PopulationEditPropertiesStep3 v-if="step === 3" @nexts="step = 4" @back="step--" />
+      <PopulationEditVehiclesStep3 v-if="step === 3" @nexts="step = 4" @back="step--" />
     </KeepAlive>
     <!-- 4 -->
     <KeepAlive v-if="property">
-      <PopulationEditPropertiesStep4 v-if="step === 4"
+      <PopulationEditVehiclesStep4 v-if="step === 4"
         @nexts="step = 5"
         @back="step--"
         :countryId="property.property.country_id"
@@ -223,10 +223,10 @@ async function createAdvertisement() {
     </KeepAlive>
     <!-- 5 -->
     <KeepAlive>
-      <PopulationEditPropertiesStep5 v-if="step === 5" @back="step--" />
+      <PopulationEditVehiclesStep5 v-if="step === 5" @back="step--" />
     </KeepAlive>
     <!-- 6 -->
-    <PopulationEditPropertiesStep6 v-if="step === 6" />
+    <PopulationEditVehiclesStep6 v-if="step === 6" />
     <nav class="control-steps-PostVehicle">
       <AtomsButtons v-if="step === 5" @click="createAdvertisement()">
         Actualizar Anuncio

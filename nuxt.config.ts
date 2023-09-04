@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   ],
   routeRules:{
     '/profile': { ssr: false },
-    '/edit-property': { ssr: false },
+    '/edit-vehicle': { ssr: false },
     '/PostVehicle': { ssr: false },
   },
   app: {

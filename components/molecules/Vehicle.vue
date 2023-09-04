@@ -10,7 +10,7 @@
     />
     <NuxtLink
       :to="{
-        path: `edit-property`,
+        path: `edit-vehicle`,
         query: {
           property_id: propertyId
         }

@@ -47,7 +47,7 @@
                 v-if="show_drop === item.id"
                 @click="show_drop = 0"
               />
-              <MoleculesProperty
+              <MoleculesVehicle
                 :property="item.property"
                 :property-id="item.id"
               />
@@ -79,7 +79,7 @@
           <h3>Anuncios Expirados</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in expired" :key="item">
-              <MoleculesProperty
+              <MoleculesVehicle
                 :property="item.property"
                 :property-id="item.id"
                 status-message="Anuncio expirado"
@@ -101,7 +101,7 @@
           <h3>Anuncios en revision</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in revision" :key="item">
-              <MoleculesProperty
+              <MoleculesVehicle
                 :property="item.property"
                 :property-id="item.id"
               />
@@ -121,7 +121,7 @@
           <h3>Anuncios rechazados</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in rejected" :key="item">
-              <MoleculesProperty
+              <MoleculesVehicle
                 :property="item.property"
                 :property-id="item.id"
                 status-message="Anuncio Rechazado"
@@ -157,7 +157,7 @@
                 v-if="show_drop === item.id"
                 @click="show_drop = 0"
               />
-              <MoleculesProperty
+              <MoleculesVehicle
                 :property="item.property"
                 :property-id="item.id"
               />
@@ -199,7 +199,7 @@
                 v-if="show_drop === item.id"
                 @click="show_drop = 0"
               />
-              <MoleculesProperty
+              <MoleculesVehicle
                 :property="item.property"
                 :property-id="item.id"
                 status-message="Anuncio Borrado"
@@ -399,10 +399,10 @@ h3 {
 .ads {
   & nav {
     & .btn {
-      @apply flex-grow justify-between border-2 hover:border-primary-100 text-neutral-black;
+      @apply flex-grow justify-between border-2 hover:border-primary-100 hover:text-primary-90;
       & span { @apply w-6 h-6 flex items-center justify-center rounded-full font-medium text-sm bg-[#F5F5F5] text-[#ADADAD]; }
       &.active {
-        @apply bg-primary-100 text-neutral-white border-primary-100 hover:text-neutral-black !important;
+        @apply bg-primary-100 text-neutral-white border-primary-100 hover:text-primary-90 !important;
         & span { @apply text-primary-100 bg-primary-50; }
       }
     }

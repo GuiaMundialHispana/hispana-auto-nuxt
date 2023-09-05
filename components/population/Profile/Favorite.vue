@@ -28,7 +28,7 @@
       <h3 class="font-semibold text-sm text-black md:text-[28px] md:leading-[42px] mb-5">Mis Favoritos</h3>
       <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <li v-for="item in data.results" :key="item">
-          <MoleculesProperty
+          <MoleculesVehicle
             :is-favorite="true"
             :property="item.property"
             :property-id="item.advertisement_id"

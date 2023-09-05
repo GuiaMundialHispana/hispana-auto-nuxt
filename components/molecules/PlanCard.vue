@@ -1,7 +1,7 @@
 <template>
   <div class="plan-wrapper">
     <!-- plan.id != 4 &&   -->
-    <span class="user-quantity" v-if="$route.path === '/PostVehicle' || $route.path === '/PostVehicle' || $route.path === '/edit-property'">
+    <span class="user-quantity" v-if="$route.path === '/PostVehicle' || $route.path === '/PostVehicle' || $route.path === '/edit-vehicle'">
       {{ userQuantity }}
     </span>
     <span class="plan-category" :class="[renderPlanText]">{{ plan.name }}</span>
@@ -20,7 +20,7 @@
       </li>
       <li>
         <AtomsIcon name="general/check" :size=16 class="text-[#FFAE10] mr-2" />
-        Cantidades de inmuebles: 1
+        Cantidad de vehículos: 1
       </li>
       <li>
         <AtomsIcon name="general/check" :size=16 class="text-[#FFAE10] mr-2" />
@@ -52,7 +52,7 @@
       </AtomsButtons>
     </div>
     <div v-if="!seleccionado">
-      <AtomsButtons v-if="$route.path === '/PostVehicle' || $route.path === '/PostVehicle'  || $route.path === '/edit-property'"
+      <AtomsButtons v-if="$route.path === '/PostVehicle' || $route.path === '/PostVehicle'  || $route.path === '/edit-vehicle'"
         btn-style="outline-gray"
         class="my-1 w-full"
         :class="{active: active}"
@@ -61,7 +61,7 @@
         Seleccionar
       </AtomsButtons>
     </div>
-    <p class="price" v-if="plan.id != 4  && $route.path != '/PostVehicle' && $route.path != 'PostVehicle' && $route.path != '/edit-property'">
+    <p class="price" v-if="plan.id != 4  && $route.path != '/PostVehicle' && $route.path != 'PostVehicle' && $route.path != '/edit-vehicle'">
       <span class="text-base"> RD$ </span>{{ plan.price  }}
     </p>
     <p v-if="plan.id === 4" class="free-price mt-4">
@@ -111,7 +111,7 @@ export default {
       return parseInt(this.plan.price * this.planQuantity);
     },
     disabledPayment() {
-     if(this.planQuantity <= 0) { return true } else { false}
+      if(this.planQuantity <= 0) { return true } else { false}
     },
   },
   methods: {

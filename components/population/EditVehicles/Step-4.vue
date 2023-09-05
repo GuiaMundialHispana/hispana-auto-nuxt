@@ -66,7 +66,7 @@ watch(newPreview.value, (newx) => {
   <div class="w-fit mx-auto lg:px-8 px-4">
     <h4 class="mt-11 mb-7 text-center">
       Sube buenas fotos de tu 
-      <span class="text-primary-100">inmueble</span>
+      <span class="text-primary-90">vehículo</span>
     </h4>
     <div class="flex mx-auto w-fit gap-4 mb-5">
       <p v-if="totalImgs > planSelected.quantity" class="warning-message">
@@ -125,7 +125,7 @@ watch(newPreview.value, (newx) => {
         <p :class="[{cover: index === 0 && !use_posts.testPortada}]">Portada</p>
       </figure>
     </div>
-    <p class="text-center mt-16 mb-8">{{ newPreview.length }}/{{planSelected.quantity}} Fotos</p>
+    <p class="text-center mt-16 mb-8">{{ newPreview.length + previewImages.length }}/{{planSelected.quantity}} Fotos</p>
   </div>
   <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="emit('back')" btn-style="outline-primary">

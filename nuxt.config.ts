@@ -5,12 +5,12 @@ export default defineNuxtConfig({
   ],
   routeRules:{
     '/profile': { ssr: false },
-    '/edit-property': { ssr: false },
+    '/edit-vehicle': { ssr: false },
     '/PostVehicle': { ssr: false },
   },
   app: {
     head: {
-      title: 'Hispana Home',
+      title: 'Hispana Auto',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
       ],

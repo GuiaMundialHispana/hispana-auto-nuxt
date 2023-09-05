@@ -48,7 +48,7 @@
                 @click="show_drop = 0"
               />
               <MoleculesProperty
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
               />
               <OnClickOutside @trigger="show_drop = 0">
@@ -80,7 +80,7 @@
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in expired" :key="item">
               <MoleculesProperty
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
                 status-message="Anuncio expirado"
                 status-background="bg-primary-90 border-2 border-primary-100 text-neutral-white"
@@ -102,7 +102,7 @@
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in revision" :key="item">
               <MoleculesProperty
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
               />
             </li>
@@ -122,7 +122,7 @@
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in rejected" :key="item">
               <MoleculesProperty
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
                 status-message="Anuncio Rechazado"
                 status-background="bg-primary-100"
@@ -158,7 +158,7 @@
                 @click="show_drop = 0"
               />
               <MoleculesProperty
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
               />
               <OnClickOutside @trigger="show_drop = 0">
@@ -200,7 +200,7 @@
                 @click="show_drop = 0"
               />
               <MoleculesProperty
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
                 status-message="Anuncio Borrado"
                 status-background="bg-neutral-white text-neutral-black font-semibold"

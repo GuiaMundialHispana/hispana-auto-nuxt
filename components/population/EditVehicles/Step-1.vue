@@ -1,56 +1,100 @@
 <script lang="ts" setup>
 import { usePostsStore } from '~/stores/Post';
+
+
 const use_posts = usePostsStore();
-const emit = defineEmits(['nexts'])
+const config = useRuntimeConfig();
+let categorySelected = ref(0);
+
+const { data, pending } = useLazyFetch('generals/categories', {
+  baseURL: config.public.API
+});
+
+categorySelected.value = use_posts.category_id;
+watch(categorySelected,(value) => {
+  use_posts.category_id = value;
+});
+
+const emit = defineEmits(['back', 'nexts'])
 </script>
 
 <template>
-  <div class="flex flex-col text-center items-center justify-center">
-    <h4 class="my-20">
-      <span class="text-primary-100">Vamos a comenzar</span>
-      <br>
-      ¿Vas a vender o alquilar?
-    </h4>
-    <div class="flex gap-2.5">
-      <label class="option" :class="[{checked: use_posts.option_selected === 'sale'}]">
-        Vender
-        <input
-          type="radio"
-          value="sale"
-          name="sale"
-          @click="use_posts.option_selected = 'sale'"
-        >
-      </label>
-      <label class="option" :class="[{checked: use_posts.option_selected === 'rent'}]">
-        Alquilar
-        <input
-          type="radio"
-          value="rent"
-          name="rent"
-          @click="use_posts.option_selected = 'rent'"
-          >
-      </label>
-    </div>
+  <h4>
+    Selecciona la categoría de tu<span class="text-primary-90"> vehículo</span>
+  </h4>
+  <div class="wrapper" v-if="pending">
+    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+    <hr class="border-b border-neutral-10 mb-4 block">
+  </div>
+  <div v-if="data && !pending" class="wrapper scrollbar">
+    <label
+      v-for="category in data.results"
+      :key="category"
+      class="option"
+      :class="[{checked: categorySelected === category.id}]">
+      <input type="radio" :value="category.id" v-model="categorySelected">
+      {{ category.name }}
+    </label>
   </div>
   <nav class="control-steps-PostVehicle">
     <AtomsLink btn-style="outline-primary" link-to="/profile?tab=anuncio">
       Cancelar
     </AtomsLink>
-    <AtomsButtons :disabled="use_posts.option_selected === ''" @click="emit('nexts')">
+    <AtomsButtons @click="emit('nexts')" :disabled="categorySelected === 0">
       Continuar
     </AtomsButtons>
   </nav>
 </template>
 
 <style lang="postcss" scoped>
-h4 { @apply font-semibold text-[28px] leading-[42px]; }
+h4 {
+  @apply font-semibold text-[28px] leading-[42px] mt-11 mb-7 text-center;
+}
+.wrapper {
+  @apply max-w-[971px] h-[490px]  overflow-y-scroll hover:overscroll-contain mx-auto px-5;
+}
+
 .option {
-  @apply sm:w-56 w-36 text-center text-base mb-14 cursor-pointer select-none flex items-center justify-center font-normal leading-[22px] border h-10 border-gray-300 rounded-md hover:bg-primary-100 hover:text-neutral-white hover:border-none;
-
+  @apply cursor-pointer select-none flex items-center font-normal text-base  leading-[22px] border-b h-[70px] border-b-gray-100 hover:bg-primary-50 px-4;
   &.checked {
-    @apply bg-primary-100 text-neutral-white font-semibold text-lg hover:bg-primary-90 !important;
+    @apply bg-primary-100 text-neutral-white font-semibold text-lg;
   }
-
   & input { @apply appearance-none; }
 }
-</style>
+
+.scrollbar {
+  &::-webkit-scrollbar {
+    @apply lg:w-[68px] w-[28px];
+  }
+
+  &::-webkit-scrollbar-track {
+    @apply bg-neutral-white rounded-full;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply lg:border-[30px] border-[10px] border-solid border-neutral-white rounded-full bg-[#C1C1C1];
+  }
+}
+</style> 

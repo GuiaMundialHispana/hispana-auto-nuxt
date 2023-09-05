@@ -1,100 +1,123 @@
-<script lang="ts" setup>
+<script setup>
+import { useUserStore } from '~/stores/User';
 import { usePostsStore } from '~/stores/Post';
 
-
+const user_store = useUserStore();
 const use_posts = usePostsStore();
-const config = useRuntimeConfig();
-let categorySelected = ref(0);
+const emit = defineEmits(['back', 'nexts'])
 
-const { data, pending } = useLazyFetch('generals/categories', {
+// let plans = [];
+let next = ref(false);
+const config = useRuntimeConfig();
+
+const current = ref(false)
+const { data:plans,pending } = await useLazyFetch('user-plans',{
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${user_store.token}`
+  },
+  onResponse({response}) {
+    if(response.status === 200) {
+      response._data.results.forEach(element => {
+        if(element.plan.id === use_posts.plan_id) {
+          use_posts.plan_pictures = element.plan.pictures;
+          current.value = true;
+        }
+      });
+    }
+  },
   baseURL: config.public.API
 });
 
-categorySelected.value = use_posts.category_id;
-watch(categorySelected,(value) => {
-  use_posts.category_id = value;
-});
+function send_plan(id,pictures) {
+  use_posts.plan_id = id;
+  use_posts.plan_pictures = pictures;
+  current.value = false;
+  next.value = true;
+};
 
-const emit = defineEmits(['back', 'nexts'])
+// send_plan(use_posts.plan_id,use_posts.plan_pictures);
 </script>
 
 <template>
-  <h4>
-    ¿Cuál es tu tipo de <span class="text-primary-100"> inmueble?</span>
-  </h4>
-  <div class="wrapper" v-if="pending">
-    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
-    <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
-    <hr class="border-b border-neutral-10 mb-4 block">
+  <h4> Planes disponibles para esta publicación.</h4>
+  <div v-if="pending" class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-16">
+    <div class="border border-gray-10 rounded-lg p-6 relative">
+      <div class="w-full h-10 skeleton rounded-lg mb-4"></div>
+      <hr class="border-neutral-10 my-4">
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+    </div>
+    <div class="border border-gray-10 rounded-lg p-6 relative">
+      <div class="w-full h-10 skeleton rounded-lg mb-4"></div>
+      <hr class="border-neutral-10 my-4">
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+    </div>
+    <div class="border border-gray-10 rounded-lg p-6 relative">
+      <div class="w-full h-10 skeleton rounded-lg mb-4"></div>
+      <hr class="border-neutral-10 my-4">
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+    </div>
+    <div class="border border-gray-10 rounded-lg p-6 relative">
+      <div class="w-full h-10 skeleton rounded-lg mb-4"></div>
+      <hr class="border-neutral-10 my-4">
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-56 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-40 h-5 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+      <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
+    </div>
   </div>
-  <div v-if="data && !pending" class="wrapper scrollbar">
-    <label
-      v-for="category in data.results"
-      :key="category"
-      class="option"
-      :class="[{checked: categorySelected === category.id}]">
-      <input type="radio" :value="category.id" v-model="categorySelected">
-      {{ category.name }}
-    </label>
+  <ul v-if="plans && !pending" class="plans-list">
+    <li v-for="plan in plans.results" :key="plan">
+      <MoleculesPlanCard
+        class="h-full"
+        @pay="send_plan"
+        :plan="plan.plan"
+        :user-quantity="plan.quantity"
+        :seleccionado="plan.plan.id === use_posts.plan_id && current"
+      >
+        <AtomsButtons class="my-2 w-full active">
+          Seleccionado
+        </AtomsButtons>
+      </MoleculesPlanCard>
+    </li>
+  </ul>
+  <div class="flex justify-center">
+    <AtomsLink link-to="/plans" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
   </div>
   <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>
-    <AtomsButtons @click="emit('nexts')" :disabled="categorySelected === 0">
+    <!-- :disabled="!next" -->
+    <AtomsButtons @click="emit('nexts')">
       Continuar
     </AtomsButtons>
   </nav>
 </template>
 
 <style lang="postcss" scoped>
-h4 {
-  @apply font-semibold text-[28px] leading-[42px] mt-11 mb-7 text-center;
-}
-.wrapper {
-  @apply max-w-[971px] h-[490px]  overflow-y-scroll hover:overscroll-contain mx-auto px-5;
-}
+h4 { @apply font-semibold text-[28px] leading-[42px] mt-11 mb-14 text-center; }
 
-.option {
-  @apply cursor-pointer select-none flex items-center font-normal text-base  leading-[22px] border-b h-[70px] border-b-gray-100 hover:bg-primary-50 px-4;
-  &.checked {
-    @apply bg-primary-100 text-neutral-white font-semibold text-lg;
-  }
-  & input { @apply appearance-none; }
-}
-
-.scrollbar {
-  &::-webkit-scrollbar {
-    @apply lg:w-[68px] w-[28px];
-  }
-
-  &::-webkit-scrollbar-track {
-    @apply bg-neutral-white rounded-full;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    @apply lg:border-[30px] border-[10px] border-solid border-neutral-white rounded-full bg-[#C1C1C1];
-  }
-}
-</style> 
+.plans-list { @apply grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-16; }
+</style>

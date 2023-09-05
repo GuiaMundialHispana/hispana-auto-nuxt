@@ -241,7 +241,7 @@ article {
   }
 
   & .btn-icon {
-    @apply bg-primary-100 inline-flex justify-center items-center no-underline cursor-pointer duration-300 focus:outline-none;
+    @apply bg-primary-100 inline-flex justify-center items-center no-underline cursor-pointer duration-300 focus:outline-none hover:bg-primary-90 ;
 
     &.small { @apply w-8 rounded-full h-8; }
   }

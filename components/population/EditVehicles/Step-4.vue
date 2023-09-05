@@ -1,374 +1,154 @@
 <script setup>
-import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
-
-const use_posts = usePostsStore();
-const config = useRuntimeConfig();
 const emit = defineEmits(['back', 'nexts'])
-const currencyTab = ref(true);
-let price = ref(Number);
-let price_us = ref(Number);
-const propertyStatus = [
-  {
-    name: 'Nuevo',
-    value: 'New'
-  },
-  {
-    name: 'Usado',
-    value: 'Used'
-  },
-];
-const feature = ref([]);
-let features = [];
-let countries = [];
-let country = ref(props.countryId);
-let sectors = reactive([]);
-let sector = ref(props.sectorId);
-let displaySector = ref(true);
-let cities = reactive([]);
-let city = ref([]);
-let displayCity = ref(true);
-let categories = [];
-let lat = null;
-let log = null;
-let address = ref('');
-let pricePlaceholder = ref('pesos dominicanos');
-
-let countriesApi = await $fetch('generals/countries', {
-  baseURL: config.public.API
-});
-countriesApi.results.data.forEach(element => {
-  if(element.id === 63 || element.id === 236) {
-    countries.push(element)
-  }
-});
-
-use_posts.feature.forEach(element => {
-  feature.value.push(element)
-})
-
-let featuresApi = await $fetch('generals/features', {
-  baseURL: config.public.API
-});
-features = featuresApi.results;
-
-let categoriesApi = await $fetch('generals/categories', {
-  baseURL: config.public.API
-});
-categoriesApi.results = categories;
-
-async function getStates(country_id) {
-  const statesApi = await $fetch(`generals/states/${country_id}`, {
-    baseURL: config.public.API
-  });
-  sectors.push(statesApi.results.data);
+const use_posts = usePostsStore();
+const allowedFileTypes = ref(['image/jpeg', 'image/png', 'image/gif', 'image/svg', 'image/svg+xml']);
+let totalImgs = ref(0);
+let savedImages= ref([]);
+let previewImages = use_posts.saved_images;
+let newPreview = ref([]);
+let fileFormat = ref(true);
+let testPortada = use_posts.testPortada;
+let planSelected = {
+  id: use_posts.plan_id,
+  quantity: use_posts.plan_pictures
 };
 
-async function getCities(sector_id) {
-  const citiesApi = await $fetch(`generals/cities/${sector_id}`, {
-    baseURL: config.public.API
-  });
-  cities.push(citiesApi.results.data);
-};
+// previewImages.forEach((element, index)=>{
+//   newPreview.value.push(element.image);
+// });
+function previewFiles(event) {
+  let images = null;
+  images = event.target.files;
+  totalImgs.value = newPreview.value.length + images.length;
+  if (totalImgs.value <= planSelected.quantity) {
+    for (let i = 0; i < images.length; i++) {
+      if (allowedFileTypes.value.indexOf(images[i].type) !== -1) {
+        let file = images[i];
+        savedImages.value.push(images[i]);
+        newPreview.value.push(URL.createObjectURL(file));
+        fileFormat.value = true;
+        // use_posts.new_images.push(savedImages.value);
 
-function getAddress(lant, long, location) {
-  lat = lant;
-  log = long;
-  address.value = location;
-  use_posts.address = location;
-  // console.log(lat, log, address.value)
-};
-
-const props = defineProps({
-  countryId: {
-    type: Number
-  },
-  sectorId: {
-    type: Number
-  },
-  cityId: {
-    type: Number
-  }
-});
-getStates(props.countryId);
-getCities(props.sectorId);
-
-watch(country,(country_id) => {
-  getStates(country_id);
-  use_posts.country = country_id;
-  sectors = reactive([]);
-  cities = reactive([]);
-});
-
-watch(sector,(sector_id) => {
-  getCities(sector_id);
-  use_posts.sector = sector_id;
-  cities = reactive([]);
-});
-
-watch(city,(city_id) => {
-  use_posts.city = city_id;
-});
-
-let price_temp = ref(Number);
-function currencyFormat() {
-  let valor = priceInput.value.replace(/[^\d.]/g, '');
-  let numero = parseFloat(valor);
-  if (!isNaN(numero)) {
-    priceInput.value = numero.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
-    price_temp.value = numero;
-  }
-}
-function validateInput(event) {
-  const inputValue = event.target.value;
-  const regex = /^[0-9.]*$/;
-  if (inputValue === '' || event.inputType === 'deleteContentBackward') {
-    priceInput.value = inputValue;
-    return;
-  }
-  if (!regex.test(inputValue)) {
-    priceInput.value = inputValue.replace(/[^\d.]/g, '');
-  };
-  return {
-    priceInput,
-    validateInput,
-  };
-}
-
-watch(currencyTab,(new_value) => {
-  priceInput.value = '';
-  price_temp.value = 0;
-  price.value = 0;
-  price_us.value = 0;
-  if (new_value === true) {
-    pricePlaceholder = "pesos dominicanos DOP";
-  } else{
-    pricePlaceholder = "dólares USD";
-  }
-});
-
-watch(price_temp,(new_price) => {
-  if (currencyTab.value === true) {
-    price.value = parseInt(new_price);
-    price_us.value = parseInt(new_price / 58);
+        use_posts.new_images = savedImages.value;
+        //
+        // const unifiedArray = newPreview.value.concat(previewImages);
+        // previewImages.forEach((element, index)=>{
+        //   newPreview.value.push(element.image);
+        // });
+        // console.log(unifiedArray);
+      } else { fileFormat.value = false; }
+    }
   } else {
-    price_us.value = parseInt(new_price);
-    price.value = parseInt(new_price * 58);
-  }
-});
+    console.log('error');
+  };
+};
 
-watch(price,(new_price) => {
-  price_us.value = parseInt(new_price / 58);
+function setFirtsImg(array, index) {
+  if (index > 0 && index < array.length) {
+    const imgToMove = array[index];
+    array.splice(index, 1);
+    array.unshift(imgToMove);
+  }
+};
+
+let previewPortada = ref(false);
+let newPortada = ref(false);
+watch(newPreview.value, (newx) => {
+  if(newPreview.value.length > 0 ) {
+    console.log()
+    newPortada.value = true;
+  }
 });
 </script>
 
-
 <template>
-  <h4 class="mt-11 mb-7 text-center">
-    Cuéntanos sobre tu <span class="text-primary-100">inmueble</span>
-  </h4>
-  <div class="mx-4 px-4 md:px-8 sm:grid sm:grid-cols-3 sm:mx-auto gap-4 max-w-[995px]">
-    <!-- Nombre -->
-    <label class="col-span-3 sm:mb-2 mb-5">
-      Nombre del proyecto
-      <input class="form-control" v-model="use_posts.name" placeholder="Nombre del proyecto" type="text">
-    </label>
-    <!-- Price -->
-    <div class="flex col-span-3 sm:mb-2 mb-5">
-      <label class="w-full">
-        Precio
-        <input
-          class="form-control"
-          v-model="use_posts.price"
-          @blur="currencyFormat"
-          @input="validateInput"
-          :placeholder="`Precio en `+ pricePlaceholder"
-        >
-        <input v-if="!currencyTab"
-          class="form-control"
-          v-model="use_posts.price_us"
-          placeholder="Precio en Dolares"
-          type="number"
-        >
-      </label>
-      <div class="flex items-center ml-2.5">
-        <button 
-          class="price-btn border-l rounded-l-md" 
-          :class="{'active': currencyTab}" 
-          @click="currencyTab = true">RD
-        </button>
-        <button 
-          class="price-btn border-r rounded-r-md" 
-          :class="{'active': !currencyTab}" 
-          @click="currencyTab = false">USD
-        </button>
+  <div class="w-fit mx-auto lg:px-8 px-4">
+    <h4 class="mt-11 mb-7 text-center">
+      Sube buenas fotos de tu 
+      <span class="text-primary-90">vehículo</span>
+    </h4>
+    <div class="flex mx-auto w-fit gap-4 mb-5">
+      <p v-if="totalImgs > planSelected.quantity" class="warning-message">
+        <AtomsIcon name="general/warning" :size=24 /> Solo puede cargar {{ planSelected.quantity }} fotos 
+      </p>
+      <p v-if="!fileFormat" class="warning-message">
+        <AtomsIcon name="general/warning" :size=24 /> Formato incorrecto
+      </p>
+    </div>
+    <div class="upload-photos-container">
+      <div class="upload-button" v-if="previewImages.length <= planSelected.quantity">
+        <div>
+          <AtomsIcon name="general/upload" :size=28 class="text-primary-100" />
+        </div>
+        <p class="text-[#707070]"><span class="text-primary-100">Click para subir</span> o arrastra y suelta SVG, PNG, <br> JPG (max. 800px400px)</p>
+        <input type="file" @change="previewFiles" ref="file" multiple="multiple" class="absolute left-0 top-0 scale-[9] cursor-pointer opacity-0">
       </div>
+      <!-- Estas son las que subo -->
+      <figure v-for="(img, index) in newPreview" :key="index">
+        <img :src="img" class="w-full h-full object-cover">
+        <AtomsButtons
+          class="absolute top-2 right-2"
+          icon-name="general/trash-can"
+          btn-type="btn-icon"
+          @click="newPreview.splice(index, 1), savedImages.splice(index, 1)"
+        />
+        <AtomsButtons
+          :class="[{newPortada: index === 0 && use_posts.testPortada}]"
+          class="top-2 left-2 absolute bg-neutral-white"
+          btn-style="outline-primary"
+          icon-name="general/star"
+          btn-type="btn-icon"
+          :iconSize=20
+          @click="setFirtsImg(newPreview, index), setFirtsImg(savedImages, index), use_posts.testPortada = true" 
+        />
+        <p :class="[{cover: index === 0 && use_posts.testPortada}]">Portada</p>
+      </figure>
+      <!-- estas son las que traigo del api -->
+      <figure v-for="(img, index) in previewImages" :key="index">
+        <img :src="`https://seal-app-4mhut.ondigitalocean.app/${img.image}`" class="w-full h-full object-cover">
+        <AtomsButtons
+          class="absolute top-2 right-2"
+          icon-name="general/trash-can"
+          btn-type="btn-icon"
+          @click="previewImages.splice(index, 1), savedImages.splice(index, 1)"
+        />
+        <AtomsButtons
+          :class="[{previewPortada: index === 0 && !use_posts.testPortada}]"
+          class="top-2 left-2 absolute bg-neutral-white"
+          btn-style="outline-primary"
+          icon-name="general/star"
+          btn-type="btn-icon"
+          :iconSize=20
+          @click="setFirtsImg(previewImages, index), setFirtsImg(savedImages, index), use_posts.testPortada = false" 
+        />
+        <p :class="[{cover: index === 0 && !use_posts.testPortada}]">Portada</p>
+      </figure>
     </div>
-    <!-- Map -->
-    <div class="col-span-3">
-      <ClientOnly>
-        <PopulationEditVehiclesMap :lat="use_posts.lat" :long="use_posts.log" @send-location="getAddress"/>
-      </ClientOnly>
-    </div>
-    <!-- Direccion -->
-    <div class="col-span-3">
-      <label class="w-full sm:mb-2 mb-5">
-      Direccion
-      <input class="form-control" readonly v-model="use_posts.address" placeholder="Direccion" type="text">
-    </label>
-    </div>
-    <!-- Pais -->
-    <label class="w-full sm:mb-2 mb-5">
-      País
-      <select class="form-control col-span-3" v-model="country">
-        <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-        {{ country.name }}
-        </option>
-      </select>
-    </label>
-    <!-- Ciudad -->
-    <label class="w-full sm:mb-2 mb-5" v-if="displaySector">
-      Ciudad
-      <select class="form-control col-span-3" v-model="sector">
-        <option v-for="sector in sectors[0]" :value="sector.id" :key="sector.id" class="option-label">
-        {{ sector.name }}
-        </option>
-      </select>
-    </label>
-    <!-- Sector -->
-    <label class="w-full sm:mb-2 mb-5" v-if="displayCity">
-      Sector
-      <select class="form-control" v-model="city">
-        <option v-for="item in cities[0]" :value="item.id" :key="item.id" class="option-label">
-        {{ item.name }}
-        </option>
-      </select>
-    </label>
-    <!-- Habitaciones, banos, parqueos -->
-    <div class="col-span-3 gap-4 sm:grid grid-cols-2">
-      <label class="w-full sm:mb-2 mb-5">
-        Habitaciones
-        <input class="form-control" v-model="use_posts.bedrooms" placeholder="Cantidad de habitaciones" type="number">
-      </label>
-      <label class="w-full sm:mb-2 mb-5">
-        Baños
-        <input class="form-control" v-model="use_posts.bathrooms" placeholder="Cantidad de baños" type="number">
-      </label>
-      <label class="w-full sm:mb-2 mb-5">
-        Parqueos
-        <input class="form-control" v-model="use_posts.parking" placeholder="Cantidad de parqueos" type="number">
-      </label>
-      <div class="mb-5 sm:mb-0">
-        <label for="propertyStatus" class="mb-2">Estado</label>
-        <select class="form-control" v-model="use_posts.property_status" id="propertyStatus">
-          <option v-for="status in propertyStatus" :key="status" :value="status.value" class="option-label">
-            {{ status.name }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <!-- Amenidades -->
-    <div class="col-span-3">
-      <label for="amenities" class="mb-2">Otras amenidades</label>
-      <div class="amenities-wrapper scrollbar">
-        <label 
-          v-for="item in features"
-          :value="item.id"
-          :key="item" 
-          id="amenities" 
-          class="checkbox-labels">
-          <input 
-            type="checkbox"
-            class="checkbox"
-            :checked="feature === item.id"
-            v-model="feature"
-            :value="item.id"
-          >
-          {{ item.name }}
-        </label>
-      </div>
-      <!-- {{ use_posts.feature }} -->
-    </div>
-    <!-- Superficie de construccion y total -->
-    <div class="col-span-3 w-full gap-4 sm:flex sm:mb-2 mb-5">
-      <label class="w-full mb-5 sm:mb-0">
-        Superficie de construcción
-        <input class="form-control" v-model="use_posts.meter" placeholder="Metros²" type="number">
-      </label>
-      <label class="w-full">
-        Superficie de total
-        <input class="form-control" v-model="use_posts.meter_2" placeholder="Metros²" type="number">
-      </label>
-    </div>
-    <!-- Descripcion -->
-    <div class="flex flex-col col-span-3">
-      <label>Descripción</label>
-      <textarea type="text" v-model="use_posts.description" placeholder="Descripcion de la propiedad"></textarea>
-    </div>
+    <p class="text-center mt-16 mb-8">{{ newPreview.length + previewImages.length }}/{{planSelected.quantity}} Fotos</p>
   </div>
   <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="emit('back')" btn-style="outline-primary">
       Atras
-    </AtomsButtons>
-    <AtomsButtons @click="emit('nexts')">
-      Continuar
     </AtomsButtons>
   </nav>
 </template>
 
 <style lang="postcss" scoped>
 h4 { @apply font-semibold text-[28px] leading-[42px]; }
-
-label {
-  @apply flex flex-col font-normal text-sm text-opacity-[0.85] gap-2;
-}
-.form-control {
-  @apply h-8 w-full border border-[#D9D9D9] text-sm rounded-md px-3 placeholder:text-opacity-25 placeholder:font-normal focus:outline-primary-100;
+.upload-button {
+  @apply sm:col-span-2 flex flex-col relative items-center justify-center border border-gray-300 rounded-md w-full h-[165px] overflow-hidden text-center px-2;
+  & > div { @apply flex items-center justify-center rounded-full bg-primary-50 w-14 h-14;}
 }
 
-.select-multiple { @apply h-40; }
-.price-btn {
-  @apply border-y border-gray-300 text-primary-100 w-[37px] h-8 text-[12px] mb-0 mt-auto ;
-  &.active { @apply bg-primary-100 text-neutral-white border-none; }
+figure {
+  @apply relative rounded-md bg-primary-50 sm:w-[230px] h-40 overflow-hidden;
+}
+.cover{
+  @apply absolute bottom-0 bg-primary-100 w-full h-[35px] z-20 flex items-center justify-center text-neutral-white text-base
 }
 
-textarea {
-  @apply mt-2 border border-[#D9D9D9] text-sm rounded-md px-3 py-2 placeholder:text-opacity-25 placeholder:font-normal focus:outline-primary-100 h-[130px];
-}
+.upload-photos-container { @apply grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3; }
 
-.amenities-wrapper {
-  @apply bg-neutral-white border border-gray-100 rounded-lg px-2.5 pt-3 overflow-y-scroll hover:overscroll-contain h-56  ;
-}
-
-.checkbox-labels {
-  @apply cursor-pointer select-none flex flex-row items-center font-normal text-sm leading-[22px] mb-3;
-
-  & .checkbox {
-    @apply relative appearance-none flex-none w-4 h-4 border border-gray-300 rounded-sm mr-2 cursor-pointer hover:bg-primary-90 hover:border-none checked:bg-primary-100 checked:hover:bg-gray-300 checked:border-none
-    after:w-full
-    after:h-full
-    after:absolute
-    after:bg-no-repeat
-    after:bg-center
-    after:bg-[length:10px]
-    after:bg-[url('~/assets/icons/general/check.svg')];
-  }
-}
-
-.scrollbar {
-  &::-webkit-scrollbar {
-    @apply w-7;
-  }
-
-  &::-webkit-scrollbar-track {
-    @apply bg-neutral-white rounded-full;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    @apply border-[10px] border-solid border-neutral-white rounded-full bg-[#C1C1C1];
-  }
-}
+.warning-message { @apply flex gap-2 items-center justify-center w-fit py-1 px-2 bg-primary-100 text-neutral-white font-semibold rounded-lg; }
 </style>

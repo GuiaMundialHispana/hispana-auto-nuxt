@@ -23,7 +23,7 @@ const fuel_type = ref("");
 let price = ref(Number);
 let price_us = ref(Number);
 let price_temp = ref(Number);
-let mileage_id = ref(Number);
+let mileage_temp = ref(Number);
 let mileage_km = ref(Number);
 let mileage_m = ref(Number);
 const description = ref('');
@@ -120,10 +120,12 @@ const { data: makes_data } = useFetch('generals/makes', {
 });
 
 watch(make_id,() => {
-  const { data: models_data } = useFetch(`generals/models/${make_id}`, {
+  const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
     baseURL: config.public.API,
     transform(models_data) {
-      makes.value = models_data.results;
+      console.log(models_data)
+      models.value.push(models_data.results);
+      console.log(models.value)
     }
   });
 });
@@ -154,7 +156,7 @@ watch(currencyTab,(new_value) => {
 });
 
 watch(mileageTab,(new_value) => {
-  mileage_id.value = 0;
+  mileage_temp.value = 0;
   mileage_km.value = 0;
   mileage_m.value = 0;
   if (new_value === true) {
@@ -164,7 +166,7 @@ watch(mileageTab,(new_value) => {
   }
 });
 
-watch(mileage_id,(new_mileage) => {
+watch(mileage_temp,(new_mileage) => {
   if (mileageTab.value === true) {
     mileage_km.value = parseInt(new_mileage);
     mileage_m.value = parseInt(new_mileage / 1.6);
@@ -191,10 +193,13 @@ function save_data() {
   use_posts.lat = lat;
   use_posts.log = log;
   use_posts.address = address.value;
-  use_posts.condition = condition;
+  use_posts.country_id = country.value;
+  use_posts.town_id = sector.value;
+  use_posts.city_id = city.value;
+  use_posts.condition = condition.value;
   use_posts.description = description.value;
-  use_posts.make_id = make_id.value;
-  use_posts.model_id = model_id.value;
+  use_posts.make_id = parseInt(make_id.value);
+  use_posts.model_id = parseInt(model_id.value);
   use_posts.exterior_color = exterior_color.value;
   use_posts.interior_color = interior_color.value;
   use_posts.air_conditioned = air_conditioned.value;
@@ -204,6 +209,8 @@ function save_data() {
   use_posts.air_bag = air_bag.value;
   use_posts.fuel_type = fuel_type.value;
   use_posts.year = year.value;
+  use_posts.mileage = parseInt(mileage_m.value);
+  use_posts.kilometer = parseInt(mileage_km.value);
 };
 
 </script>
@@ -228,7 +235,7 @@ function save_data() {
       <label class="w-full sm:mb-2 mb-5">
         Marca
         <select class="form-control col-span-2" v-model="make_id">
-          <option v-for="make_id in makes" :value="makes.id" :key="make_id.id" class="option-label">
+          <option v-for="make_id in makes" :value="make_id.id" :key="make_id.id" class="option-label">
           {{ make_id.name }}
           </option>
         </select>
@@ -271,8 +278,8 @@ function save_data() {
       <label for="vehicleStatus" class="mb-2">
         Estado
         <select class="form-control" v-model="condition" id="vehicleStatus">
-          <option v-for="status in vehicleStatus" :key="status" :value="status.value" class="option-label">
-            {{ status.name }}
+          <option v-for="condition in vehicleStatus" :key="condition" :value="condition.value" class="option-label">
+            {{ condition.name }}
           </option>
         </select>
       </label>
@@ -300,6 +307,7 @@ function save_data() {
           {{ country.name }}
           </option>
         </select>
+        {{ country }}
       </label>
       <!-- Ciudad -->
       <label class="w-full sm:mb-2 mb-5">
@@ -309,6 +317,7 @@ function save_data() {
           {{ sector.name }}
           </option>
         </select>
+        {{ sector }}
       </label>
       <!-- Sector -->
       <label class="w-full sm:mb-2 mb-5">
@@ -318,6 +327,7 @@ function save_data() {
           {{ item.name }}
           </option>
         </select>
+        {{ city }}
       </label>
       <!-- Kilometraje -->
       <div class="flex sm:mb-2 mb-5">
@@ -326,7 +336,7 @@ function save_data() {
           <input
           type="number"
             class="form-control"
-            v-model="mileage" 
+            v-model="mileage_temp" 
             :placeholder="`Kilometraje en `+ mileagePlaceholder"
           >
         </label>
@@ -369,7 +379,7 @@ function save_data() {
       <!-- Transmisión -->
       <label class="w-full sm:mb-2 mb-5">
         Transmisión
-        <select v-model="transmission">
+        <select v-model="transmission" class="form-control">
           <option value="automática">Automática</option>
           <option value="mecánica">Mecánica</option>
         </select>

@@ -13,14 +13,14 @@ async function createAdvertisement() {
   const form = new FormData();
   form.append('plan_id', use_posts.plan_id);
   form.append('auto_category_id', use_posts.auto_category_id);
-  form.append('title', use_posts.name);
+  form.append('title', use_posts.title);
   form.append('price', use_posts.price);
   form.append('price_us', use_posts.price_us);
   form.append('address', use_posts.address);
   form.append('description', use_posts.description);
-  form.append('town_id', use_posts.sector);
-  form.append('city_id', use_posts.city);
-  form.append('country_id', use_posts.country);
+  form.append('town_id', use_posts.town_id);
+  form.append('city_id', use_posts.city_id);
+  form.append('country_id', use_posts.country_id);
   form.append('latitude', use_posts.lat);
   form.append('longitude', use_posts.log);
   form.append('exterior_color', use_posts.exterior_color);
@@ -30,6 +30,7 @@ async function createAdvertisement() {
   form.append('transmission', use_posts.transmission);
   form.append('engine', use_posts.engine);
   form.append('mileage', use_posts.mileage);
+  form.append('kilometer', use_posts.kilometer);
   form.append('condition', use_posts.condition);
   form.append('make_id', use_posts.make_id);
   form.append('model_id', use_posts.model_id);
@@ -60,7 +61,7 @@ async function createAdvertisement() {
           showConfirmButton: false,
           timer: 4000
         });
-        step.value = 6;
+        step.value = 5;
         setTimeout(() => {
           useRouter().push("/profile?tab=anuncio");
         }, 3000);
@@ -105,7 +106,7 @@ async function createAdvertisement() {
           <p>Categoría</p>
         </div>
         <hr class="progress-bar" :class="[{progress: step >= 2}]">
-        <div  :class="[{active: step >= 3}]">
+        <div :class="[{active: step >= 3}]">
           <span>2</span>
           <p>Paquete</p>
         </div>
@@ -115,7 +116,7 @@ async function createAdvertisement() {
           <p>Detalles</p>
         </div>
         <hr class="progress-bar" :class="[{progress: step >= 4}]">
-        <div :class="[{active: step >= 5}]">
+        <div :class="[{active: step >= 4}]">
           <span>4</span>
           <p>Fotos</p>
         </div>
@@ -147,7 +148,7 @@ async function createAdvertisement() {
     <!-- 5 -->
     <PopulationPostVehicleStep5 v-if="step === 5" />
     <nav class="control-steps-PostVehicle">
-      <AtomsButtons v-if="step === 5" @click="createAdvertisement()">
+      <AtomsButtons v-if="step === 4" @click="createAdvertisement()">
         Crear Anuncio
       </AtomsButtons>
     </nav>

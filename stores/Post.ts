@@ -28,6 +28,7 @@ export const usePostsStore = defineStore('posts', {
       transmission: String,
       engine: String || Number,
       mileage: String || Number,
+      kilometer: String || Number,
       condition: String || Number,
       make_id: String || Number,
       model_id: String || Number,

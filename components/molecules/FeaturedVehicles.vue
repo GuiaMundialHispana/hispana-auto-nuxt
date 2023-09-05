@@ -5,7 +5,6 @@
       btn-type="btn-icon"
       icon-name="general/favorite"
       class="favorite-button"
-      :class="{active: property.is_favorite}"
       @click="toggleFavorite()"
       v-if="$route.fullPath != '/profile?tab=anuncio'"
     />

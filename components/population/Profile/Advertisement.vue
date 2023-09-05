@@ -181,7 +181,7 @@
       </div>
       <!-- Borrados -->
       <div v-if="tab === 5">
-        <div v-if="inactive.length > 0">
+        <div v-if="trashed.length > 0">
           <h3>Anuncios borrados</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in trashed" :key="item" class="relative">

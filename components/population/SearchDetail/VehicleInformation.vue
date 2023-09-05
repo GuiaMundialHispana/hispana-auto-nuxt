@@ -2,7 +2,8 @@
   <section class="md:px-14 px-4">
     <div class="grid md:grid-cols-12 grid-cols-1 gap-8 justify-center 2xl:max-w-[1440px] mx-auto">
       <div class="lg:col-span-8 col-span-12">
-        <h1 class="text-[28px] leading-[28px] font-semibold md:mb-12 mb-8">{{ property.name }}</h1>
+        <h1 class="text-[28px] leading-[28px] font-semibold mb-2">{{ property.title }}</h1>
+        <h2 class="md:mb-12 mb-8 text-lg font-semibold">{{ property.condition === 'New' ? 'Nuevo' : 'Usado' }}</h2>
         <!-- Price -->
         <div class="flex md:items-center md:flex-row flex-col md:gap-6 gap-2 border-b border-gray-100 pb-4 mb-8">
           <p class="text-neutral-black text-base font-normal">
@@ -17,28 +18,24 @@
         </div>
         <!-- Estado -->
         <ul class="short-information">
-          <li class="md:border-r border-primary-100 xl:px-14 md:px-8 px-4 bg-primary-100 text-neutral-white rounded-lg">
+          <li class="md:border-r flex-grow border-primary-100 xl:px-14 md:px-8 px-4 bg-primary-100 text-neutral-white rounded-lg">
             <AtomsIcon name="general/calendar_month" :size=19 class="text-primary-90 mr-2.5" />
-            <!-- TODO: informacion estatica -->
-            Año de fabricación: 2024
+            Año de fabricación: {{ property.year}}
           </li>
           <li class="md:border-r border-primary-100 xl:px-14 md:px-8">
             <AtomsIcon name="general/mileage" :size=19 class="text-primary-100 mr-2.5" />
-            <!-- TODO: cambiar price por la variable para el millaje -->
             {{ showParsedNumber(property.price_us) }} km
           </li>
           <li class="xl:pl-14 md:pl-8">
             <AtomsIcon name="general/share-location" :size=19 class="text-primary-100 mr-2.5" />
-            <!-- TODO: informacion estatica -->
-            Santo Domingo
-            <!-- {{ property.address }} -->
+            {{ property.address }}
           </li>
         </ul>
       </div>
       <!-- User information -->
       <div class="lg:col-span-4 md:col-span-8 md:col-start-3 col-span-12 pb-4 border-b border-gray-100 h-max">
         <figure class="user-image">
-          <img v-if="user.profile_pic != null" :src="`https://seal-app-4mhut.ondigitalocean.app/${user.profile_pic}`" :alt="user.name">
+          <img v-if="user.profile_pic != null" :src="`https://oyster-app-xcp8j.ondigitalocean.app/${user.profile_pic}`" :alt="user.name">
           <span v-else class="w-full h-full flex items-center justify-center font-bold text-primary-100 text-2xl uppercase bg-primary-50">
             {{user.name.charAt(0)}}{{ user.lastname.charAt(0) }}
           </span>
@@ -61,80 +58,78 @@
         </a>
       </div>
     </div>
-    
     <!-- Caracteristicas -->
-    <div class="pb-[56px] md:pt-16 pt-8 2xl:max-w-[1440px] mx-auto" v-if="property.features.length > 0">
+    <div class="pb-[56px] md:pt-16 pt-8 2xl:max-w-[1440px] mx-auto">
       <h2 class="text-[28px] leading-[28px] font-semibold mb-8">Características</h2>
         <div class="characteristics-wrapper">
-          <!-- TODO: Informacion estatica -->
           <div>
             <AtomsIcon name="general/car" :size=42 class="text-primary-100 mr-1" />
             <p>
               Marca
-              <span>Nissan</span>
+              <span>{{property.make}}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/car_model" :size=42 class="text-primary-100 mr-1" />
             <p>
               Modelo
-              <span>GT-R Nismo</span>
+              <span>{{ property.model }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/car_color" :size=42 class="text-primary-100 mr-1" />
             <p>
               Color exterior
-              <span>Blanco</span>
+              <span>{{ property.exterior_color }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/car_interior" :size=42 class="text-primary-100 mr-1" />
             <p>
               Color interior
-              <span>Negro</span>
+              <span>{{ property.interior_color }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/ac_unit" :size=42 class="text-primary-100 mr-1" />
             <p>
               Aire acondicionado
-              <span>Si</span>
+              <span>{{ property.air_conditioned === 0 ? 'No' : 'Si' }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/car_category" :size=42 class="text-primary-100 mr-1" />
             <p>
               Tracción
-              <span>4x4</span>
+              <span>{{ property.traction }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/fuel" :size=42 class="text-primary-100 mr-1" />
             <p>
               Combustible
-              <span>Gasolina</span>
+              <span>{{ property.fuel_type }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/transmission" :size=42 class="text-primary-100 mr-1" />
             <p>
               Transmisión
-              <span>Manual</span>
+              <span>{{ property.transmission }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/engine" :size=42 class="text-primary-100 mr-1" />
             <p>
               Motor
-              <span>6.0 Litros turbo</span>
+              <span>{{ property.engine }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/shield" :size=42 class="text-primary-100 mr-1" />
             <p>
               Bolsa de aire
-              <span>Si</span>
+              <span>{{ property.air_bag === 0 ? 'No' : 'Si' }}</span>
             </p>
           </div>
         </div>

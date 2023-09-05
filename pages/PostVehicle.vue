@@ -16,7 +16,7 @@ async function createAdvertisement() {
   form.append('title', use_posts.title);
   form.append('price', use_posts.price);
   form.append('price_us', use_posts.price_us);
-  form.append('address', use_posts.address);
+  // form.append('address', use_posts.address);
   form.append('description', use_posts.description);
   form.append('town_id', use_posts.town_id);
   form.append('city_id', use_posts.city_id);

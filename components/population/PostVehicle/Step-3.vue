@@ -192,7 +192,7 @@ function save_data() {
   use_posts.price_us = price_us.value;
   use_posts.lat = lat;
   use_posts.log = log;
-  use_posts.address = address.value;
+  // use_posts.address = address.value;
   use_posts.country_id = country.value;
   use_posts.town_id = sector.value;
   use_posts.city_id = city.value;
@@ -289,16 +289,16 @@ function save_data() {
         <input class="form-control" v-model="year" placeholder="Escriba el Año" type="text">
       </label>
       <!-- Map -->
-      <div class="col-span-2">
+      <!-- <div class="col-span-2">
         <ClientOnly>
           <PopulationPostVehicleMap @send-location="getAddress"/>
         </ClientOnly>
-      </div>
+      </div> -->
       <!-- ubicacion -->
-      <label class="w-full sm:mb-2 mb-5 col-span-2">
+      <!-- <label class="w-full sm:mb-2 mb-5 col-span-2">
         Ubicación
         <input class="form-control" readonly v-model="address" placeholder="Direccion" type="text">
-      </label>
+      </label> -->
       <!-- Pais -->
       <label class="w-full sm:mb-2 mb-5">
         País

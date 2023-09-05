@@ -44,25 +44,24 @@
       </nav>
       <swiper-slide v-for="image in property.images" :key="image">
         <NuxtLink :to="{
-          path: `/search/${property.name}`,
+          path: `/search/${property.title}`,
           query: {
             property_id: propertyId
           }
         }" class="h-[254px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
           <img
-            :src="`https://seal-app-4mhut.ondigitalocean.app/${image.image}`"
-            :alt="property.name"
+            :src="`https://oyster-app-xcp8j.ondigitalocean.app/${image.image}`"
+            :alt="property.title"
             class="object-cover h-full w-full absolute top-0 left-0 rounded-lg"
           >
-          <p class="property-name">{{ property.name }}</p>
+          <p class="property-name">{{ property.title }}</p>
         </NuxtLink>
       </swiper-slide>
     </Swiper>
     <MoleculesCharacteristics
-      :bedroom="property.bedroom"
-      :bath="property.bathroom"
-      :parking="property.parking"
-      :area="property.meters"
+      :year="property.year"
+      :mileage="property.mileage"
+      :location="property.location"
       class="my-3 justify-center"
     />
     <p class="title-price">Desde:</p>

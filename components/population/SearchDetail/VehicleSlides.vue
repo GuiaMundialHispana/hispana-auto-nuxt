@@ -10,7 +10,6 @@
       :thumbs="{ swiper: thumbsSwiper }"
       :modules="[SwiperNavigation,SwiperThumbs]"
       class="swiper-hero">
-        <!-- TODO Eliminar statitc route image env -->
         <swiper-slide
           @click="showModal = true"
           v-for="image in images" :key="image"
@@ -18,7 +17,7 @@
           <div class="overlay">
             <AtomsIcon name="general/zoom" :size=35 class="text-neutral-white" />
           </div>
-          <img :src="`https://seal-app-4mhut.ondigitalocean.app/${image.image}`" class="w-full h-full object-cover rounded-lg" />
+          <img :src="`https://oyster-app-xcp8j.ondigitalocean.app/${image.image}`" class="w-full h-full object-cover rounded-lg" />
         </swiper-slide>
         <atoms-property-plans :plan-type="renderPlanText" plan-position="top" />
     </swiper>
@@ -34,7 +33,7 @@
       }"
     >
       <swiper-slide v-for="image in images" :key="image">
-        <img :src="`https://seal-app-4mhut.ondigitalocean.app/${image.image}`" class="w-full h-full object-cover rounded-lg" />
+        <img :src="`https://oyster-app-xcp8j.ondigitalocean.app/${image.image}`" class="w-full h-full object-cover rounded-lg" />
       </swiper-slide>
     </swiper>
     <!-- Zoom image -->

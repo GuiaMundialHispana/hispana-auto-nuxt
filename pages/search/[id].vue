@@ -2,13 +2,13 @@
   <div v-if="property">
     <PopulationSearchDetailVehicleSlides
       :plan-type="property.plan_id"
-      :images="property.property.images"
+      :images="property.auto.images"
     />
     <PopulationSearchDetailVehicleInformation
-      :property="property.property"
+      :property="property.auto"
       :user="property.user"
     />
-    <PopulationSearchDetailVehicleLoan :property="property.property" class="md:px-14 px-4" />
+    <PopulationSearchDetailVehicleLoan :property="property.auto" class="md:px-14 px-4" />
     <OrganismExploreVehicles :property_id='property.plan_id' />
   </div>
   <div class="p-16" v-if="pending">

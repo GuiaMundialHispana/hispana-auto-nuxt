@@ -38,8 +38,7 @@
       <ul v-if="!pending" class="property-list">
         <li v-for="property in properties" :key="property">
           <MoleculesProperty
-            :is-favorite="property.property.is_favorite"
-            :property="property.property"
+            :property="property.auto"
             :property-id="property.advertisement_id"
           />
         </li>
@@ -109,7 +108,6 @@ const { data, pending } = await useLazyFetch('advertisements/search', {
       properties.push(element)
     });
   },
-  // query: route.query
 });
 
 function getFilterResults(e) {

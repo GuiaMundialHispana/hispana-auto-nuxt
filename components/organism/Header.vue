@@ -133,10 +133,6 @@ export default {
         route: '/contact'
       },
       {
-        name: 'Calcula tu préstamo',
-        route: '/plans'
-      },
-      {
         name: 'Planes',
         route: '/plans'
       }

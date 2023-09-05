@@ -66,14 +66,14 @@
             <AtomsIcon name="general/car" :size=42 class="text-primary-100 mr-1" />
             <p>
               Marca
-              <span>{{property.make}}</span>
+              <span>{{property.make_details.name }}</span>
             </p>
           </div>
           <div>
             <AtomsIcon name="general/car_model" :size=42 class="text-primary-100 mr-1" />
             <p>
               Modelo
-              <span>{{ property.model }}</span>
+              <span>{{ property.model_details.name }}</span>
             </p>
           </div>
           <div>

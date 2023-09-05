@@ -199,8 +199,8 @@ export default {
       config:useRuntimeConfig(),
       types:[
         {
-          getPath: '/search?type=All',
-          getType: 'All',
+          getPath: '/search/',
+          getType: '',
           name: 'Todos'
         },
         {
@@ -243,8 +243,8 @@ export default {
       maxYearValue: 2021,
       status:'',
       queryBody: {},
-      sendPath: '/search?type=All',
-      sendType: 'All',
+      sendPath: '/search',
+      sendType: '',
       ready: true
     }
   },

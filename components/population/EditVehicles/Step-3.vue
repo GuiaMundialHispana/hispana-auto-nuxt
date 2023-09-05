@@ -135,12 +135,18 @@ watch(country,(country_id) => {
   sectors = reactive([]);
   cities = reactive([]);
   displaySector.value = true;
+  use_posts.country_id = country_id;
 });
 
 watch(sector,(sector_id) => {
   getCities(sector_id);
   cities = reactive([]);
+  use_posts.town_id = sector_id;
   displayCity.value = true;
+});
+
+watch(city,(city_id) => {
+  use_posts.city_id = city_id;
 });
 
 watch(currencyTab,(new_value) => {
@@ -186,33 +192,6 @@ watch(price_temp,(new_price) => {
   }
 });
 
-function save_data() {
-  use_posts.title = title.value;
-  use_posts.price = price.value;
-  use_posts.price_us = price_us.value;
-  use_posts.lat = lat;
-  use_posts.log = log;
-  // use_posts.address = address.value;
-  use_posts.country_id = country.value;
-  use_posts.town_id = sector.value;
-  use_posts.city_id = city.value;
-  use_posts.condition = condition.value;
-  use_posts.description = description.value;
-  use_posts.make_id = parseInt(make_id.value);
-  use_posts.model_id = parseInt(model_id.value);
-  use_posts.exterior_color = exterior_color.value;
-  use_posts.interior_color = interior_color.value;
-  use_posts.air_conditioned = air_conditioned.value;
-  use_posts.traction = traction.value;
-  use_posts.transmission = transmission.value;
-  use_posts.engine = engine.value;
-  use_posts.air_bag = air_bag.value;
-  use_posts.fuel_type = fuel_type.value;
-  use_posts.year = year.value;
-  use_posts.mileage = parseInt(mileage_m.value);
-  use_posts.kilometer = parseInt(mileage_km.value);
-};
-
 </script>
 
 <template>
@@ -223,18 +202,18 @@ function save_data() {
     <!-- Titulo -->
     <label class="col-span-2 sm:mb-2 mb-5">
       Título de la publicación
-      <input class="form-control" v-model="title" placeholder="Escriba el título" type="text">
+      <input class="form-control" v-model="use_posts.title" placeholder="Escriba el título" type="text">
     </label>
     <!-- Descripcion -->
     <div class="flex flex-col col-span-2">
       <label for="description">Descripción</label>
-      <textarea id="description" type="text" v-model="description" placeholder="Descripcion de la propiedad"></textarea>
+      <textarea id="description" type="text" v-model="use_posts.description" placeholder="Descripcion de la propiedad"></textarea>
     </div>
     <div class="col-span-2 gap-4 sm:grid grid-cols-2">
       <!-- Marca -->
       <label class="w-full sm:mb-2 mb-5">
         Marca
-        <select class="form-control col-span-2" v-model="make_id">
+        <select class="form-control col-span-2" v-model="use_posts.make_id">
           <option v-for="make_id in makes" :value="make_id.id" :key="make_id.id" class="option-label">
           {{ make_id.name }}
           </option>
@@ -243,7 +222,7 @@ function save_data() {
       <!-- Modelo -->
       <label class="w-full sm:mb-2 mb-5">
         Modelo
-        <select class="form-control col-span-2" v-model="model_id">
+        <select class="form-control col-span-2" v-model="use_posts.model_id">
           <option v-for="model_id in models" :value="model_id.id" :key="model_id.id" class="option-label">
           {{ model_id.name }}
           </option>
@@ -255,7 +234,7 @@ function save_data() {
           Precio
           <input
             class="form-control"
-            v-model="priceInput" 
+            v-model="use_posts.price" 
             @blur="currencyFormat"
             @input="validateInput"
             :placeholder="`Precio en `+ pricePlaceholder"
@@ -277,7 +256,7 @@ function save_data() {
       <!-- Estado -->
       <label for="vehicleStatus" class="mb-2">
         Estado
-        <select class="form-control" v-model="condition" id="vehicleStatus">
+        <select class="form-control" v-model="use_posts.condition" id="vehicleStatus">
           <option v-for="condition in vehicleStatus" :key="condition" :value="condition.value" class="option-label">
             {{ condition.name }}
           </option>
@@ -286,7 +265,7 @@ function save_data() {
       <!-- year -->
       <label class="w-full sm:mb-2 mb-5">
         Año
-        <input class="form-control" v-model="year" placeholder="Escriba el Año" type="text">
+        <input class="form-control" v-model="use_posts.year" placeholder="Escriba el Año" type="text">
       </label>
       <!-- Map -->
       <!-- <div class="col-span-2">
@@ -302,7 +281,7 @@ function save_data() {
       <!-- Pais -->
       <label class="w-full sm:mb-2 mb-5">
         País
-        <select class="form-control col-span-3" v-model="country">
+        <select class="form-control col-span-3" v-model="use_posts.country_id">
           <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
           {{ country.name }}
           </option>
@@ -333,7 +312,7 @@ function save_data() {
           <input
           type="number"
             class="form-control"
-            v-model="mileage_temp" 
+            v-model="use_posts.mileage" 
             :placeholder="`Kilometraje en `+ mileagePlaceholder"
           >
         </label>
@@ -353,17 +332,17 @@ function save_data() {
       <!-- Color exterior -->
       <label class="w-full sm:mb-2 mb-5">
         Color exterior
-        <input type="text" v-model="exterior_color" class="form-control" />
+        <input type="text" v-model="use_posts.exterior_color" class="form-control" />
       </label>
       <!-- Color Interior -->
       <label class="w-full sm:mb-2 mb-5">
         Color interior
-        <input type="text" v-model="interior_color" class="form-control" />
+        <input type="text" v-model="use_posts.interior_color" class="form-control" />
       </label>
       <!-- Aire acondicionado -->
       <label class="w-full sm:mb-2 mb-5">
         Aire acondicionado
-        <select class="form-control col-span-2" v-model="air_conditioned">
+        <select class="form-control col-span-2" v-model="use_posts.air_conditioned">
           <option value="0">No</option>
           <option value="1">Si</option>
         </select>
@@ -371,12 +350,12 @@ function save_data() {
       <!-- Tracciön -->
       <label class="w-full sm:mb-2 mb-5">
         Tracción
-        <input type="text" v-model="traction" class="form-control" />
+        <input type="text" v-model="use_posts.traction" class="form-control" />
       </label>
       <!-- Transmisión -->
       <label class="w-full sm:mb-2 mb-5">
         Transmisión
-        <select v-model="transmission" class="form-control">
+        <select v-model="use_posts.transmission" class="form-control">
           <option value="automática">Automática</option>
           <option value="mecánica">Mecánica</option>
         </select>
@@ -384,12 +363,12 @@ function save_data() {
       <!-- Motor -->
       <label class="w-full sm:mb-2 mb-5">
         Motor
-        <input type="text" v-model="engine" class="form-control" />
+        <input type="text" v-model="use_posts.engine" class="form-control" />
       </label>
       <!-- Bolsa de aire -->
       <label class="w-full sm:mb-2 mb-5">
         Bolsa de aire
-        <select class="form-control col-span-2" v-model="air_bag">
+        <select class="form-control col-span-2" v-model="use_posts.air_bag">
           <option value="0">No</option>
           <option value="1">Si</option>
         </select>
@@ -397,7 +376,7 @@ function save_data() {
       <!-- Combustible -->
       <label class="w-full sm:mb-2 mb-5">
         Combustible
-        <input type="text" v-model="fuel_type" class="form-control" />
+        <input type="text" v-model="use_posts.fuel_type" class="form-control" />
       </label>
     </div>   
   </div>
@@ -405,7 +384,7 @@ function save_data() {
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
       Atras
     </AtomsButtons>
-    <AtomsButtons @click="$emit('nexts'), save_data()">
+    <AtomsButtons @click="$emit('nexts')">
       Continuar
     </AtomsButtons>
   </nav>
@@ -418,35 +397,18 @@ label {
   @apply flex flex-col font-normal text-sm text-opacity-[0.85] gap-2;
 }
 .form-control {
-  @apply h-8 w-full border border-[#D9D9D9] text-sm rounded-md px-3 placeholder:text-opacity-25 placeholder:font-normal focus:outline-primary-100 disabled:cursor-not-allowed disabled:bg-neutral-10;
+  @apply h-8 w-full border border-[#D9D9D9] text-sm rounded-md px-3 placeholder:text-opacity-25 placeholder:font-normal focus:outline-primary-100;
 }
+
 .select-multiple { @apply h-40; }
 .value-toggle_btn {
   @apply border-y border-gray-300 text-primary-100 w-[37px] h-8 text-[12px] mb-0 mt-auto ;
   &.active { @apply bg-primary-100 text-neutral-white border-none; }
 }
-
 textarea {
   @apply mt-2 border border-[#D9D9D9] text-sm rounded-md px-3 py-2 placeholder:text-opacity-25 placeholder:font-normal focus:outline-primary-100 h-[130px];
 }
-.amenities-wrapper {
-  @apply bg-neutral-white border border-gray-100 rounded-lg px-2.5 pt-3 overflow-y-scroll hover:overscroll-contain h-56  ;
-}
 
-.checkbox-labels {
-  @apply cursor-pointer select-none flex flex-row items-center font-normal text-sm leading-[22px] mb-3;
-
-  & .checkbox {
-    @apply relative appearance-none flex-none w-4 h-4 border border-gray-300 rounded-sm mr-2 cursor-pointer hover:bg-primary-90 hover:border-none checked:bg-primary-100 checked:hover:bg-gray-300 checked:border-none
-    after:w-full
-    after:h-full
-    after:absolute
-    after:bg-no-repeat
-    after:bg-center
-    after:bg-[length:10px]
-    after:bg-[url('~/assets/icons/general/check.svg')];
-  }
-}
 
 .scrollbar {
   &::-webkit-scrollbar {
@@ -461,5 +423,4 @@ textarea {
     @apply border-[10px] border-solid border-neutral-white rounded-full bg-[#C1C1C1];
   }
 }
-
 </style>

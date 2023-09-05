@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { usePostsStore } from '~/stores/Post';
 
-
 const use_posts = usePostsStore();
 const config = useRuntimeConfig();
 let categorySelected = ref(0);
@@ -10,9 +9,9 @@ const { data, pending } = useLazyFetch('generals/categories', {
   baseURL: config.public.API
 });
 
-categorySelected.value = use_posts.category_id;
+categorySelected.value = use_posts.auto_category_id;
 watch(categorySelected,(value) => {
-  use_posts.category_id = value;
+  use_posts.auto_category_id = value;
 });
 
 const emit = defineEmits(['back', 'nexts'])
@@ -20,7 +19,7 @@ const emit = defineEmits(['back', 'nexts'])
 
 <template>
   <h4>
-    ¿Cuál es tu tipo de <span class="text-primary-100"> inmueble?</span>
+    Selecciona la categoría de tu<span class="text-primary-90"> vehículo</span>
   </h4>
   <div class="wrapper" v-if="pending">
     <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>
@@ -59,9 +58,9 @@ const emit = defineEmits(['back', 'nexts'])
     </label>
   </div>
   <nav class="control-steps-PostVehicle">
-    <AtomsButtons @click="emit('back')" btn-style="outline-primary">
-      Atras
-    </AtomsButtons>
+    <AtomsLink btn-style="outline-primary" link-to="/profile?tab=anuncio">
+      Cancelar
+    </AtomsLink>
     <AtomsButtons @click="emit('nexts')" :disabled="categorySelected === 0">
       Continuar
     </AtomsButtons>

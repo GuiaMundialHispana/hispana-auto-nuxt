@@ -37,7 +37,7 @@
     <div class="mt-8 pb-14">
       <ul v-if="!pending" class="property-list">
         <li v-for="property in properties" :key="property">
-          <MoleculesProperty
+          <MoleculesVehicle
             :property="property.auto"
             :property-id="property.advertisement_id"
           />

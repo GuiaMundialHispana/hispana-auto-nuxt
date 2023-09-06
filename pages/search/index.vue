@@ -22,8 +22,11 @@
         @click="showFilters = false"
       />
       <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
-        <MoleculesFilterStatusProperties class="filterStatus-tabs-sm" />
-        <MoleculesSearchFiltersBar @send-properties="getFilterResults" />
+        <MoleculesFilterStatusProperties @change="getFilterResults" class="filterStatus-tabs-sm" />
+        <MoleculesSearchFiltersBar
+          @make="(x) => makeId = x"
+          @send-properties="getFilterResults"
+        />
       </div>
     </OnClickOutside>
     <div class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
@@ -38,13 +41,12 @@
       <ul v-if="!pending" class="property-list">
         <li v-for="property in properties" :key="property">
           <MoleculesVehicle
-            :is-favorite="property.property.is_favorite"
-            :property="property.property"
+            :property="property.auto"
             :property-id="property.advertisement_id"
           />
         </li>
       </ul>
-      <div v-if="pending" class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div v-else class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <div class="skeleton">
           <div class="skeleton-image"></div>
           <div class="skeleton-date"></div>
@@ -96,42 +98,50 @@ const viewport = useViewport();
 let test = ref(null);
 let properties = reactive([]);
 let showFilters = ref(false);
+const makeId = ref(null);
 
-const { data, pending } = await useLazyFetch('advertisements/search', {
+const { data, pending, refresh } = await useLazyFetch('advertisements/search', {
   method: 'GET',
   baseURL: config.public.API,
+  params: {
+    condition: useRoute().query.type,
+    make_ids: makeId.value
+  },
+  watch: [
+    makeId.value
+  ],
   transform:(data) => {
     let response = data.results.data;
     response.forEach(element => {
       properties.push(element)
     });
   },
-  query: route.query
 });
 
-console.log(properties)
+// function getFilterResults(e) {
+//   test.value = e;
+//   pending.value = true;
+//   searchProperties();
+// }
 
-function getFilterResults(e) {
-  test = e;
-  pending.value = true;
-  searchProperties();
-}
-
-async function searchProperties() {
-  const { data } = await useFetch('advertisements/search?type=All', {
-    method: 'GET',
-    baseURL: config.public.API,
-    transform:(data) => {
-      pending.value = false;
-      properties.splice(0,properties.length);
-      let response = data.results.data;
-      response.forEach(element => {
-        properties.push(element)
-      });
-    },
-    query: test
-  });
-};
+// async function searchProperties() {
+//   const { data } = await useFetch('advertisements/search', {
+//     method: 'GET',
+//     baseURL: config.public.API,
+//     transform:(data) => {
+//       pending.value = false;
+//       properties.splice(0,properties.length);
+//       let response = data.results.data;
+//       response.forEach(element => {
+//         properties.push(element)
+//       });
+//     },
+//     params: {
+//       condition: useRoute().query.type
+//     },
+//     query: test
+//   });
+// };
 
 </script>
 

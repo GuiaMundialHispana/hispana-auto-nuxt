@@ -6,21 +6,28 @@ const use_posts = usePostsStore();
 const config = useRuntimeConfig();
 const currencyTab = ref(true);
 const mileageTab = ref(true);
-const name = ref('');
+const title = ref('');
+const make_id = ref(null);
+const year = ref(null);
+const makes = ref([]);
+const models = ref([]);
+const model_id = ref(null);
+const exterior_color = ref(null);
+const interior_color = ref(null);
+const air_conditioned = ref(Number);
+const traction = ref("");
+const transmission = ref("");
+const engine = ref("");
+const air_bag = ref(Number);
+const fuel_type = ref("");
 let price = ref(Number);
 let price_us = ref(Number);
 let price_temp = ref(Number);
 let mileage_temp = ref(Number);
 let mileage_km = ref(Number);
 let mileage_m = ref(Number);
-let mileage = ref(Number);
-// const bedrooms = ref(Number);
-// const bathrooms = ref(Number);
-// const parking = ref(Number);
-// const meter = ref(Number);
-// const meter_2 = ref(Number);
 const description = ref('');
-const vehicle_status = ref('');
+const condition = ref('');
 const vehicleStatus = [
   {
     name: 'Nuevo',
@@ -31,8 +38,6 @@ const vehicleStatus = [
     value: 'Used'
   },
 ];
-const feature = ref([]);
-let features = [];
 let countries = [];
 let country = ref(0);
 let sectors = reactive([]);
@@ -57,16 +62,6 @@ countriesApi.results.data.forEach(element => {
     countries.push(element)
   }
 });
-
-let featuresApi = await $fetch('generals/features', {
-  baseURL: config.public.API
-});
-features = featuresApi.results;
-
-let categoriesApi = await $fetch('generals/categories', {
-  baseURL: config.public.API
-});
-categoriesApi.results = categories;
 
 async function getStates(country_id) {
   const statesApi = await $fetch(`generals/states/${country_id}`, {
@@ -115,6 +110,23 @@ function validateInput(event) {
     validateInput,
   };
 }
+
+// Marcas
+const { data: makes_data } = useFetch('generals/makes', {
+  baseURL: config.public.API,
+  transform(makes_data) {
+    makes.value = makes_data.results;
+  }
+});
+
+watch(make_id,() => {
+  const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
+    baseURL: config.public.API,
+    transform(models_data) {
+      models.value.push(models_data.results);
+    }
+  });
+});
 
 watch(country,(country_id) => {
   getStates(country_id);
@@ -173,23 +185,30 @@ watch(price_temp,(new_price) => {
 });
 
 function save_data() {
-  use_posts.name = name.value;
+  use_posts.title = title.value;
   use_posts.price = price.value;
   use_posts.price_us = price_us.value;
   use_posts.lat = lat;
   use_posts.log = log;
-  use_posts.address = address.value;
-  // use_posts.country = country.value;
-  // use_posts.sector = sector.value;;
-  // use_posts.city = city.value;
-  // use_posts.bedrooms = bedrooms.value;;
-  // use_posts.bathrooms = bathrooms.value;;
-  use_posts.parking = parking.value;
-  use_posts.vehicle_status = vehicle_status.value;;
-  use_posts.feature = feature.value;
-  // use_posts.meter = meter.value;
-  // use_posts.meter_2 = meter_2.value;
+  // use_posts.address = address.value;
+  use_posts.country_id = country.value;
+  use_posts.town_id = sector.value;
+  use_posts.city_id = city.value;
+  use_posts.condition = condition.value;
   use_posts.description = description.value;
+  use_posts.make_id = parseInt(make_id.value);
+  use_posts.model_id = parseInt(model_id.value);
+  use_posts.exterior_color = exterior_color.value;
+  use_posts.interior_color = interior_color.value;
+  use_posts.air_conditioned = air_conditioned.value;
+  use_posts.traction = traction.value;
+  use_posts.transmission = transmission.value;
+  use_posts.engine = engine.value;
+  use_posts.air_bag = air_bag.value;
+  use_posts.fuel_type = fuel_type.value;
+  use_posts.year = year.value;
+  use_posts.mileage = parseInt(mileage_m.value);
+  use_posts.kilometer = parseInt(mileage_km.value);
 };
 
 </script>
@@ -202,7 +221,7 @@ function save_data() {
     <!-- Titulo -->
     <label class="col-span-2 sm:mb-2 mb-5">
       Título de la publicación
-      <input class="form-control" v-model="name" placeholder="Escriba el título" type="text">
+      <input class="form-control" v-model="title" placeholder="Escriba el título" type="text">
     </label>
     <!-- Descripcion -->
     <div class="flex flex-col col-span-2">
@@ -213,18 +232,18 @@ function save_data() {
       <!-- Marca -->
       <label class="w-full sm:mb-2 mb-5">
         Marca
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
+        <select class="form-control col-span-2" v-model="make_id">
+          <option v-for="make_id in makes" :value="make_id.id" :key="make_id.id" class="option-label">
+          {{ make_id.name }}
           </option>
         </select>
       </label>
       <!-- Modelo -->
       <label class="w-full sm:mb-2 mb-5">
         Modelo
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
+        <select class="form-control col-span-2" v-model="model_id">
+          <option v-for="model_id in models" :value="model_id.id" :key="model_id.id" class="option-label">
+          {{ model_id.name }}
           </option>
         </select>
       </label>
@@ -254,24 +273,30 @@ function save_data() {
         </div>
       </div>
       <!-- Estado -->
-      <label for="vehicleStatus" class="mb-2">Estado
-        <select class="form-control" v-model="vehicle_status" id="vehicleStatus">
-          <option v-for="status in vehicleStatus" :key="status" :value="status.value" class="option-label">
-            {{ status.name }}
+      <label for="vehicleStatus" class="mb-2">
+        Estado
+        <select class="form-control" v-model="condition" id="vehicleStatus">
+          <option v-for="condition in vehicleStatus" :key="condition" :value="condition.value" class="option-label">
+            {{ condition.name }}
           </option>
         </select>
       </label>
+      <!-- year -->
+      <label class="w-full sm:mb-2 mb-5">
+        Año
+        <input class="form-control" v-model="year" placeholder="Escriba el Año" type="text">
+      </label>
       <!-- Map -->
-      <div class="col-span-2">
+      <!-- <div class="col-span-2">
         <ClientOnly>
           <PopulationPostVehicleMap @send-location="getAddress"/>
         </ClientOnly>
-      </div>
+      </div> -->
       <!-- ubicacion -->
-        <label class="w-full sm:mb-2 mb-5 col-span-2">
+      <!-- <label class="w-full sm:mb-2 mb-5 col-span-2">
         Ubicación
         <input class="form-control" readonly v-model="address" placeholder="Direccion" type="text">
-      </label>
+      </label> -->
       <!-- Pais -->
       <label class="w-full sm:mb-2 mb-5">
         País
@@ -299,7 +324,6 @@ function save_data() {
           </option>
         </select>
       </label>
-
       <!-- Kilometraje -->
       <div class="flex sm:mb-2 mb-5">
         <label class="w-full">
@@ -327,77 +351,53 @@ function save_data() {
       <!-- Color exterior -->
       <label class="w-full sm:mb-2 mb-5">
         Color exterior
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
-        </select>
+        <input type="text" v-model="exterior_color" class="form-control" />
       </label>
       <!-- Color Interior -->
       <label class="w-full sm:mb-2 mb-5">
         Color interior
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
-        </select>
+        <input type="text" v-model="interior_color" class="form-control" />
       </label>
       <!-- Aire acondicionado -->
       <label class="w-full sm:mb-2 mb-5">
         Aire acondicionado
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
+        <select class="form-control col-span-2" v-model="air_conditioned">
+          <option value="0">No</option>
+          <option value="1">Si</option>
         </select>
       </label>
       <!-- Tracciön -->
       <label class="w-full sm:mb-2 mb-5">
         Tracción
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
-        </select>
+        <input type="text" v-model="traction" class="form-control" />
       </label>
       <!-- Transmisión -->
       <label class="w-full sm:mb-2 mb-5">
         Transmisión
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
+        <select v-model="transmission" class="form-control">
+          <option value="automática">Automática</option>
+          <option value="mecánica">Mecánica</option>
         </select>
       </label>
       <!-- Motor -->
       <label class="w-full sm:mb-2 mb-5">
         Motor
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
-        </select>
+        <input type="text" v-model="engine" class="form-control" />
       </label>
       <!-- Bolsa de aire -->
       <label class="w-full sm:mb-2 mb-5">
         Bolsa de aire
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
+        <select class="form-control col-span-2" v-model="air_bag">
+          <option value="0">No</option>
+          <option value="1">Si</option>
         </select>
       </label>
       <!-- Combustible -->
       <label class="w-full sm:mb-2 mb-5">
         Combustible
-        <select class="form-control col-span-2" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
-          </option>
-        </select>
+        <input type="text" v-model="fuel_type" class="form-control" />
       </label>
-    </div>
-    
+    </div>   
   </div>
   <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">

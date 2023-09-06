@@ -1,10 +1,10 @@
 <template>
   <section class="max-w-[972px] mx-auto mt-[72px] px-4 mb-24">
     <div class="flex items-center gap-x-2 mb-3.5">
-      <AtomsLink
+      <AtomsButtons
         btn-type="btn-icon"
         iconName="arrows/arrow-left"
-        link-to="/profile?tab=anuncio"
+        @click="useRouter().back()"
       />
       <h3 class="text-[28px] leading-[42px] font-semibold">Editar perfil</h3>
     </div>
@@ -153,14 +153,13 @@
         </div>
       </div>
       <div class="flex gap-2.5 ml-auto mt-12">
-        <AtomsLink
+        <AtomsButton
           class="cancel-btn"
           btn-size="xsmall"
           btn-style="outline-gray"
-          link-to="/profile"
-          @click="isNewImage = false, editUser.$reset()"
+          @click="isNewImage = false, editUser.$reset(), useRouter().back()"
           >Cancelar
-        </AtomsLink>
+        </AtomsButton>
         <AtomsButtons
           btn-size="xsmall"
           btn-style="solid-primary"

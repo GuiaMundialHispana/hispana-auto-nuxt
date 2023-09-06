@@ -48,7 +48,7 @@
                 @click="show_drop = 0"
               />
               <MoleculesVehicle
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
               />
               <OnClickOutside @trigger="show_drop = 0">
@@ -80,7 +80,7 @@
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in expired" :key="item">
               <MoleculesVehicle
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
                 status-message="Anuncio expirado"
                 status-background="bg-primary-90 border-2 border-primary-100 text-neutral-white"
@@ -102,7 +102,7 @@
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in revision" :key="item">
               <MoleculesVehicle
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
               />
             </li>
@@ -122,7 +122,7 @@
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in rejected" :key="item">
               <MoleculesVehicle
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
                 status-message="Anuncio Rechazado"
                 status-background="bg-primary-100"
@@ -158,7 +158,7 @@
                 @click="show_drop = 0"
               />
               <MoleculesVehicle
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
               />
               <OnClickOutside @trigger="show_drop = 0">
@@ -181,7 +181,7 @@
       </div>
       <!-- Borrados -->
       <div v-if="tab === 5">
-        <div v-if="inactive.length > 0">
+        <div v-if="trashed.length > 0">
           <h3>Anuncios borrados</h3>
           <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <li v-for="item in trashed" :key="item" class="relative">
@@ -200,7 +200,7 @@
                 @click="show_drop = 0"
               />
               <MoleculesVehicle
-                :property="item.property"
+                :property="item.auto"
                 :property-id="item.id"
                 status-message="Anuncio Borrado"
                 status-background="bg-neutral-white text-neutral-black font-semibold"

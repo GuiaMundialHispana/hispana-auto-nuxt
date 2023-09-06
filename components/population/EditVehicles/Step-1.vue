@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { usePostsStore } from '~/stores/Post';
 
-
 const use_posts = usePostsStore();
 const config = useRuntimeConfig();
 let categorySelected = ref(0);
@@ -10,9 +9,9 @@ const { data, pending } = useLazyFetch('generals/categories', {
   baseURL: config.public.API
 });
 
-categorySelected.value = use_posts.category_id;
+categorySelected.value = use_posts.auto_category_id;
 watch(categorySelected,(value) => {
-  use_posts.category_id = value;
+  use_posts.auto_category_id = value;
 });
 
 const emit = defineEmits(['back', 'nexts'])

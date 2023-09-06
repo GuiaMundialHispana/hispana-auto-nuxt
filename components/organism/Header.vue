@@ -122,11 +122,7 @@ export default {
       menu: [
       {
         name: 'Comprar',
-        route: '/sales?type=buy',
-      },
-      {
-        name: 'Vender',
-        route: '/rent?type=sell',
+        route: '/search',
       },
       {
         name: 'Destacados',
@@ -135,10 +131,6 @@ export default {
       {
         name: 'Contacto',
         route: '/contact'
-      },
-      {
-        name: 'Calcula tu préstamo',
-        route: '/plans'
       },
       {
         name: 'Planes',

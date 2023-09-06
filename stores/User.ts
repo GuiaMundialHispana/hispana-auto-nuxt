@@ -87,39 +87,51 @@ export const useUserStore = defineStore('user', {
         baseURL: this.config.public.API,
         headers: {
           'Authorization': `Bearer ${this.token}`
+        },
+        onResponse({response}) {
+          let responseApi = response._data.message;
+
+          if(responseApi === "Token invalid or not provided.") {
+            localStorage.removeItem('token');
+            Swal.fire({
+              icon: 'error',
+              text: 'Confirma que tus datos esten correctos',
+              timer: 2000
+            });
+          }
         }
       });
       
       if(data.value != null) {
         let response = data.value;
         let user_response = data.value.results.user;
-        console.log(data)
 
         if(response.code === 200) {
           this.userData = user_response;
         }
-      } else {
-        console.log(data.value)
-        // this.refresh_token();
       }
     },
     async refresh_token() {
-      const {data} = await useFetch('auth/refresh',{
+      const {data, error} = await useFetch('auth/refresh',{
         method: 'POST',
         baseURL: this.config.public.API,
         headers: {
           'Authorization': `Bearer ${this.token}`
         },
       });
-      // console.log(data);
+
+      if(data) {
+        let response = data.value;
+        let user_response = data.value.results.user;
+      }
+
       if(data.value != null) {
         this.token = data.value.results.access_token;
         localStorage.setItem('token', this.token);
-
       }
     }
   }
-})
+});
 
 // if (import.meta.hot) {
 //   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))

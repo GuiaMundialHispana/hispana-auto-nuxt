@@ -198,15 +198,20 @@ export default {
       route: useRoute(),
       config:useRuntimeConfig(),
       types:[
+        // {
+        //   getPath: '/search/',
+        //   getType: '',
+        //   name: 'Todos'
+        // },
         {
           getPath: '/search?type=New',
           getType: 'New',
-          name: 'Nuevo'
+          name: 'Nuevos'
         },
         {
-          getPath: '/sales?type=Used',
+          getPath: '/search?type=Used',
           getType: 'Used',
-          name: 'Usado'
+          name: 'Usados'
         },
       ],
       dropdownLists: {
@@ -236,13 +241,10 @@ export default {
       maxYear: 2024,
       minYearValue: 2007,
       maxYearValue: 2021,
-      bedroomQuantity:0,
-      bathroomQuantity:0,
-      parkingLotQuantity:0,
       status:'',
       queryBody: {},
-      sendPath: '/search?type=All',
-      sendType: 'All',
+      sendPath: '/search',
+      sendType: '',
       ready: true
     }
   },

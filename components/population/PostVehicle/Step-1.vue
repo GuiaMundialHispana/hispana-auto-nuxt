@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { usePostsStore } from '~/stores/Post';
 
-
 const use_posts = usePostsStore();
 const config = useRuntimeConfig();
 let categorySelected = ref(0);
@@ -11,14 +10,14 @@ const { data, pending } = useLazyFetch('generals/categories', {
 });
 
 watch(categorySelected,(value) => {
-  use_posts.category_id = value;
+  use_posts.auto_category_id = value;
 });
 
 </script>
 
 <template>
   <h4>
-    ¿Cuál es tu tipo de <span class="text-primary-100"> inmueble?</span>
+    Selecciona la categoría de tu <span class=" text-primary-50"> vehículo </span>
   </h4>
   <div class="wrapper" v-if="pending">
     <div class="w-96 h-5 skeleton rounded-lg mb-4"></div>

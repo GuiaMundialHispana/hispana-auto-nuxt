@@ -21,36 +21,33 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${u
       return navigateTo('/notFound')
     }
     if(response.status === 200 ) {
-      const property_object = response._data.results;
-      use_posts.option_selected = property_object.property.type.toLowerCase();
-      use_posts.plan_id = property_object.plan_id;
-      use_posts.category_id = property_object.property.property_category_id;
-      use_posts.name = property_object.property.name;
-      use_posts.price = property_object.property.price;
-      use_posts.price_us = property_object.property.price_us;
-      use_posts.address = property_object.property.address;
-      use_posts.country = property_object.property.country_id;
-      use_posts.sector = property_object.property.town_id;
-      use_posts.city = property_object.property.city_id;
-      use_posts.bedrooms = property_object.property.bedroom;
-      use_posts.bathrooms = property_object.property.bathroom;
-      use_posts.parking = property_object.property.parking;
-      use_posts.property_status = property_object.property.property_status;
-      // use_posts.feature = property_object.property.feature_ids;
-      var arreglo = property_object.property.feature_ids.split(',');
-      // Convierte los elementos en números enteros
-      var arregloNumeros = arreglo.map(function(elemento) {
-        // return parseInt(elemento);
-        use_posts.feature.push(elemento)
-      });
-
-      use_posts.meter = property_object.property.meters;
-      use_posts.meter_2 = property_object.property.solar_meters;
-      use_posts.description = property_object.property.description;
-      use_posts.saved_images = property_object.property.images;
-      use_posts.lat = property_object.property.latitude;
-      use_posts.log = property_object.property.longitude;
-      // 
+      const auto_response = response._data.results;
+      
+      use_posts.plan_id = auto_response.plan_id;
+      use_posts.auto_category_id = auto_response.auto.auto_category_id;
+      use_posts.title = auto_response.auto.title;
+      use_posts.price = auto_response.auto.price;
+      use_posts.price_us = auto_response.auto.price_us;
+      use_posts.country_id = auto_response.auto.country_id;
+      use_posts.town_id = auto_response.auto.town_id;
+      use_posts.city_id = auto_response.auto.city_id;
+      use_posts.condition = auto_response.auto.condition;
+      use_posts.description = auto_response.auto.description;
+      use_posts.saved_images = auto_response.auto.images;
+      use_posts.interior_color = auto_response.auto.interior_color;
+      use_posts.exterior_color = auto_response.auto.exterior_color;
+      use_posts.air_conditioned = auto_response.auto.air_conditioned;
+      use_posts.traction = auto_response.auto.traction;
+      use_posts.transmission = auto_response.auto.transmission;
+      use_posts.engine = auto_response.auto.engine;
+      use_posts.mileage = auto_response.auto.mileage,
+      use_posts.kilometer = auto_response.auto.kilometer,
+      use_posts.condition = auto_response.auto.condition,
+      use_posts.make_id = auto_response.auto.make_id,
+      use_posts.model_id = auto_response.auto.model_id,
+      use_posts.air_bag = auto_response.auto.air_bag,
+      use_posts.fuel_type = auto_response.auto.fuel_type,
+      use_posts.year = auto_response.auto.year;
     }
   }
 });
@@ -60,26 +57,33 @@ async function createAdvertisement() {
   const form = new FormData();
   form.append('plan_id', use_posts.plan_id);
   form.append('advertisement_id', useRoute().query.property_id);
-  form.append('type', use_posts.option_selected);
-  form.append('property_category', use_posts.category_id);
-  form.append('name', use_posts.name);
+  form.append('auto_category_id', parseInt(use_posts.auto_category_id));
+  form.append('title', use_posts.title);
   form.append('price', use_posts.price);
   form.append('price_us', use_posts.price_us);
-  form.append('address', use_posts.address);
   form.append('description', use_posts.description);
-  form.append('town_id', use_posts.sector);
-  form.append('city_id', use_posts.city);
-  form.append('country_id', use_posts.country);
-  form.append('bedroom', use_posts.bedrooms);
-  form.append('bathroom', use_posts.bathrooms);
-  form.append('parking', use_posts.parking);
-  form.append('meters', use_posts.meter);
-  form.append('solar_meters', use_posts.meter_2);
+  form.append('town_id', use_posts.town_id);
+  form.append('city_id', use_posts.city_id);
+  form.append('country_id', use_posts.country_id);
   form.append('latitude', use_posts.lat);
   form.append('longitude', use_posts.log);
-  form.append('property_status', use_posts.property_status);
-  use_posts.feature.forEach((element, index) => {
-    form.append(`features[${index}]`, element);
+  form.append('exterior_color', use_posts.exterior_color);
+  form.append('interior_color', use_posts.interior_color);
+  form.append('air_conditioned', use_posts.air_conditioned);
+  form.append('traction', use_posts.traction);
+  form.append('transmission', use_posts.transmission);
+  form.append('engine', use_posts.engine);
+  form.append('mileage', use_posts.mileage);
+  form.append('kilometer', use_posts.kilometer);
+  form.append('condition', use_posts.condition);
+  form.append('make_id', use_posts.make_id);
+  form.append('model_id', use_posts.model_id);
+  form.append('air_bag', use_posts.air_bag);
+  form.append('fuel_type', use_posts.fuel_type);
+  form.append('year', use_posts.year);
+  form.append('image', use_posts.saved_images[0]);
+  use_posts.saved_images.forEach((element, index)=>{
+    form.append('images[' + index + ']',element);
   });
 
   use_posts.saved_images.forEach((element, index)=>{
@@ -207,9 +211,9 @@ async function createAdvertisement() {
       <PopulationEditVehiclesStep3 v-if="step === 3"
         @nexts="step = 4"
         @back="step--"
-        :countryId="property.property.country_id"
-        :sectorId="property.property.town_id"
-        :cityId="property.property.city_id"
+        :countryId="property.auto.country_id"
+        :sectorId="property.auto.town_id"
+        :cityId="property.auto.city_id"
       />
     </KeepAlive>
     <!-- 4 -->

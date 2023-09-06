@@ -4,7 +4,6 @@
       btn-type="btn-icon"
       icon-name="general/favorite"
       class="favorite-button"
-      :class="{active: property.is_favorite}"
       @click="toggleFavorite()"
       v-if="$route.fullPath != '/profile?tab=anuncio'"
     />
@@ -45,7 +44,7 @@
       }">
       <SwiperSlide>
         <NuxtLink class="bg-gray-10" :to="{
-          path: `/search/${property.name}`,
+          path: `/search/${property.title}`,
           query: {
             property_id: propertyId
           }
@@ -56,25 +55,24 @@
             >
               <p :class="statusBackground">{{ statusMessage }}</p>
             </div>
-            <img :src="`https://seal-app-4mhut.ondigitalocean.app/${property.image}`" :alt="property.name" class="object-cover h-full w-full">
+            <img :src="`https://oyster-app-xcp8j.ondigitalocean.app/${property.image}`" :alt="property.title" class="object-cover h-full w-full">
           </figure>
         </NuxtLink>
       </SwiperSlide>
       <AtomsPropertyPlans class="absolute bottom-0 right-0 z-10" />
     </Swiper>
     <NuxtLink :to="{
-      path: `/search/${property.name}`,
+      path: `/search/${property.title}`,
       query: {
         property_id: propertyId
       }
     }">
-      <p class="property-title">{{property.name }}</p>
+      <p class="property-title">{{property.title }}</p>
       <!-- Caracteristicas -->
       <MoleculesCharacteristics class="my-3"
-        :bedroom="property.bedroom"
-        :parking="property.parking"
-        :bath="property.bathroom"
-        :area="property.solar_meters"
+        :year="property.year"
+        :mileage="property.mileage"
+        :location="property.location"
       />
       <!-- Price -->
       <div class="flex items-center gap-2">

@@ -4,14 +4,27 @@
     <div class="filter-content items-center">
       <button class="flex gap-2.5 filter-btn" @click="toggleList('brand')" :class="{'active': dropdownLists.brand}">
         <AtomsIcon name="general/car" class="text-primary-100" :size=20  />
-        <p>{{ property_name != '' ? property_name : 'Marca' }}</p>
+        <p>{{ make_name != '' ? make_name : 'Marca' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('brand')" v-if="dropdownLists.brand" class="dropdown w-full sm:w-[230px] h-fit">
+      <!-- v-if="dropdownLists.brand" -->
+      <OnClickOutside @trigger="toggleList('brand')" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
-          <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
-            <input type="radio" class="checkbox" :value="category.id" :id="category.name" v-model="selectedCategories" @click="property_name = category.name">
-            {{category.name}}
+          <label
+            class="checkbox-labels"
+            :for="make.name"
+            v-for="make in makes"
+            :key="make.id"
+            @click="make_name = make.name"
+          >
+            <input
+              type="radio"
+              class="checkbox"
+              :value="make.id"
+              :id="make.name"
+              v-model="make_id"
+            />
+            {{ make.name }}
           </label>
         </div>
       </OnClickOutside>
@@ -20,30 +33,27 @@
     <div class="filter-content items-center">
       <button class="flex gap-2.5 filter-btn" @click="toggleList('model')" :class="{'active': dropdownLists.model}">
         <AtomsIcon name="general/car_model" class="text-primary-100" :size=20  />
-        <p>{{ property_name != '' ? property_name : 'Modelo' }}</p>
+        <p>{{ model_name != '' ? model_name : 'Modelo' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('model')" v-if="dropdownLists.model" class="dropdown w-full sm:w-[230px] h-fit">
+      <!-- v-if="dropdownLists.model" -->
+      <OnClickOutside @trigger="toggleList('model')" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
-          <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
-            <input type="radio" class="checkbox" :value="category.id" :id="category.name" v-model="selectedCategories" @click="property_name = category.name">
-            {{category.name}}
-          </label>
-        </div>
-      </OnClickOutside>
-    </div>
-    <!-- Versión -->
-    <div class="filter-content items-center">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('version')" :class="{'active': dropdownLists.version}">
-        <AtomsIcon name="general/car_version" class="text-primary-100" :size=20  />
-        <p>{{ property_name != '' ? property_name : 'Versión' }}</p>
-        <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
-      </button>
-      <OnClickOutside @trigger="toggleList('version')" v-if="dropdownLists.version" class="dropdown w-full sm:w-[230px] h-fit">
-        <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
-          <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
-            <input type="radio" class="checkbox" :value="category.id" :id="category.name" v-model="selectedCategories" @click="property_name = category.name">
-            {{category.name}}
+          <label
+            class="checkbox-labels"
+            :for="model.name"
+            v-for="model in models"
+            :key="model.id"
+            @click="model_name = model.name"
+          >
+            <input
+              type="radio"
+              class="checkbox"
+              :value="model.id"
+              :id="model.name"
+              v-model="model_id"
+            />
+            {{ model.name }}
           </label>
         </div>
       </OnClickOutside>
@@ -52,10 +62,11 @@
     <div class="filter-content items-center">
       <button class="flex gap-2.5 filter-btn" @click="toggleList('year')" :class="{'active': dropdownLists.year}">
         <AtomsIcon name="general/calendar" class="text-primary-100" :size=20  />
-        <p>{{ property_name != '' ? property_name : 'Año' }}</p>
+        <p>{{ year != '' ? year : 'Año' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('year')" v-if="dropdownLists.year" class="dropdown w-[238px] h-fit">
+      <!-- v-if="dropdownLists.year" -->
+      <OnClickOutside @trigger="toggleList('year')" class="dropdown w-[238px] h-fit">
         <p>
           Año
         </p>
@@ -68,13 +79,13 @@
           :label="false"
           :minValue="minYearValue"
           :maxValue="maxYearValue"
-          @input="UpdateYears"
+          @input="updateYears"
         />
         <p class="whitespace-normal text-sm font-medium">
           Desde <b>{{ minYearValue }}</b>
           hasta <b>{{ maxYearValue }}</b>
         </p>
-        </OnClickOutside>
+      </OnClickOutside>
     </div>
     <!-- Price -->
     <div class="filter-content">
@@ -83,7 +94,8 @@
         <p>Precio</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('priceRange')" v-if="dropdownLists.priceRange" class="dropdown md:w-[238px] h-fit">
+      <!-- v-if="dropdownLists.priceRange" -->
+      <OnClickOutside @trigger="toggleList('priceRange')"  class="dropdown md:w-[238px] h-fit">
         <p class="flex justify-between text-base text-neutral-black">
           Precio
           <label for="RD" class="price-btn ml-auto">
@@ -102,7 +114,7 @@
           :label="false"
           :minValue="priceMinValue"
           :maxValue="priceMaxValue"
-          @input="UpdatePrice"
+          @input="updatePrice"
         />
         <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
           Desde <b>{{currency_picked}}${{ showpriceMinValue }}</b>
@@ -118,7 +130,8 @@
         <p>Kilometraje</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('mileageRange')" v-if="dropdownLists.mileageRange" class="dropdown md:w-[238px] h-fit">
+      <!-- v-if="dropdownLists.mileageRange" -->
+      <OnClickOutside @trigger="toggleList('mileageRange')" class="dropdown md:w-[238px] h-fit">
         <p class="flex justify-between text-base text-neutral-black">
           Kilometraje
           <label for="KM" class="price-btn ml-auto mileage-btn">
@@ -137,7 +150,7 @@
           :label="false"
           :minValue="mileageMinValue"
           :maxValue="mileageMaxValue"
-          @input="UpdateMileage"
+          @input="updateMileage"
         />
         <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
           Desde <b>{{ showMileageMinValue }} {{mileage_picked}}</b>
@@ -152,7 +165,8 @@
         <p>Categoria</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('category')" v-if="dropdownLists.category" class="dropdown w-full sm:w-[230px] h-fit">
+      <!-- v-if="dropdownLists.category" -->
+      <OnClickOutside @trigger="toggleList('category')" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
             <input
@@ -177,177 +191,200 @@
 
 <script setup>
 import { OnClickOutside } from '@vueuse/components';
+const emit = defineEmits([
+  'make'
+]);
+const config = useRuntimeConfig();
+const route = useRoute();
+const dropdownLists =  {
+  brand: false,
+  model: false,
+  year: false,
+  priceRange: false,
+  mileageRange: false,
+  country: false,
+  status: false,
+  category: false
+}
+const makes = ref([]);
+const make_id = ref(null);
+const make_name = ref("");
+const models = ref([]);
+const model_id = ref(null);
+const model_name = ref("");
+const priceMinValue = ref(0);
+const priceMaxValue = ref(10000000);
+const showpriceMinValue = ref('0');
+const showpriceMaxValue = ref("10,000,000");
+const maxPrice = ref(50000000);
+const country_name = ref('');
+const currency_picked = ref('RD');
+const price = ref('');
+const priceRangeSteps = ref(500000);
+const status = ref('');
+const queryBody = ref({});
+const filter = ref(true);
+const minYear = ref(1998);
+const maxYear = ref(2024);
+const minYearValue = ref(2007);
+const maxYearValue = ref(2021);
+const year = ref('');
+const mileage = ref('');
+const mileage_picked = ref('KM');
+const maxMileage = ref(150000);
+const mileageMinValue =  ref(0);
+const mileageMaxValue = ref(50000);
+const showMileageMinValue = ref('0');
+const showMileageMaxValue = ref("50,000");
+const selectedCategories = ref(null);
+
+const { data: makes_data } = useFetch('generals/makes', {
+  baseURL: config.public.API,
+  transform(makes_data) {
+    makes.value = makes_data.results;
+  }
+});
+
+watch(make_id,() => {
+  emit('make', make_id);
+  const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
+    baseURL: config.public.API,
+    transform(models_data) {
+      models.value.push(models_data.results);
+    }
+  });
+});
+
+let countries = [];
+let country = ref(0);
+let countriesApi = await $fetch('generals/countries', {
+  baseURL: config.public.API
+});
+countriesApi.results.data.forEach(element => {
+  if(element.id === 63 || element.id === 236) {
+    countries.push(element)
+  }
+});
+
+let categories = ref([]);
+const categoriesApi = await $fetch(config.public.API+'generals/categories');
+categories.value = categoriesApi.results;
+
+let sectors = reactive([]);
+let sector = ref(0);
+async function getStates(country_id) {
+  const statesApi = await $fetch(`generals/states/${country_id}`, {
+    baseURL: config.public.API
+  });
+  sectors.push(statesApi.results.data);
+};
+
+let cities = reactive([]);
+let city = ref([]);
+async function getCities(sector_id) {
+  const citiesApi = await $fetch(`generals/cities/${sector_id}`, {
+    baseURL: config.public.API
+  });
+  cities.push(citiesApi.results.data);
+};
+
+watch(country,(country_id) => {
+  getStates(country_id);
+  sectors = reactive([]);
+  cities = reactive([]);
+  displaySector.value = true;
+});
+
+watch(sector,(sector_id) => {
+  getCities(sector_id);
+  cities = reactive([]);
+  displayCity.value = true;
+});
+
+watch(currency_picked, (newPicked) => {
+ queryBody.value.price_type = newPicked;
+//  $emit('sendProperties',queryBody);
+  if (newPicked === 'USD') {
+   priceMinValue.value = 0,
+   priceMaxValue.value = 1000000,
+   showpriceMinValue.value = '0';
+   showpriceMaxValue.value = '1,000,000';
+   maxPrice.value = 3000000;
+   priceRangeSteps.value = 50000;
+  } else{
+   priceMinValue.value = 0,
+   priceMaxValue.value = 10000000,
+   showpriceMinValue.value = '0';
+   showpriceMaxValue.value = '10,000,000';
+   maxPrice.value = 50000000;
+   priceRangeSteps.value = 500000;
+  }
+})
+
+watch(price, (price) => {
+  queryBody.value.price = price;
+  // $emit('sendProperties', queryBody);
+});
+
+watch(selectedCategories, (newItemSelected) => {
+  queryBody.value.property_category_id = newItemSelected;
+  // $emit('sendProperties', queryBody);
+})
+
+
+function updatePrice(e) {
+  priceMinValue.value = e.minValue;
+  priceMaxValue.value = e.maxValue;
+  showpriceMinValue.value = priceMinValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  showpriceMaxValue.value = priceMaxValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  price.value = priceMinValue.value.toString() + '-' + priceMaxValue.value.toString();
+}
+
+function updateYears(e) {
+  minYearValue.value = e.minValue;
+  maxYearValue.value = e.maxValue;
+  year.value = minYearValue.value.toString() + '-' + maxYearValue.value.toString();
+}
+
+function updateMileage(e) {
+ mileageMinValue.value = e.minValue;
+ mileageMaxValue.value = e.maxValue;
+ showMileageMinValue.value = mileageMinValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+ showMileageMaxValue.value = mileageMaxValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+ mileage.value = mileageMinValue.value.toString() + '-' + mileageMaxValue.value.toString();
+}
+
+function toggleList(list) {
+  if (dropdownLists[list]) {
+    setTimeout(() => {
+      dropdownLists[list] = false;
+    }, 50);
+  } else { dropdownLists[list] = true; }
+}
+
+function clearFilter() {
+  delete queryBody.property_status.value;
+  delete queryBody.country_id.value;
+  delete queryBody.town_id.value;
+  delete queryBody.city_id.value;
+  delete queryBody.currency_picked.value;
+  delete queryBody.price.value;
+  delete queryBody.property_category_id.value;
+  country_name = '';
+  property_name = '';
+  $emit('sendProperties', queryBody.value);
+}
+onMounted(()=> {
+  queryBody.value.price_type = currency_picked.value
+});
 </script>
 
 <script>
 import  MultiRangeSlider  from "multi-range-slider-vue";
 export default {
-  data() {
-    return {
-      route: useRoute(),
-      config:useRuntimeConfig(),
-      dropdownLists: {
-        brand: false,
-        model: false,
-        version: false,
-        year: false,
-        priceRange: false,
-        mileageRange: false,
-        country: false,
-        status: false,
-        category: false
-      },
-      priceMinValue:0,
-      priceMaxValue:10000000,
-      showpriceMinValue: '0',
-      showpriceMaxValue:"10,000,000",
-      maxPrice: 50000000,
-      countries: [],
-      country_id:0,
-      country_name: '',
-      property_name: '',
-      features_name: '',
-      cities:[],
-      city_id:0,
-      states:[],
-      state_id:0,
-      currency_picked:'RD',
-      price:'',
-      priceRangeSteps: 500000,
-      status:'',
-      queryBody: {},
-      filter:true,
-      categories: [],
-      selectedCategories: [],
-      minYear: 1998,
-      maxYear: 2024,
-      minYearValue: 2007,
-      maxYearValue: 2021,
-      year: '',
-      mileage: '',
-      mileage_picked: 'KM',
-      maxMileage: 150000,
-      mileageMinValue: 0,
-      mileageMaxValue: 50000,
-      showMileageMinValue: '0',
-      showMileageMaxValue: "50,000",
-    }
-  },
   components: {
     MultiRangeSlider
   },
-  methods: {
-    UpdatePrice(e) {
-      this.priceMinValue = e.minValue;
-      this.priceMaxValue = e.maxValue;
-      this.showpriceMinValue = this.priceMinValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.showpriceMaxValue = this.priceMaxValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.price = this.priceMinValue.toString() + '-' + this.priceMaxValue.toString();
-    },
-    UpdateYears(e) {
-      this.minYearValue = e.minValue;
-      this.maxYearValue = e.maxValue;
-      this.year = this.minYearValue.toString() + '-' + this.maxYearValue.toString();
-    },
-    UpdateMileage(e) {
-      this.mileageMinValue = e.minValue;
-      this.mileageMaxValue = e.maxValue;
-      this.showMileageMinValue = this.mileageMinValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.showMileageMaxValue = this.mileageMaxValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.mileage = this.mileageMinValue.toString() + '-' + this.mileageMaxValue.toString();
-    },
-    toggleList(list) {
-      if (this.dropdownLists[list]) {
-        setTimeout(() => {
-          this.dropdownLists[list] = false;
-        }, 50);
-      } else { this.dropdownLists[list] = true; }
-    },
-    async getCountries() {
-      const countriesApi = await $fetch(this.config.public.API+'generals/countries');
-      countriesApi.results.data.forEach(element => {
-        if(element.id === 63 || element.id === 236) {
-          this.countries.push(element)
-        }
-      });
-    },
-    async getCategories() {
-      const categoriesApi = await $fetch(this.config.public.API+'generals/categories');
-      this.categories = categoriesApi.results;
-    },
-    async getStates(country_id) {
-      const statesApi = await $fetch(this.config.public.API+'generals/states/'+`${country_id}`);
-      this.states = statesApi.results.data;
-    }, 
-    async getCities(state_id) {
-      const citiesApi = await $fetch(this.config.public.API+'generals/cities/'+`${state_id}`);
-      this.cities = citiesApi.results.data;
-    },
-    clearFilter() {
-      delete this.queryBody.property_status;
-      delete this.queryBody.country_id;
-      delete this.queryBody.town_id;
-      delete this.queryBody.city_id;
-      delete this.queryBody.currency_picked;
-      delete this.queryBody.price;
-      delete this.queryBody.property_category_id;
-      this.country_name = '';
-      this.property_name = '';
-      this.$emit('sendProperties', this.queryBody);
-    }
-  },
-  watch: {
-    currency_picked(newPicked) {
-      this.queryBody.price_type = newPicked;
-      this.$emit('sendProperties', this.queryBody);
-      if (newPicked === 'USD') {
-        this.priceMinValue = 0,
-        this.priceMaxValue = 1000000,
-        this.showpriceMinValue = '0';
-        this.showpriceMaxValue = '1,000,000';
-        this.maxPrice = 3000000;
-        this.priceRangeSteps = 50000;
-      } else{
-        this.priceMinValue = 0,
-        this.priceMaxValue = 10000000,
-        this.showpriceMinValue = '0';
-        this.showpriceMaxValue = '10,000,000';
-        this.maxPrice = 50000000;
-        this.priceRangeSteps = 500000;
-      }
-    },
-    status(status) {
-      this.queryBody.property_status = status;
-      this.$emit('sendProperties', this.queryBody);
-    },
-    country_id(country_id) {
-      this.getStates(this.country_id);
-      this.queryBody.country_id = country_id;
-      this.$emit('sendProperties', this.queryBody);
-    },
-    state_id(state_id) {
-      this.getCities(this.state_id);
-      this.queryBody.town_id = state_id;
-      this.$emit('sendProperties', this.queryBody);
-    },
-    city_id(city_id) {
-      this.queryBody.city_id = city_id;
-      this.$emit('sendProperties', this.queryBody);
-    },
-    price(price) {
-      this.queryBody.price = price;
-      this.$emit('sendProperties', this.queryBody);
-    },
-    selectedCategories(newItemSelected) {
-      this.queryBody.property_category_id = newItemSelected;
-      this.$emit('sendProperties', this.queryBody);
-    }
-  },
-  mounted() {
-    this.getCountries();
-    this.getCategories();
-    this.queryBody.price_type = this.currency_picked;
-  }
 }
 </script>
 

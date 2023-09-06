@@ -198,11 +198,11 @@ export default {
       route: useRoute(),
       config:useRuntimeConfig(),
       types:[
-        {
-          getPath: '/search/',
-          getType: '',
-          name: 'Todos'
-        },
+        // {
+        //   getPath: '/search/',
+        //   getType: '',
+        //   name: 'Todos'
+        // },
         {
           getPath: '/search?type=New',
           getType: 'New',

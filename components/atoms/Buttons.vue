@@ -94,7 +94,7 @@ export default {
   @apply inline-flex justify-center items-center no-underline cursor-pointer duration-300 focus:outline-none;
 
   /* Global status custom */
-  &.active { @apply bg-primary-90 text-neutral-white; }
+  &.active { @apply bg-primary-100 text-neutral-white hover:bg-primary-90 hover:border-none; }
   &:disabled { @apply bg-gray-10 text-primary-50 cursor-not-allowed border-gray-10; }
 }
 

@@ -13,16 +13,18 @@
 import { onMounted } from 'vue'
 import useRefresh from '~/composables/RefreshToken';
 import { useUserStore } from '~/stores/User';
+import { useAuthStore  } from '~/stores/Auth';
 
 export default {
   setup() {
     const user_store = useUserStore();
+    const auth_store = useAuthStore();
     const miFuncionGlobal = () => {
       // Tu lógica aquí
-      user_store.refresh_token();
-      console.log('Función global ejecutada cada 2 minutos')
+      if(auth_store.isLoggedIn) {
+        user_store.refresh_token();
+      }
     }
-
     onMounted(() => {
       useRefresh(miFuncionGlobal)
     })

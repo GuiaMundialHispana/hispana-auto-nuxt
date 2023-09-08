@@ -1,4 +1,5 @@
 <template>
+  <!-- {{ data.results.data }} -->
   <section class="lg:px-16 md:px-8 px-4 md:min-h-screen">
     <AtomsButtons
       v-show="viewport.isLessThan('xl')"
@@ -22,22 +23,22 @@
         @click="showFilters = false"
       />
       <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
-        <MoleculesFilterStatusProperties @change="getFilterResults" class="filterStatus-tabs-sm" />
+        <MoleculesFilterStatusProperties @change="getCondition" class="filterStatus-tabs-sm" />
         <MoleculesSearchFiltersBar
-          @make="(x) => makeId = x"
-          @send-properties="getFilterResults"
+          @make="getMake"
         />
       </div>
     </OnClickOutside>
-    <div class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
+    {{ data }}
+    <!-- <div class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
       <p class="text-neutral-black">
         <span class="text-primary-100 font-semibold">
-          {{ properties.length }} resultados
+          {{ data.results.data }} resultados
         </span>
         encontrados
       </p>
-    </div>
-    <div class="mt-8 pb-14">
+    </div> -->
+    <!-- <div class="mt-8 pb-14">
       <ul v-if="!pending" class="property-list">
         <li v-for="property in properties" :key="property">
           <MoleculesVehicle
@@ -78,17 +79,17 @@
           <div class="skeleton-body"></div>
         </div>
       </div>
-      <div v-if="properties.length === 0 && !pending">
+      <div v-if="data.results.data === 0 && !pending">
         <figure class="mb-4">
           <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
         </figure>
         <h6 class="text-4xl text-primary-100 font-bold mb-4 text-center">No hemos encontramos propiedades <br/>con estos resultados</h6>
       </div>
-    </div>
+    </div> -->
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { OnClickOutside } from '@vueuse/components';
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -98,25 +99,31 @@ const viewport = useViewport();
 let test = ref(null);
 let properties = reactive([]);
 let showFilters = ref(false);
-const makeId = ref(null);
+const makeId = ref([]);
+const condition = ref(null);
 
-const { data, pending, refresh } = await useLazyFetch('advertisements/search', {
+const { data, pending } = useLaFetch('advertisements/search', {
   method: 'GET',
   baseURL: config.public.API,
-  params: {
-    condition: useRoute().query.type,
-    make_ids: makeId.value
+  query: {
+    condition: condition.value
   },
   watch: [
-    makeId.value
+    condition.value,
   ],
-  transform:(data) => {
-    let response = data.results.data;
-    response.forEach(element => {
-      properties.push(element)
-    });
-  },
 });
+
+function getCondition(n:null) {
+  condition.value = n;
+  console.log(condition.value)
+}
+
+function getMake(n:null) {
+  makeId.value = n;
+  refresh();
+  console.log(makeId.value)
+}
+
 
 // function getFilterResults(e) {
 //   test.value = e;
@@ -130,7 +137,7 @@ const { data, pending, refresh } = await useLazyFetch('advertisements/search', {
 //     baseURL: config.public.API,
 //     transform:(data) => {
 //       pending.value = false;
-//       properties.splice(0,properties.length);
+//       properties.splice(0,data.results.data);
 //       let response = data.results.data;
 //       response.forEach(element => {
 //         properties.push(element)

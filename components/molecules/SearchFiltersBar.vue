@@ -18,7 +18,7 @@
             @click="make_name = make.name"
           >
             <input
-              type="radio"
+              type="checkbox"
               class="checkbox"
               :value="make.id"
               :id="make.name"
@@ -119,7 +119,7 @@
         <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
           Desde <b>{{currency_picked}}${{ showpriceMinValue }}</b>
           hasta <b>{{currency_picked}}${{ showpriceMaxValue }}</b>+
-          {{publishedBooksMessage  }}
+          <!-- {{publishedBooksMessage  }} -->
         </p>
       </OnClickOutside>
     </div>
@@ -192,7 +192,11 @@
 <script setup>
 import { OnClickOutside } from '@vueuse/components';
 const emit = defineEmits([
-  'make'
+  'make',
+  'model',
+  'priceType',
+  'price',
+  'category'
 ]);
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -207,7 +211,7 @@ const dropdownLists =  {
   category: false
 }
 const makes = ref([]);
-const make_id = ref(null);
+const make_id = ref([]);
 const make_name = ref("");
 const models = ref([]);
 const model_id = ref(null);
@@ -237,6 +241,7 @@ const mileageMaxValue = ref(50000);
 const showMileageMinValue = ref('0');
 const showMileageMaxValue = ref("50,000");
 const selectedCategories = ref(null);
+const category_id =ref(null);
 
 const { data: makes_data } = useFetch('generals/makes', {
   baseURL: config.public.API,
@@ -246,13 +251,21 @@ const { data: makes_data } = useFetch('generals/makes', {
 });
 
 watch(make_id,() => {
-  emit('make', make_id);
-  const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
-    baseURL: config.public.API,
-    transform(models_data) {
-      models.value.push(models_data.results);
-    }
-  });
+  emit('make', make_id.value);
+  if(make_id.value.length > 1 ){
+    return true;
+  } else {
+    const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
+      baseURL: config.public.API,
+      transform(models_data) {
+        models.value.push(models_data.results);
+      }
+    });
+  }
+});
+
+watch(model_id, () => {
+  emit('model', model_id.value);
 });
 
 let countries = [];
@@ -302,8 +315,7 @@ watch(sector,(sector_id) => {
 });
 
 watch(currency_picked, (newPicked) => {
- queryBody.value.price_type = newPicked;
-//  $emit('sendProperties',queryBody);
+  emit('priceType', newPicked);
   if (newPicked === 'USD') {
    priceMinValue.value = 0,
    priceMaxValue.value = 1000000,
@@ -322,15 +334,12 @@ watch(currency_picked, (newPicked) => {
 })
 
 watch(price, (price) => {
-  queryBody.value.price = price;
-  // $emit('sendProperties', queryBody);
+  emit('price', price);
 });
 
 watch(selectedCategories, (newItemSelected) => {
-  queryBody.value.property_category_id = newItemSelected;
-  // $emit('sendProperties', queryBody);
+  emit('category',newItemSelected);
 })
-
 
 function updatePrice(e) {
   priceMinValue.value = e.minValue;
@@ -370,13 +379,8 @@ function clearFilter() {
   delete queryBody.currency_picked.value;
   delete queryBody.price.value;
   delete queryBody.property_category_id.value;
-  country_name = '';
-  property_name = '';
   $emit('sendProperties', queryBody.value);
-}
-onMounted(()=> {
-  queryBody.value.price_type = currency_picked.value
-});
+};
 </script>
 
 <script>

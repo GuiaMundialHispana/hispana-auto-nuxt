@@ -3,7 +3,7 @@
     <div class="flex items-center overflow-hidden rounded-lg border-2 border-gray-100 bg-neutral-white text-[#232323] shadow-sm w-fit flex-none filterStatus-tabs-lg">
       <AtomsButtons
         v-for="(btn,i) in types"
-        @click="sendPath = btn.getPath, sendType = btn.getType, btnSelected = i"
+        @click="condition = btn.getType; btnSelected = i"
         :class="{active: i === btnSelected}"
         :key="btn">
         {{btn.name}}
@@ -25,9 +25,9 @@
         </button>
         <OnClickOutside @trigger="toggleList('brand')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.brand">
           <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
+            <label class="checkbox-labels" :for="category.name" v-for="category in makes" :key="category.id">
               <input
-                type="radio"
+                type="checkbox"
                 class="checkbox"
                 name="category"
                 v-model="category_id"
@@ -40,8 +40,8 @@
         </OnClickOutside>
       </div>
       <!-- Modelo -->
-      <span class="buttons-separation"></span>
-      <div class="flex justify-center">
+      <span class="buttons-separation" v-if="showModels"></span>
+      <div class="flex justify-center" v-if="showModels">
         <button class="filter-btn" :class="{'active': dropdownLists.model}" @click="toggleList('model')">
           <div class="icon-container">
             <AtomsIcon class="text-primary-100" name="general/car_model" :size=20 />
@@ -55,42 +55,12 @@
         </button>
         <OnClickOutside @trigger="toggleList('model')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.model">
           <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
+            <label class="checkbox-labels" :for="category.name" v-for="category in models" :key="category">
               <input
                 type="radio"
                 class="checkbox"
                 name="category"
-                v-model="category_id"
-                :value="category.id"
-                :id="category.name"
-              >
-              {{ category.name }}
-            </label>
-          </div>
-        </OnClickOutside>
-      </div>
-      <!-- Versión -->
-      <span class="buttons-separation" v-show="viewport.isGreaterThan('xl')"></span>
-      <div class="flex justify-center" v-show="viewport.isGreaterThan('xl')">
-        <button class="filter-btn" :class="{'active': dropdownLists.version}" @click="toggleList('version')">
-          <div class="icon-container">
-            <AtomsIcon class="text-primary-100" name="general/car_version" :size=20 />
-          </div>
-          <div>
-            <h2>Versión</h2>
-            <p>Todas las versiones
-              <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
-            </p>
-          </div>
-        </button>
-        <OnClickOutside @trigger="toggleList('version')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.version">
-          <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
-              <input
-                type="radio"
-                class="checkbox"
-                name="category"
-                v-model="category_id"
+                v-model="model_id"
                 :value="category.id"
                 :id="category.name"
               >
@@ -198,18 +168,11 @@ export default {
       route: useRoute(),
       config:useRuntimeConfig(),
       types:[
-        // {
-        //   getPath: '/search/',
-        //   getType: '',
-        //   name: 'Todos'
-        // },
         {
-          getPath: '/search?type=New',
           getType: 'New',
           name: 'Nuevos'
         },
         {
-          getPath: '/search?type=Used',
           getType: 'Used',
           name: 'Usados'
         },
@@ -226,13 +189,8 @@ export default {
       showPriceMaxValue: '0',
       showBarMaxValue:"10,000,000",
       maxPrice: 50000000,
-      countries: [],
-      country_id:0,
-      cities:[],
-      city_id:0,
-      states:[],
       categories: [],
-      category_id: 0,
+      category_id: [],
       state_id:0,
       picked:'RD',
       price:'',
@@ -241,11 +199,17 @@ export default {
       maxYear: 2024,
       minYearValue: 2007,
       maxYearValue: 2021,
+      year: null,
       status:'',
       queryBody: {},
-      sendPath: '/search',
+      condition: 'New',
       sendType: '',
-      ready: true
+      ready: true,
+      makes: null,
+      make_id: null,
+      models: [],
+      model_id:null,
+      showModels: false
     }
   },
   components: {
@@ -262,6 +226,7 @@ export default {
     UpdateYears(e) {
       this.minYearValue = e.minValue;
       this.maxYearValue = e.maxValue;
+      this.year = this.minYearValue.toString() + '-' + this.maxYearValue.toString();
     },
     toggleList(list) {
       if (this.dropdownLists[list]) {
@@ -270,25 +235,10 @@ export default {
         }, 50);
       } else { this.dropdownLists[list] = true; }
     },
-    async getCountries() {
-      const countriesApi = await $fetch(this.config.public.API+'generals/countries');
-      countriesApi.results.data.forEach(element => {
-        if(element.id === 63 || element.id === 236) {
-          this.countries.push(element)
-        }
-      });
-    },
-    async getStates(country_id) {
-      const statesApi = await $fetch(this.config.public.API+'generals/states/'+`${country_id}`);
-      this.states = statesApi.results.data;
-    }, 
-    async getCities(state_id) {
-      const citiesApi = await $fetch(this.config.public.API+'generals/cities/'+`${state_id}`);
-      this.cities = citiesApi.results.data;
-    },
     async searchProperties() {
+      console.log(this.queryBody)
       useRouter().push({
-        path: this.sendPath, 
+        path: '/search', 
         query: this.queryBody 
       })
     },
@@ -296,10 +246,14 @@ export default {
       const categoriesApi = await $fetch(this.config.public.API+'generals/categories');
       this.categories = categoriesApi.results;
     },
+    async getMakes() {
+      const makes = await $fetch(this.config.public.API+'generals/makes');
+      this.makes = makes.results;
+    },
   },
   watch: {
     picked(newPicked) {
-      this.queryBody.price_type = newPicked;
+      this.queryBody.priceType = newPicked;
       if (newPicked === 'USD') {
         this.priceMinValue = 0,
         this.priceMaxValue = 1000000,
@@ -319,29 +273,40 @@ export default {
     price(price) {
       this.queryBody.price = price;
     },
-    country_id(country_id) {
-      this.getStates(this.country_id);
-      this.queryBody.country_id = country_id;
+    condition(route) {
+      this.queryBody.condition = route;
+      console.log(route)
     },
-    state_id(state_id) {
-      this.getCities(this.state_id);
-      this.queryBody.town_id = state_id;
-    },
-    city_id(city_id) {
-      this.queryBody.city_id = city_id;
-    },
-    sendType(route) {
-      this.queryBody.type = route;
+    year(year) {
+      this.queryBody.year = year;
+      console.log(year)
     },
     category_id(category_id) {
-      this.queryBody.property_category_id = category_id;
+      this.queryBody.category = category_id.join();
+    },
+    category_id(makes) {
+      // console.log(makes.length)
+      if(makes.length > 1) {
+        this.showModels = false;
+        return true;
+      } else {
+        const { data: models_data } = useFetch(`generals/models/${makes[0]}`, {
+          baseURL: this.config.public.API,
+          transform(models_data) {
+            console.log(models_data.results)
+            this.models.push(models_data.results);
+            console.log(this.models)
+          }
+        });
+        this.showModels = true;
+      }
     }
   },
   mounted() {
-    this.getCountries();
+    this.getMakes();
     this.getCategories();
-    this.queryBody.type = this.sendType;
-    this.queryBody.price_type = this.picked;
+    this.queryBody.condition = this.condition;
+    this.queryBody.priceType = this.picked;
   }
 }
 </script>

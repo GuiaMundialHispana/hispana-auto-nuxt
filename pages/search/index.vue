@@ -22,23 +22,32 @@
         @click="showFilters = false"
       />
       <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
-        <MoleculesFilterStatusProperties @change="getFilterResults" class="filterStatus-tabs-sm" />
+        <MoleculesFilterStatusProperties
+          @change="getCondition"
+          class="filterStatus-tabs-sm"
+        />
         <MoleculesSearchFiltersBar
-          @make="(x) => makeId = x"
-          @send-properties="getFilterResults"
+          @make="getMake"
+          @priceType="getPriceType"
+          @price="getPrice"
+          @unitType="getUnitType"
+          @unit="getUnit"
+          @year="getYear"
+          @category="getCategory"
+          @model="getModel"
         />
       </div>
     </OnClickOutside>
-    <div class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
+    <div v-if="!peending" class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
       <p class="text-neutral-black">
         <span class="text-primary-100 font-semibold">
-          {{ properties.length }} resultados
+          {{ properties.length}} resultados
         </span>
         encontrados
       </p>
     </div>
     <div class="mt-8 pb-14">
-      <ul v-if="!pending" class="property-list">
+      <ul class="property-list" v-if="!peending">
         <li v-for="property in properties" :key="property">
           <MoleculesVehicle
             :property="property.auto"
@@ -78,7 +87,7 @@
           <div class="skeleton-body"></div>
         </div>
       </div>
-      <div v-if="properties.length === 0 && !pending">
+      <div v-if="properties.length === 0 && !peending">
         <figure class="mb-4">
           <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
         </figure>
@@ -88,61 +97,112 @@
   </section>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { OnClickOutside } from '@vueuse/components';
+import { ref } from 'vue';
 const config = useRuntimeConfig();
-const route = useRoute();
 const viewport = useViewport();
 
 //Mostrar propiedades
-let test = ref(null);
-let properties = reactive([]);
+let properties = ref([]);
 let showFilters = ref(false);
 const makeId = ref(null);
+const priceType = useRoute().query.priceType;
+let condition = useRoute().query.condition ;
+const price = ref(null) || '';
+const unitType = ref("");
+const unit = ref("");
+const year = useRoute().query.year || '';
+const category = useRoute().query.category || [];
+const model = ref(null);
+let peending = ref(true);
 
-const { data, pending, refresh } = await useLazyFetch('advertisements/search', {
-  method: 'GET',
-  baseURL: config.public.API,
-  params: {
-    condition: useRoute().query.type,
-    make_ids: makeId.value
-  },
-  watch: [
-    makeId.value
-  ],
-  transform:(data) => {
-    let response = data.results.data;
-    response.forEach(element => {
-      properties.push(element)
-    });
-  },
-});
+function getCondition(x: string) {
+  condition = x;
+  getAds();
+}
 
-// function getFilterResults(e) {
-//   test.value = e;
-//   pending.value = true;
-//   searchProperties();
-// }
+function getMake(make:null) {
+  makeId.value = make.join();
+  getAds();
+}
 
-// async function searchProperties() {
-//   const { data } = await useFetch('advertisements/search', {
-//     method: 'GET',
-//     baseURL: config.public.API,
-//     transform:(data) => {
-//       pending.value = false;
-//       properties.splice(0,properties.length);
-//       let response = data.results.data;
-//       response.forEach(element => {
-//         properties.push(element)
-//       });
-//     },
-//     params: {
-//       condition: useRoute().query.type
-//     },
-//     query: test
-//   });
-// };
+function getModel(model:null) {
+  model.value = model.join();
+  getAds();
+}
 
+function getPriceType(priceType:null) {
+  priceType = priceType;
+  getAds();
+}
+
+function getPrice(prices:null) {
+  price.value = prices;
+  getAds();
+}
+
+function getUnitType(unitType: null) {
+  unitType.value = unitType;
+  getAds();
+}
+
+function getUnit(unit: null) {
+  unit.value = unitType;
+  getAds();
+}
+
+function getYear(year:null) {
+  year = year;
+  getAds();
+}
+
+function getCategory(categorys: null) {
+  category = categorys.join();
+  getAds();
+}
+
+function getAds() {
+  peending.value = true;
+  const { data,pending } = useLazyFetch('advertisements/search', {
+    method: 'GET',
+    baseURL: config.public.API,
+    params: {
+      condition: condition,
+      price_type: priceType,
+      price: price.value,
+      unit_type: unitType.value,
+      unit: unit.value,
+      year: year,
+      categories: category,
+      make_ids: makeId.value,
+      model_ids: model.value
+    },
+    watch: [
+      condition,
+      priceType,
+      price.value,
+      unitType.value,
+      unit.value,
+      year,
+      category,
+      makeId.value,
+      model.value
+    ],
+    transform(data) {
+      console.log(data.results.data)
+      properties.value = data.results.data;
+      console.log(properties.value)
+    },
+    onResponse({response}) {
+      if(response.status === 200 ) {
+        peending.value = false;
+      }
+    }
+  });
+}
+
+getAds();
 </script>
 
 <style lang="postcss" scoped>

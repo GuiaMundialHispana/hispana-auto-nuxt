@@ -7,8 +7,7 @@
         <p>{{ make_name != '' ? make_name : 'Marca' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <!-- v-if="dropdownLists.brand" -->
-      <OnClickOutside @trigger="toggleList('brand')" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside v-if="dropdownLists.brand" @trigger="toggleList('brand')" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label
             class="checkbox-labels"
@@ -18,7 +17,7 @@
             @click="make_name = make.name"
           >
             <input
-              type="radio"
+              type="checkbox"
               class="checkbox"
               :value="make.id"
               :id="make.name"
@@ -36,8 +35,7 @@
         <p>{{ model_name != '' ? model_name : 'Modelo' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <!-- v-if="dropdownLists.model" -->
-      <OnClickOutside @trigger="toggleList('model')" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside v-if="dropdownLists.model" @trigger="toggleList('model')" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label
             class="checkbox-labels"
@@ -65,8 +63,7 @@
         <p>{{ year != '' ? year : 'Año' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <!-- v-if="dropdownLists.year" -->
-      <OnClickOutside @trigger="toggleList('year')" class="dropdown w-[238px] h-fit">
+      <OnClickOutside @trigger="toggleList('year')" v-if="dropdownLists.year" class="dropdown w-[238px] h-fit">
         <p>
           Año
         </p>
@@ -94,8 +91,7 @@
         <p>Precio</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <!-- v-if="dropdownLists.priceRange" -->
-      <OnClickOutside @trigger="toggleList('priceRange')"  class="dropdown md:w-[238px] h-fit">
+      <OnClickOutside @trigger="toggleList('priceRange')" v-if="dropdownLists.priceRange"  class="dropdown md:w-[238px] h-fit">
         <p class="flex justify-between text-base text-neutral-black">
           Precio
           <label for="RD" class="price-btn ml-auto">
@@ -116,10 +112,9 @@
           :maxValue="priceMaxValue"
           @input="updatePrice"
         />
-        <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
+        <p class="whitespace-normal text-sm font-medium max-w-[200px]">
           Desde <b>{{currency_picked}}${{ showpriceMinValue }}</b>
           hasta <b>{{currency_picked}}${{ showpriceMaxValue }}</b>+
-          {{publishedBooksMessage  }}
         </p>
       </OnClickOutside>
     </div>
@@ -130,8 +125,7 @@
         <p>Kilometraje</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <!-- v-if="dropdownLists.mileageRange" -->
-      <OnClickOutside @trigger="toggleList('mileageRange')" class="dropdown md:w-[238px] h-fit">
+      <OnClickOutside @trigger="toggleList('mileageRange')" v-if="dropdownLists.mileageRange" class="dropdown md:w-[238px] h-fit">
         <p class="flex justify-between text-base text-neutral-black">
           Kilometraje
           <label for="KM" class="price-btn ml-auto mileage-btn">
@@ -165,12 +159,11 @@
         <p>Categoria</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <!-- v-if="dropdownLists.category" -->
-      <OnClickOutside @trigger="toggleList('category')" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside v-if="dropdownLists.category" @trigger="toggleList('category')" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
             <input
-              type="radio"
+              type="checkbox"
               class="checkbox"
               name="category"
               v-model="category_id"
@@ -192,7 +185,14 @@
 <script setup>
 import { OnClickOutside } from '@vueuse/components';
 const emit = defineEmits([
-  'make'
+  'make',
+  'model',
+  'priceType',
+  'price',
+  'category',
+  'unitType',
+  'unit',
+  'year'
 ]);
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -207,7 +207,7 @@ const dropdownLists =  {
   category: false
 }
 const makes = ref([]);
-const make_id = ref(null);
+const make_id = ref([]);
 const make_name = ref("");
 const models = ref([]);
 const model_id = ref(null);
@@ -236,7 +236,7 @@ const mileageMinValue =  ref(0);
 const mileageMaxValue = ref(50000);
 const showMileageMinValue = ref('0');
 const showMileageMaxValue = ref("50,000");
-const selectedCategories = ref(null);
+const category_id = ref([])
 
 const { data: makes_data } = useFetch('generals/makes', {
   baseURL: config.public.API,
@@ -246,13 +246,21 @@ const { data: makes_data } = useFetch('generals/makes', {
 });
 
 watch(make_id,() => {
-  emit('make', make_id);
-  const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
-    baseURL: config.public.API,
-    transform(models_data) {
-      models.value.push(models_data.results);
-    }
-  });
+  emit('make', make_id.value);
+  if(make_id.value.length > 1 ){
+    return true;
+  } else {
+    const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
+      baseURL: config.public.API,
+      transform(models_data) {
+        models.value.push(models_data.results);
+      }
+    });
+  }
+});
+
+watch(model_id, () => {
+  emit('model', model_id.value);
 });
 
 let countries = [];
@@ -269,6 +277,10 @@ countriesApi.results.data.forEach(element => {
 let categories = ref([]);
 const categoriesApi = await $fetch(config.public.API+'generals/categories');
 categories.value = categoriesApi.results;
+
+watch(category_id, (new_category_id) => {
+  emit('category', new_category_id);
+});
 
 let sectors = reactive([]);
 let sector = ref(0);
@@ -302,8 +314,7 @@ watch(sector,(sector_id) => {
 });
 
 watch(currency_picked, (newPicked) => {
- queryBody.value.price_type = newPicked;
-//  $emit('sendProperties',queryBody);
+  emit('priceType', newPicked);
   if (newPicked === 'USD') {
    priceMinValue.value = 0,
    priceMaxValue.value = 1000000,
@@ -321,16 +332,17 @@ watch(currency_picked, (newPicked) => {
   }
 })
 
-watch(price, (price) => {
-  queryBody.value.price = price;
-  // $emit('sendProperties', queryBody);
+watch(price, (prices) => {
+  emit('price', prices);
 });
 
-watch(selectedCategories, (newItemSelected) => {
-  queryBody.value.property_category_id = newItemSelected;
-  // $emit('sendProperties', queryBody);
+watch(mileage_picked, (new_mileage_picked) => {
+  emit('unitType',new_mileage_picked);
 })
 
+watch(mileage, (new_mileage) => {
+  emit('unit',new_mileage);
+})
 
 function updatePrice(e) {
   priceMinValue.value = e.minValue;
@@ -344,6 +356,7 @@ function updateYears(e) {
   minYearValue.value = e.minValue;
   maxYearValue.value = e.maxValue;
   year.value = minYearValue.value.toString() + '-' + maxYearValue.value.toString();
+  emit('year', year.value);
 }
 
 function updateMileage(e) {
@@ -370,13 +383,8 @@ function clearFilter() {
   delete queryBody.currency_picked.value;
   delete queryBody.price.value;
   delete queryBody.property_category_id.value;
-  country_name = '';
-  property_name = '';
   $emit('sendProperties', queryBody.value);
-}
-onMounted(()=> {
-  queryBody.value.price_type = currency_picked.value
-});
+};
 </script>
 
 <script>

@@ -2,12 +2,12 @@
   <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
     <!-- Marca -->
     <div class="filter-content items-center">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('brand')" :class="{'active': dropdownLists.brand}">
+      <button class="flex gap-2.5 filter-btn" @click="brand = true" :class="{'active': brand}">
         <AtomsIcon name="general/car" class="text-primary-100" :size=20  />
         <p>{{ make_name != '' ? make_name : 'Marca' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside v-if="dropdownLists.brand" @trigger="toggleList('brand')" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside v-if="brand" @trigger="brand = false" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label
             class="checkbox-labels"
@@ -29,13 +29,13 @@
       </OnClickOutside>
     </div>
     <!-- Modelo -->
-    <div class="filter-content items-center">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('model')" :class="{'active': dropdownLists.model}">
+    <div class="filter-content items-center" v-if="make_id.length === 1">
+      <button class="flex gap-2.5 filter-btn" @click="model = !model" :class="{'active': model}">
         <AtomsIcon name="general/car_model" class="text-primary-100" :size=20  />
         <p>{{ model_name != '' ? model_name : 'Modelo' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside v-if="dropdownLists.model" @trigger="toggleList('model')" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside v-if="model" @trigger="model = false" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label
             class="checkbox-labels"
@@ -58,12 +58,12 @@
     </div>
     <!-- Año -->
     <div class="filter-content items-center">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('year')" :class="{'active': dropdownLists.year}">
+      <button class="flex gap-2.5 filter-btn" @click="dropYear = !dropYear" :class="{'active': dropYear}">
         <AtomsIcon name="general/calendar" class="text-primary-100" :size=20  />
         <p>{{ year != '' ? year : 'Año' }}</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('year')" v-if="dropdownLists.year" class="dropdown w-[238px] h-fit">
+      <OnClickOutside @trigger="dropYear = false" v-if="dropYear" class="dropdown w-[238px] h-fit">
         <p>
           Año
         </p>
@@ -86,12 +86,12 @@
     </div>
     <!-- Price -->
     <div class="filter-content">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('priceRange')" :class="{'active': dropdownLists.priceRange}">
+      <button class="flex gap-2.5 filter-btn" @click="priceRange = !priceRange" :class="{'active': priceRange}">
         <AtomsIcon name="general/price" class="text-primary-100" :size=20  />
         <p>Precio</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('priceRange')" v-if="dropdownLists.priceRange"  class="dropdown md:w-[238px] h-fit">
+      <OnClickOutside @trigger="priceRange = false" v-if="priceRange"  class="dropdown md:w-[238px] h-fit">
         <p class="flex justify-between text-base text-neutral-black">
           Precio
           <label for="RD" class="price-btn ml-auto">
@@ -120,12 +120,12 @@
     </div>
     <!-- Mileage -->
     <div class="filter-content">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('mileageRange')" :class="{'active': dropdownLists.mileageRange}">
+      <button class="flex gap-2.5 filter-btn" @click="mileageRange =! mileageRange" :class="{'active': mileageRange}">
         <AtomsIcon name="general/mileage" class="text-primary-100" :size=20  />
         <p>Kilometraje</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside @trigger="toggleList('mileageRange')" v-if="dropdownLists.mileageRange" class="dropdown md:w-[238px] h-fit">
+      <OnClickOutside @trigger="mileageRange = false" v-if="mileageRange" class="dropdown md:w-[238px] h-fit">
         <p class="flex justify-between text-base text-neutral-black">
           Kilometraje
           <label for="KM" class="price-btn ml-auto mileage-btn">
@@ -154,12 +154,12 @@
     </div>
     <!-- Category -->
     <div class="filter-content">
-      <button class="flex gap-2.5 filter-btn" @click="toggleList('category')" :class="{'active': dropdownLists.category}">
+      <button class="flex gap-2.5 filter-btn" @click="category = !category" :class="{'active': category}">
         <AtomsIcon name="general/car_category" class="text-primary-100" :size=20 />
         <p>Categoria</p>
         <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
       </button>
-      <OnClickOutside v-if="dropdownLists.category" @trigger="toggleList('category')" class="dropdown w-full sm:w-[230px] h-fit">
+      <OnClickOutside v-if="category" @trigger="category = false" class="dropdown w-full sm:w-[230px] h-fit">
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label class="checkbox-labels" :for="category.name" v-for="category in categories" :key="category">
             <input
@@ -196,16 +196,25 @@ const emit = defineEmits([
 ]);
 const config = useRuntimeConfig();
 const route = useRoute();
-const dropdownLists =  {
-  brand: false,
-  model: false,
-  year: false,
-  priceRange: false,
-  mileageRange: false,
-  country: false,
-  status: false,
-  category: false
-}
+// const dropdownLists =  {
+//   brand: false,
+//   model: false,
+//   year: false,
+//   priceRange: false,
+//   mileageRange: false,
+//   country: false,
+//   status: false,
+//   category: false
+// }
+const brand = ref(false);
+const model = ref(false);
+const dropYear = ref(false);
+const priceRange = ref(false);
+const mileageRange = ref(false);
+// const dropCountry = ref(false);
+// const dropStatus = ref(false);
+const category = ref(false);
+
 const makes = ref([]);
 const make_id = ref([]);
 const make_name = ref("");
@@ -316,19 +325,19 @@ watch(sector,(sector_id) => {
 watch(currency_picked, (newPicked) => {
   emit('priceType', newPicked);
   if (newPicked === 'USD') {
-   priceMinValue.value = 0,
-   priceMaxValue.value = 1000000,
-   showpriceMinValue.value = '0';
-   showpriceMaxValue.value = '1,000,000';
-   maxPrice.value = 3000000;
-   priceRangeSteps.value = 50000;
+    priceMinValue.value = 0,
+    priceMaxValue.value = 1000000,
+    showpriceMinValue.value = '0';
+    showpriceMaxValue.value = '1,000,000';
+    maxPrice.value = 3000000;
+    priceRangeSteps.value = 50000;
   } else{
-   priceMinValue.value = 0,
-   priceMaxValue.value = 10000000,
-   showpriceMinValue.value = '0';
-   showpriceMaxValue.value = '10,000,000';
-   maxPrice.value = 50000000;
-   priceRangeSteps.value = 500000;
+    priceMinValue.value = 0,
+    priceMaxValue.value = 10000000,
+    showpriceMinValue.value = '0';
+    showpriceMaxValue.value = '10,000,000';
+    maxPrice.value = 50000000;
+    priceRangeSteps.value = 500000;
   }
 })
 
@@ -360,11 +369,11 @@ function updateYears(e) {
 }
 
 function updateMileage(e) {
- mileageMinValue.value = e.minValue;
- mileageMaxValue.value = e.maxValue;
- showMileageMinValue.value = mileageMinValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
- showMileageMaxValue.value = mileageMaxValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
- mileage.value = mileageMinValue.value.toString() + '-' + mileageMaxValue.value.toString();
+  mileageMinValue.value = e.minValue;
+  mileageMaxValue.value = e.maxValue;
+  showMileageMinValue.value = mileageMinValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  showMileageMaxValue.value = mileageMaxValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  mileage.value = mileageMinValue.value.toString() + '-' + mileageMaxValue.value.toString();
 }
 
 function toggleList(list) {

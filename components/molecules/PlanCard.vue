@@ -189,7 +189,7 @@ export default {
   }
 
   & .user-quantity {
-    @apply w-9 h-9 rounded-full flex items-center justify-center absolute -top-4 -right-4 bg-primary-90 text-base text-neutral-white;
+    @apply w-9 h-9 rounded-full flex items-center justify-center absolute -top-4 -right-4 bg-primary-100 text-base text-neutral-white;
   }
 }
 

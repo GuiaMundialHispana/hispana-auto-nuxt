@@ -18,7 +18,7 @@
         icon-name="general/close"
         :icon-size=20
         btn-size="small"
-        class="mr-0 ml-auto"
+        class="mr-0 ml-auto flex-none"
         @click="showFilters = false"
       />
       <div class="flex flex-wrap gap-2 xl:flex-row flex-col">

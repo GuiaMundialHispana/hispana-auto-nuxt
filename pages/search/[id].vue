@@ -12,7 +12,15 @@
     <OrganismExploreVehicles :property_id='property.plan_id' />
   </div>
   <div class="p-16" v-if="pending">
-    <OrganismSkeleton class="w-16 h-5" />
+    <OrganismSkeleton class="md:h-[560px] h-[360px] max-w-6xl mb-7" />
+    <OrganismSkeleton class="w-40 h-8 mb-2" />
+    <OrganismSkeleton class="w-80 h-8 mb-2" />
+    <OrganismSkeleton class="w-40 h-8 mb-2" />
+    <OrganismSkeleton class="w-96 h-8 mb-2" />
+    <OrganismSkeleton class="w-40 h-8 mb-2" />
+    <OrganismSkeleton class="w-24 h-8 mb-2" />
+    <OrganismSkeleton class="w-40 h-8 mb-2" />
+    <OrganismSkeleton class="w-80 h-8" />
   </div>
 </template>
 

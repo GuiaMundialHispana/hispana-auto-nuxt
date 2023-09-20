@@ -19,11 +19,11 @@ export default {
   name: 'characteristics',
   props: {
     year: {
-      type: Number,
+      type: String,
       default: 2023
     },
     mileage: {
-      type: Number,
+      type: String,
       default: 5248
     },
     location: {

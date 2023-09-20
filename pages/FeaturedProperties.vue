@@ -5,7 +5,7 @@
       </h1>
       <p class="pt-6 md:pt-8 text-sm lg:whitespace-nowrap">Busca, encuentra y compra el inmueble perfecto con <strong>Hispana Home</strong>, el buscador de inmuebles<br class="md:block hidden"> que te ofrece la mejor selección de propiedades. ¡Empieza tu búsqueda hoy mismo!</p>
       <AtomsLink
-        linkTo="/search?type=All" 
+        linkTo="/search?condition=New&priceType=RD" 
         btn-size="large" 
         class="my-5 font-semibold">
         Buscar más propiedades

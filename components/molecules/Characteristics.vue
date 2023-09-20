@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center gap-x-5">
+  <div class="flex items-center flex-wrap gap-4">
     <div class="flex items-center w-fit bg-neutral-10 rounded-lg px-2">
       {{year}}
     </div>

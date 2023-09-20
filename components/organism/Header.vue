@@ -124,10 +124,10 @@ export default {
         name: 'Comprar',
         route: '/search?condition=New&priceType=RD',
       },
-      {
-        name: 'Destacados',
-        route: '/featured'
-      },
+      // {
+      //   name: 'Destacados',
+      //   route: '/featured'
+      // },
       {
         name: 'Contacto',
         route: '/contact'

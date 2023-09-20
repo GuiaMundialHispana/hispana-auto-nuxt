@@ -55,16 +55,16 @@
         </button>
         <OnClickOutside @trigger="toggleList('model')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.model">
           <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="category.name" v-for="category in models" :key="category">
+            <label class="checkbox-labels" :for="model.name" v-for="model in models" :key="model.id">
               <input
                 type="radio"
                 class="checkbox"
-                name="category"
+                name="model"
                 v-model="model_id"
-                :value="category.id"
-                :id="category.name"
+                :value="model.id"
+                :id="model.name"
               >
-              {{ category.name }}
+              {{ model.name }}
             </label>
           </div>
         </OnClickOutside>
@@ -236,7 +236,7 @@ export default {
       } else { this.dropdownLists[list] = true; }
     },
     async searchProperties() {
-      console.log(this.queryBody)
+      // console.log(this.queryBody)
       useRouter().push({
         path: '/search', 
         query: this.queryBody 
@@ -249,6 +249,19 @@ export default {
     async getMakes() {
       const makes = await $fetch(this.config.public.API+'generals/makes');
       this.makes = makes.results;
+    },
+    async getModels(model) {
+      this.models = [];
+      const { data,pending } = await useFetch(`generals/models/${model}`, {
+        baseURL: this.config.public.API,
+        transform(data){
+          return data.results;
+        }
+      });
+      if(!pending.value) {
+        this.models.push(data.value);
+        this.showModels = true;
+      }
     },
   },
   watch: {
@@ -275,31 +288,21 @@ export default {
     },
     condition(route) {
       this.queryBody.condition = route;
-      console.log(route)
     },
     year(year) {
       this.queryBody.year = year;
-      console.log(year)
-    },
-    category_id(category_id) {
-      this.queryBody.category = category_id.join();
     },
     category_id(makes) {
-      // console.log(makes.length)
+      this.queryBody.category = makes.join();
       if(makes.length > 1) {
         this.showModels = false;
         return true;
       } else {
-        const { data: models_data } = useFetch(`generals/models/${makes[0]}`, {
-          baseURL: this.config.public.API,
-          transform(models_data) {
-            console.log(models_data.results)
-            this.models.push(models_data.results);
-            console.log(this.models)
-          }
-        });
-        this.showModels = true;
+        this.getModels(makes);
       }
+    },
+    model_id(model) {
+      this.queryBody.model = model;
     }
   },
   mounted() {

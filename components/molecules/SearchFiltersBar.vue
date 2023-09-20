@@ -196,25 +196,12 @@ const emit = defineEmits([
 ]);
 const config = useRuntimeConfig();
 const route = useRoute();
-// const dropdownLists =  {
-//   brand: false,
-//   model: false,
-//   year: false,
-//   priceRange: false,
-//   mileageRange: false,
-//   country: false,
-//   status: false,
-//   category: false
-// }
 const brand = ref(false);
 const model = ref(false);
 const dropYear = ref(false);
 const priceRange = ref(false);
 const mileageRange = ref(false);
-// const dropCountry = ref(false);
-// const dropStatus = ref(false);
 const category = ref(false);
-
 const makes = ref([]);
 const make_id = ref([]);
 const make_name = ref("");
@@ -231,7 +218,6 @@ const currency_picked = ref('RD');
 const price = ref('');
 const priceRangeSteps = ref(500000);
 const status = ref('');
-const queryBody = ref({});
 const filter = ref(true);
 const minYear = ref(1998);
 const maxYear = ref(2024);
@@ -265,6 +251,10 @@ watch(make_id,() => {
         models.value.push(models_data.results);
       }
     });
+  }
+
+  if(make_id.value.length <= 0) {
+    make_name.value = 'Marca';
   }
 });
 
@@ -350,6 +340,7 @@ watch(mileage_picked, (new_mileage_picked) => {
 })
 
 watch(mileage, (new_mileage) => {
+  console.log(new_mileage)
   emit('unit',new_mileage);
 })
 
@@ -385,14 +376,13 @@ function toggleList(list) {
 }
 
 function clearFilter() {
-  delete queryBody.property_status.value;
-  delete queryBody.country_id.value;
-  delete queryBody.town_id.value;
-  delete queryBody.city_id.value;
-  delete queryBody.currency_picked.value;
-  delete queryBody.price.value;
-  delete queryBody.property_category_id.value;
-  $emit('sendProperties', queryBody.value);
+  emit('make', make_id.value = []);
+  emit('model', model_id.value = []);
+  emit('category', category_id.value = []);
+  emit('priceType', '');
+  emit('price', price.value = '');
+  emit('unitType', '');
+  emit('unit',mileage.value = '');
 };
 </script>
 

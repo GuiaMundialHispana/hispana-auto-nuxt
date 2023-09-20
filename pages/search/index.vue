@@ -107,14 +107,14 @@ const viewport = useViewport();
 let properties = ref([]);
 let showFilters = ref(false);
 const makeId = ref(null);
-const priceType = useRoute().query.priceType;
-let condition = useRoute().query.condition ;
-const price = ref(null) || '';
-const unitType = ref("");
+let priceType = useRoute().query.priceType;
+let condition = useRoute().query.condition;
+let price = useRoute().query.price || '';
+const unitType = ref("KM");
 const unit = ref("");
-const year = useRoute().query.year || '';
-const category = useRoute().query.category || [];
-const model = ref(null);
+let year = useRoute().query.year || '';
+let category = useRoute().query.category || [];
+let model = useRoute().query.model || null;
 let peending = ref(true);
 
 function getCondition(x: string) {
@@ -127,33 +127,34 @@ function getMake(make:null) {
   getAds();
 }
 
-function getModel(model:null) {
-  model.value = model.join();
+function getModel(models:null) {
+  model = models.join();
   getAds();
 }
 
-function getPriceType(priceType:null) {
-  priceType = priceType;
+function getPriceType(priceTypes:null) {
+  priceType = priceTypes;
   getAds();
 }
 
 function getPrice(prices:null) {
-  price.value = prices;
+  price = prices;
   getAds();
 }
 
-function getUnitType(unitType: null) {
-  unitType.value = unitType;
+function getUnitType(unitTypes: null) {
+  unitType.value = unitTypes;
   getAds();
 }
 
-function getUnit(unit: null) {
-  unit.value = unitType;
+function getUnit(units: null) {
+  unit.value = units;
   getAds();
 }
 
-function getYear(year:null) {
-  year = year;
+function getYear(years:null) {
+  console.log(years)
+  year = years;
   getAds();
 }
 
@@ -170,29 +171,27 @@ function getAds() {
     params: {
       condition: condition,
       price_type: priceType,
-      price: price.value,
+      price: price,
       unit_type: unitType.value,
       unit: unit.value,
       year: year,
       categories: category,
       make_ids: makeId.value,
-      model_ids: model.value
+      model_ids: model
     },
     watch: [
       condition,
       priceType,
-      price.value,
+      price,
       unitType.value,
       unit.value,
       year,
       category,
       makeId.value,
-      model.value
+      model
     ],
     transform(data) {
-      console.log(data.results.data)
       properties.value = data.results.data;
-      console.log(properties.value)
     },
     onResponse({response}) {
       if(response.status === 200 ) {

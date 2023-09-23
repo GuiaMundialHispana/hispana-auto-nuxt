@@ -35,7 +35,7 @@
       <!-- User information -->
       <div class="lg:col-span-4 md:col-span-8 md:col-start-3 col-span-12 pb-4 border-b border-gray-100 h-max">
         <figure class="user-image">
-          <img v-if="user.profile_pic != null" :src="`https://oyster-app-xcp8j.ondigitalocean.app/${user.profile_pic}`" :alt="user.name">
+          <img v-if="user.profile_pic != null" :src="`https://hispana-autos-3284x.ondigitalocean.app/${user.profile_pic}`" :alt="user.name">
           <span v-else class="w-full h-full flex items-center justify-center font-bold text-primary-100 text-2xl uppercase bg-primary-50">
             {{user.name.charAt(0)}}{{ user.lastname.charAt(0) }}
           </span>

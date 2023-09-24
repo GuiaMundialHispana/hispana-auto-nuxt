@@ -1,9 +1,9 @@
 <template>
   <section class="w-full md:h-[450px] lg:h-[500px] relative py-6 sm:py-16 md:py-20 mx-auto  border-b border-gray-300 flex items-center justify-start">
     <div class="md:pl-14 relative z-10 md:text-left text-center px-4 max-w-[97rem] w-full mx-auto text-neutral-white">
-      <h1 class="lg:whitespace-nowrap text-neutral-white">Estás más cerca del <br class="hidden sm:block"/><span class="font-bold">hogar de tus sueños</span>
+      <h1 class="lg:whitespace-nowrap text-neutral-white">Estás más cerca del <br class="hidden sm:block"/><span class="font-bold">carro de tus sueños</span>
       </h1>
-      <p class="pt-6 md:pt-8 text-sm lg:whitespace-nowrap">Busca, encuentra y compra el inmueble perfecto con <strong>Hispana Home</strong>, el buscador de inmuebles<br class="md:block hidden"> que te ofrece la mejor selección de propiedades. ¡Empieza tu búsqueda hoy mismo!</p>
+      <p class="pt-6 md:pt-8 text-sm lg:whitespace-nowrap">Cada vehículo tiene una historia<strong>descubre la tuya con nosotros</strong></p>
       <AtomsLink
         linkTo="/search?condition=New&priceType=RD" 
         btn-size="large" 

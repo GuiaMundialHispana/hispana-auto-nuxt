@@ -19,7 +19,6 @@
       :lazy="true"
       :space-between="32"
       slides-per-view="auto"
-      :loop="true"
       :autoplay="{
         delay: 5000,
         disableOnInteraction: true

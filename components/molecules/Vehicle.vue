@@ -19,48 +19,14 @@
     >
       <AtomsIcon name="general/pencil" class="text-neutral-white" />
     </NuxtLink>
-    <Swiper
-      class="relative rounded-lg overflow-hidden"
-      :modules="[SwiperAutoplay, SwiperEffectCreative]"
-      :slides-per-view="1"
-      :loop="true"
-      :effect="'creative'"
-      :autoplay="{
-        delay: 8000,
-        disableOnInteraction: true,
-      }"
-      :creative-effect="{
-        prev: {
-          shadow: false,
-          translate: ['-20%', 0, -1],
-        },
-        next: {
-          translate: ['100%', 0, 0],
-        },
-      }"
-      :navigation="{
-        nextEl: '.next',
-        prevEl: '.prev'
-      }">
-      <SwiperSlide>
-        <NuxtLink class="bg-gray-10" :to="{
-          path: `/search/${property.title}`,
-          query: {
-            property_id: propertyId
-          }
-        }">
-          <figure class="h-52 bg-gray-10">
-            <div class="advertisements" v-if="
-              $route.path === '/profile' && statusMessage !== ''"
-            >
-              <p :class="statusBackground">{{ statusMessage }}</p>
-            </div>
-            <img :src="`https://hispana-autos-3284x.ondigitalocean.app/${property.image}`" :alt="property.title" class="object-cover h-full w-full">
-          </figure>
-        </NuxtLink>
-      </SwiperSlide>
-      <AtomsPropertyPlans class="absolute bottom-0 right-0 z-10" />
-    </Swiper>
+    <figure class="h-52 bg-gray-10">
+      <div class="advertisements" v-if="
+        $route.path === '/profile' && statusMessage !== ''"
+      >
+        <p :class="statusBackground">{{ statusMessage }}</p>
+      </div>
+      <img :src="`https://hispana-autos-3284x.ondigitalocean.app/${property.image}`" :alt="property.title" class="object-cover h-full w-full">
+    </figure>
     <NuxtLink :to="{
       path: `/search/${property.title}`,
       query: {

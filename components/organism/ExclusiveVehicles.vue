@@ -16,7 +16,6 @@
       :lazy="true"
       :space-between="32"
       slides-per-view="auto"
-      :loop="true"
       :autoplay="{
         delay: 5000,
         disableOnInteraction: true
@@ -37,14 +36,9 @@
       :lazy="true"
       :space-between="32"
       slides-per-view="auto"
-      :loop="true"
       :autoplay="{
         delay: 4000,
         disableOnInteraction: true
-      }"
-      :navigation="{
-        nextEl: '.nextExcl',
-        prevEl: '.prevExcl'
       }"
     >
       <swiper-slide v-for="index in 5" :key="index">

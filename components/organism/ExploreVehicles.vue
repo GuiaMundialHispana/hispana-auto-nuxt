@@ -28,7 +28,7 @@
         prevEl: '.prev'
       }">
       <swiper-slide v-for="property in properties" :key="property">
-        <MoleculesVehicle :is-favorite="false" :property="property.auto" :property-id="property.id" />
+        <MoleculesVehicle :property="property.auto" :property-id="property.id" />
       </swiper-slide>
     </Swiper>
   </section>

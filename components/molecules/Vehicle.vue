@@ -19,14 +19,21 @@
     >
       <AtomsIcon name="general/pencil" class="text-neutral-white" />
     </NuxtLink>
-    <figure class="h-52 bg-gray-10">
-      <div class="advertisements" v-if="
-        $route.path === '/profile' && statusMessage !== ''"
-      >
-        <p :class="statusBackground">{{ statusMessage }}</p>
-      </div>
-      <img :src="`https://hispana-autos-3284x.ondigitalocean.app/${property.image}`" :alt="property.title" class="object-cover h-full w-full">
-    </figure>
+    <NuxtLink :to="{
+      path: `/search/${property.title}`,
+      query: {
+        property_id: propertyId
+      }
+    }">
+      <figure class="h-52 bg-gray-10">
+        <div class="advertisements" v-if="
+          $route.path === '/profile' && statusMessage !== ''"
+        >
+          <p :class="statusBackground">{{ statusMessage }}</p>
+        </div>
+        <img :src="`https://hispana-autos-3284x.ondigitalocean.app/${property.image}`" :alt="property.title" class="object-cover h-full w-full">
+      </figure>
+    </NuxtLink>
     <NuxtLink :to="{
       path: `/search/${property.title}`,
       query: {

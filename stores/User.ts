@@ -91,6 +91,24 @@ export const useUserStore = defineStore('user', {
         onResponse({response}) {
           let responseApi = response._data.message;
 
+          if(response._data.status === false) {
+            localStorage.removeItem('token');
+            Swal.fire({
+              icon: 'error',
+              text: 'Confirma que tus datos esten correctos',
+              timer: 2000
+            });
+          }
+
+          if(response._data.code === 400) {
+            localStorage.removeItem('token');
+            Swal.fire({
+              icon: 'error',
+              text: 'Confirma que tus datos esten correctos',
+              timer: 2000
+            });
+          }
+
           if(responseApi === "Token invalid or not provided.") {
             localStorage.removeItem('token');
             Swal.fire({

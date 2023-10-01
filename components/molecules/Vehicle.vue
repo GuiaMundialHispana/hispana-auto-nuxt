@@ -5,6 +5,7 @@
       icon-name="general/favorite"
       class="favorite-button"
       @click="toggleFavorite()"
+      :class="{active: isFavorite}"
       v-if="$route.fullPath != '/profile?tab=anuncio'"
     />
     <NuxtLink
@@ -89,7 +90,7 @@ export default {
       route: useRouter(),
       auth: useAuthStore(),
       user_store: useUserStore(),
-      test: 4
+      isFavorite: false
     }
   },
   methods: {
@@ -97,7 +98,7 @@ export default {
       return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     async addFavorite() {
-      const {data} = await useFetch('users/favorites',{
+      const {data, error} = await useFetch('users/favorites',{
         method: 'post',
         headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`},
         body: { property_id: this.property.id},
@@ -119,11 +120,11 @@ export default {
               showConfirmButton: false,
               timer: 2000
             });
-            this.isFavorite = true;
             this.user_store.get_user();
           }
         }
       });
+      if(data) { this.isFavorite = true; }
     },
     async deleteFavorite() {
       const {data} = await useFetch('users/favorites',{
@@ -142,6 +143,7 @@ export default {
           }
 
           if(response._data.code === 200) {
+            this.isFavorite = false;
             Swal.fire({
               icon: 'success',
               text: response._data.message,
@@ -151,11 +153,13 @@ export default {
           }
         }
       });
+      if(data) { this.isFavorite = false; }
     },
     toggleFavorite() {
       if(this.auth.isLoggedIn) {
         if(this.isFavorite) {
           this.deleteFavorite();
+          // useRouter().go();
         } else {
           this.addFavorite();
         }
@@ -172,7 +176,9 @@ export default {
     //end methods
   },
   mounted() {
-    // console.log(this.property)
+    if(useRoute().fullPath === "/profile?tab=favorite") {
+      this.isFavorite = true;
+    }
   }
 }
 </script>

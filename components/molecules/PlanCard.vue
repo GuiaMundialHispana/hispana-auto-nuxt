@@ -52,7 +52,7 @@
       </AtomsButtons>
     </div>
     <div v-if="!seleccionado">
-      <AtomsButtons v-if="$route.path === '/PostVehicle' || $route.path === '/PostVehicle'  || $route.path === '/edit-vehicle'"
+      <AtomsButtons v-if="$route.path === '/PostVehicle' && userQuantity > 0  || $route.path === '/edit-vehicle' && userQuantity > 0"
         btn-style="outline-gray"
         class="my-1 w-full"
         :class="{active: active}"

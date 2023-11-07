@@ -49,7 +49,7 @@
           }
         }" class="h-[254px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
           <img
-            :src="`https://hispana-autos-3284x.ondigitalocean.app/${image.image}`"
+            :src="`${image.image}`"
             :alt="property.title"
             class="object-cover h-full w-full absolute top-0 left-0 rounded-lg"
           >

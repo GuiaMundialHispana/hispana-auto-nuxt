@@ -13,7 +13,7 @@
         class="swiper-hero"
       >
         <swiper-slide v-for="image in modalImages" :key="image">
-          <img :src="`https://hispana-autos-3284x.ondigitalocean.app/${image.image}`" class="w-full h-full object-cover rounded-lg">
+          <img :src="`${image.image}`" class="w-full h-full object-cover rounded-lg">
         </swiper-slide>
       </swiper>
     </OnClickOutside>

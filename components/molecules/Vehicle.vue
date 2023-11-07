@@ -32,7 +32,7 @@
         >
           <p :class="statusBackground">{{ statusMessage }}</p>
         </div>
-        <img :src="`https://hispana-autos-3284x.ondigitalocean.app/${property.image}`" :alt="property.title" class="object-cover h-full w-full">
+        <img :src="`${property.image}`" :alt="property.title" class="object-cover h-full w-full">
       </figure>
     </NuxtLink>
     <NuxtLink :to="{

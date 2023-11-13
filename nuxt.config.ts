@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '/profile': { ssr: false },
     '/edit-vehicle': { ssr: false },
     '/PostVehicle': { ssr: false },
+    '/payment': {ssr: false}
   },
   app: {
     head: {
@@ -53,7 +54,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      API: process.env.BASE_URL
+      API: process.env.BASE_URL,
+      PUBLISH_KEY: process.env.PUBLISH_KEY
     }
   }
 })

@@ -25,7 +25,8 @@
           class="md:w-full md:max-w-[230px]"
           @click="checkAdvertisement(item,index)"
         >
-          Anuncios {{item.name}} <span v-if="item.size !== 0 || item.size !== null || item.size != ''">{{item.size}}</span>
+          Anuncios {{item.name}}
+          <span>{{ item.size === undefined ? 0 : item.size }}</span>
         </AtomsButtons>
       </nav>
       <div v-if="tab === 0">

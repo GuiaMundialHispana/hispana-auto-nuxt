@@ -53,9 +53,10 @@
 </template>
 
 <script setup>
+const props = defineProps(['property_id'])
 const config = useRuntimeConfig();
 
-const { data: property, pending, error} = await useFetch('advertisements/related/${props.property_id}', {
+const { data: property, pending, error} = await useFetch(`advertisements/related/${props.property_id}`, {
   method: 'GET',
   baseURL: config.public.API,
   transform:(_property) => _property.results.data

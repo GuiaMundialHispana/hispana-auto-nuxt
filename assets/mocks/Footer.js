@@ -23,16 +23,16 @@ export default {
   ],
   directAccess: [
     {
-      name: 'Hispana Home',
-      route: 'https://hispana-home-nuxt-eight.vercel.app/'
+      name: 'Hispana Auto',
+      route: 'https://hispana-auto-nuxt.vercel.app/'
     },
     {
       name: 'Hispana Negocios',
-      route: '/Under-construction'
+      route: 'https://hispana-negocios.vercel.app/'
     },
     {
       name: 'Hispana Afiliados',
-      route: '/Under-construction'
+      route: 'https://world-hispanic-guide.vercel.app/'
     },
     {
       name: 'Guía Mundial Hispana',

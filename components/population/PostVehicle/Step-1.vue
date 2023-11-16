@@ -56,9 +56,9 @@ watch(categorySelected,(value) => {
     </label>
   </div>
   <nav class="control-steps-PostVehicle">
-    <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
-      Atras
-    </AtomsButtons>
+    <AtomsLink btn-style="outline-primary" link-to="/profile?tab=anuncio">
+      Cancelar
+    </AtomsLink>
     <AtomsButtons @click="$emit('nexts')" :disabled="categorySelected === 0">
       Continuar
     </AtomsButtons>

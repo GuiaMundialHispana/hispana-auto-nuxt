@@ -24,6 +24,7 @@ export default {
         user_store.refresh_token();
       }
     }
+
     onMounted(() => {
       useRefresh(miFuncionGlobal)
     })

@@ -25,10 +25,14 @@
 </template>
 
 <script setup>
-const route = useRoute();
 const config = useRuntimeConfig();
+const propertyId = ref('');
 
-const { data: property, pending, error} = await useLazyFetch(`advertisements/${route.query.property_id}`, {
+if(process.client) {
+  propertyId.value = sessionStorage.getItem('propertyId');
+}
+
+const { data: property, pending, error} = await useLazyFetch(`advertisements/${propertyId.value}`, {
   method: 'GET',
   baseURL: config.public.API,
   transform:(_property) => _property.results,
@@ -39,9 +43,7 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${r
   }
 });
 
-console.log(property)
-
-definePageMeta({
-  middleware: ["not-found"]
-});
+// definePageMeta({
+//   middleware: ["not-found"]
+// });
 </script>

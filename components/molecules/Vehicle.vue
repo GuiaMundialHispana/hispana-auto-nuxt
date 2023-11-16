@@ -20,12 +20,7 @@
     >
       <AtomsIcon name="general/pencil" class="text-neutral-white" />
     </NuxtLink>
-    <NuxtLink :to="{
-      path: `/search/${property.title}`,
-      query: {
-        property_id: propertyId
-      }
-    }">
+    <NuxtLink :to="`/search/${property.title}`" @click="saveId(propertyId)">
       <figure class="h-52 bg-gray-10">
         <div class="advertisements" v-if="
           $route.path === '/profile' && statusMessage !== ''"
@@ -35,12 +30,7 @@
         <img :src="`${property.image}`" :alt="property.title" class="object-cover h-full w-full">
       </figure>
     </NuxtLink>
-    <NuxtLink :to="{
-      path: `/search/${property.title}`,
-      query: {
-        property_id: propertyId
-      }
-    }">
+    <NuxtLink :to="`/search/${property.title}`" @click="saveId(propertyId)">
       <p class="property-title">{{property.title }}</p>
       <!-- Caracteristicas -->
       <MoleculesCharacteristics class="my-3"
@@ -172,8 +162,10 @@ export default {
           timer: 2000
         });
       }
-    }
-    //end methods
+    },
+    saveId(propertyId) {
+      sessionStorage.setItem('propertyId', propertyId);
+    },
   },
   mounted() {
     if(useRoute().fullPath === "/profile?tab=favorite") {

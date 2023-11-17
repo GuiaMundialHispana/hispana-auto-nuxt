@@ -21,7 +21,6 @@
               v-model="editUser.editUserData.name"
               class="lg:mr-4 mr-0"
             >
-            <!-- :placeholder="user.userData.name" -->
           </label>
           <label>
             Apellido:
@@ -59,7 +58,6 @@
             class="lg:mr-4 mr-0"
             v-model="editUser.editUserData.phone"
           >
-          <!-- :placeholder="user.userData.cellphone" -->
         </label>
         <label>
           Teléfono residencial:
@@ -67,7 +65,6 @@
             type="tel"
             v-model="editUser.editUserData.cellphone"
           >
-          <!-- v-model="editUser.editUserData.cellphone" -->
         </label>
       </div>
       <div>
@@ -77,7 +74,6 @@
             type="email"
             v-model="editUser.editUserData.email"
           >
-          <!-- :placeholder="user.userData.email" -->
         </label>
       </div>
       <div class="flex flex-col mt-8">
@@ -124,20 +120,20 @@
           <div class="flex flex-col items-center">
             <p class="whitespace-nowrap">Actualiza tu foto de perfil</p>
             <figure class="w-[107px] h-[107px] rounded-full border-[5px] border-primary-50 mt-5">
-              <img v-if="!isNewImage"
+              <img v-if="!isNewImage && editUser.editUserData.profile_pic != null"
                 :src="`${editUser.editUserData.profile_pic}`"
                 :alt="editUser.editUserData.name"
                 class="rounded-full w-full h-full object-cover"
               >
-              <img
-                v-if="isNewImage && editUser.editUserData != null"
-                :src="`${editUser.editUserData.profile_pic}`"
-                :alt="editUser.editUserData.name"
-                class="rounded-full w-full h-full object-cover"
-              >
-              <span v-if="isNewImage && editUser.editUserData === null" class="w-full h-full flex items-center justify-center font-bold text-primary-100 text-6xl rounded-full border-2 border-primary-100 bg-primary-50">
-                {{user.userData.name.charAt(0)}}{{ user.userData.lastname.charAt(0) }}
+              <span v-if="!isNewImage && editUser.editUserData.profile_pic === null" class="w-full h-full flex items-center justify-center font-bold text-primary-100 uppercase text-6xl rounded-full">
+                {{editUser.editUserData.name.charAt(0)}}{{ editUser.editUserData.lastname.charAt(0) }}
               </span>
+              <img
+                v-if="isNewImage"
+                :src="`${editUser.editUserData.profile_pic}`"
+                :alt="editUser.editUserData.name"
+                class="rounded-full w-full h-full object-cover"
+              >
             </figure>
           </div>
         </div>
@@ -177,7 +173,7 @@ import Swal from 'sweetalert2';
 export default {
   data() {
     return {
-      editUser:useUserEditStore (),
+      editUser:useUserEditStore(),
       config: useRuntimeConfig(),
       showChangePasswd: false,
       profilePic: '',
@@ -253,7 +249,6 @@ export default {
               showConfirmButton: false,
               timer: 2000
             });
-            // useRouter().go()
             useRouter().push("/profile?tab=anuncio");
           }
         }
@@ -323,9 +318,7 @@ export default {
               showConfirmButton: false,
               timer: 2000
             });
-            // useRouter().go()
             useRouter().push("/profile?tab=anuncio");
-            editUserData.$reset();
           }
         }
       });

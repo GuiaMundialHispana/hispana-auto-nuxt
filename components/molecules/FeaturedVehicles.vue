@@ -5,6 +5,7 @@
       btn-type="btn-icon"
       icon-name="general/favorite"
       class="favorite-button"
+      :class="{active: isFavorite}"
       @click="toggleFavorite()"
       v-if="$route.fullPath != '/profile?tab=anuncio'"
     />
@@ -64,6 +65,10 @@
 </template>
 
 <script>
+import { useAuthStore } from '~/stores/Auth';
+import Swal from 'sweetalert2';
+import { useUserStore } from '~/stores/User';
+
 export default {
   props: {
     plantype: {
@@ -78,12 +83,96 @@ export default {
       type: Number
     }
   },
+  data(){
+    return {
+      config: useRuntimeConfig(),
+      route: useRouter(),
+      auth: useAuthStore(),
+      user_store: useUserStore(),
+      isFavorite: false
+    }
+  },
   methods: {
     showParsedPrice(price) {
       return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     saveId(propertyId) {
       sessionStorage.setItem('propertyId', propertyId);
+    },
+    async addFavorite() {
+      const {data, error} = await useFetch('users/favorites',{
+        method: 'post',
+        headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`},
+        body: { auto_id: parseInt(this.propertyId)},
+        baseURL: this.config.public.API,
+        onResponse({response}) {
+          if(response._data.code === 400 ) {
+            Swal.fire({
+              icon: 'error',
+              text: response._data.message,
+              showConfirmButton: false,
+              timer: 2000
+            });
+          }
+
+          if(response._data.code === 200) {
+            Swal.fire({
+              icon: 'success',
+              text: response._data.message,
+              showConfirmButton: false,
+              timer: 2000
+            });
+            this.user_store.get_user();
+          }
+        }
+      });
+      if(data) { this.isFavorite = true; }
+    },
+    async deleteFavorite() {
+      const {data} = await useFetch('users/favorites',{
+        method: 'delete',
+        headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`},
+        body: { auto_id: parseInt(this.propertyId)},
+        baseURL: this.config.public.API,
+        onResponse({response}) {
+          if(response._data.code === 400 ) {
+            Swal.fire({
+              icon: 'error',
+              text: response._data.message,
+              showConfirmButton: false,
+              timer: 2000
+            });
+          }
+
+          if(response._data.code === 200) {
+            this.isFavorite = false;
+            Swal.fire({
+              icon: 'success',
+              text: response._data.message,
+              showConfirmButton: false,
+              timer: 2000
+            });
+          }
+        }
+      });
+      if(data) { this.isFavorite = false; }
+    },
+    toggleFavorite() {
+      if(this.auth.isLoggedIn) {
+        if(this.isFavorite) {
+          this.deleteFavorite();
+        } else {
+          this.addFavorite();
+        }
+
+      } else {
+        this.$swal.fire({
+          icon: 'error',
+          text: 'Necesitas iniciar sesion para poder agregar esta propiedad a favoritos',
+          showConfirmButton: true,
+          timer: 2000
+        });
+      }
     },
   }
 }

@@ -26,7 +26,7 @@
       }"
     >
       <swiper-slide v-for="plan in property" :key="plan">
-        <MoleculesFeaturedVehicles :property-id="plan.id" plantype="exclusive" :property="plan.auto" />
+        <MoleculesFeaturedVehicles :property-id="plan.auto_id" plantype="exclusive" :property="plan.auto" />
       </swiper-slide>
     </Swiper>
     <Swiper

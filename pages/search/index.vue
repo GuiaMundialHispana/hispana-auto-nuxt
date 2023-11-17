@@ -51,7 +51,7 @@
         <li v-for="property in properties" :key="property">
           <MoleculesVehicle
             :property="property.auto"
-            :property-id="property.advertisement_id"
+            :property-id="property.auto_id"
           />
         </li>
       </ul>

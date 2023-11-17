@@ -91,7 +91,7 @@ export default {
       const {data, error} = await useFetch('users/favorites',{
         method: 'post',
         headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`},
-        body: { property_id: this.property.id},
+        body: { auto_id: parseInt(this.propertyId)},
         baseURL: this.config.public.API,
         onResponse({response}) {
           if(response._data.code === 400 ) {
@@ -120,7 +120,7 @@ export default {
       const {data} = await useFetch('users/favorites',{
         method: 'delete',
         headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`},
-        body: { property_id: this.property.id},
+        body: { auto_id: parseInt(this.propertyId)},
         baseURL: this.config.public.API,
         onResponse({response}) {
           if(response._data.code === 400 ) {
@@ -149,7 +149,6 @@ export default {
       if(this.auth.isLoggedIn) {
         if(this.isFavorite) {
           this.deleteFavorite();
-          // useRouter().go();
         } else {
           this.addFavorite();
         }

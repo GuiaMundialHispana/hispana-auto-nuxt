@@ -132,6 +132,6 @@ export default {
 }
 
 .outline-gray {
-  @apply border border-solid border-gray-100 hover:bg-primary-100 hover:border-primary-100 text-gray-20 hover:text-neutral-white;
+  @apply cursor-pointer border border-solid border-gray-100 hover:bg-primary-100 hover:border-primary-100 text-gray-20 hover:text-neutral-white;
 }
 </style>

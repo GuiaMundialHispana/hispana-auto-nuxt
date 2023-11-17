@@ -1,7 +1,6 @@
 import { defineStore, acceptHMRUpdate } from 'pinia';
 import Swal from 'sweetalert2';
 import { useUserStore } from './User';
-import { useUserEditStore } from './EditUser';
 
 export const useAuthStore = defineStore('auth', {
   state:() => {
@@ -63,8 +62,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         Swal.hideLoading();
         Swal.close();
-        useUserStore().$reset()
-        useUserEditStore().$reset()
+        useUserStore().$reset();
         useRouter().push("/")
       } 
       catch (error) {

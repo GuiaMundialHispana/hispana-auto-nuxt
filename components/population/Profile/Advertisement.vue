@@ -50,7 +50,7 @@
               />
               <MoleculesVehicle
                 :property="item.auto"
-                :property-id="item.id"
+                :property-id="item.auto_id"
               />
               <OnClickOutside @trigger="show_drop = 0">
                 <div class="status-dropdown" v-if="show_drop === item.id">
@@ -82,7 +82,7 @@
             <li v-for="item in expired" :key="item">
               <MoleculesVehicle
                 :property="item.auto"
-                :property-id="item.id"
+                :property-id="item.auto_id"
                 status-message="Anuncio expirado"
                 status-background="bg-primary-90 border-2 border-primary-100 text-neutral-white"
               />
@@ -104,7 +104,7 @@
             <li v-for="item in revision" :key="item">
               <MoleculesVehicle
                 :property="item.auto"
-                :property-id="item.id"
+                :property-id="item.auto_id"
               />
             </li>
           </ul>
@@ -124,7 +124,7 @@
             <li v-for="item in rejected" :key="item">
               <MoleculesVehicle
                 :property="item.auto"
-                :property-id="item.id"
+                :property-id="item.auto_id"
                 status-message="Anuncio Rechazado"
                 status-background="bg-primary-100"
                 />
@@ -160,7 +160,7 @@
               />
               <MoleculesVehicle
                 :property="item.auto"
-                :property-id="item.id"
+                :property-id="item.auto_id"
               />
               <OnClickOutside @trigger="show_drop = 0">
                 <div class="status-dropdown" v-if="show_drop === item.id">
@@ -202,7 +202,7 @@
               />
               <MoleculesVehicle
                 :property="item.auto"
-                :property-id="item.id"
+                :property-id="item.auto_id"
                 status-message="Anuncio Borrado"
                 status-background="bg-neutral-white text-neutral-black font-semibold"
               />

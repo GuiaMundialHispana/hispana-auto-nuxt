@@ -42,7 +42,7 @@ export const useUserStore = defineStore('user', {
     async sendPassWordEmail() {
       const { data, pending } = await useFetch('auth/forgot-password',{
         method: 'POST',
-        baseURL: this.config.public.API,
+        baseURL: useRuntimeConfig().public.API,
         body: {
           email: this.getEmail
         },
@@ -84,7 +84,7 @@ export const useUserStore = defineStore('user', {
     async get_user() {
       const { data, error } = await useFetch('auth/profile',{
         method: 'GET',
-        baseURL: this.config.public.API,
+        baseURL: useRuntimeConfig().public.API,
         headers: {
           'Authorization': `Bearer ${this.token}`
         },
@@ -145,7 +145,7 @@ export const useUserStore = defineStore('user', {
     async refresh_token() {
       const {data, error} = await useFetch('auth/refresh',{
         method: 'POST',
-        baseURL: this.config.public.API,
+        baseURL: useRuntimeConfig().public.API,
         headers: {
           'Authorization': `Bearer ${this.token}`
         },

@@ -17,7 +17,7 @@
         <div class="skeleton-body"></div>
       </div>
     </div>
-    <div v-if="!pending && data && data.results.length < 1 || data === null">
+    <div v-if="!pending && data.results.length === 0">
       <figure class="mb-4">
         <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
       </figure>
@@ -30,8 +30,8 @@
         <li v-for="item in data.results" :key="item">
           <MoleculesVehicle
             :is-favorite="true"
-            :property="item.property"
-            :property-id="item.advertisement_id"
+            :property="item.auto"
+            :property-id="item.auto_id"
           />
         </li>
       </ul>

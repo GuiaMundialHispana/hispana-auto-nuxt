@@ -88,7 +88,7 @@ export default {
       return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     async addFavorite() {
-      const {data, error} = await useFetch('users/favorites',{
+      const {data} = await useFetch('users/favorites',{
         method: 'post',
         headers: {'Authorization': `Bearer ${localStorage.getItem('token')}`},
         body: { auto_id: parseInt(this.propertyId)},

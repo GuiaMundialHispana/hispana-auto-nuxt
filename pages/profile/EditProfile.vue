@@ -171,6 +171,10 @@
 import Swal from 'sweetalert2';
 import { useUserStore } from '~/stores/User';
 
+definePageMeta({
+  middleware: 'check-auth'
+});
+
 const name = ref('');
 const lastName = ref('');
 const birthdate = ref(null);

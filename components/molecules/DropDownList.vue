@@ -8,38 +8,6 @@
       >
       {{ options.name }}
     </label>
-    <!-- <label for="option2" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option2">
-      Opcion 2
-    </label>
-    <label for="option3" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option3">
-      Opcion 3
-    </label>
-    <label for="option4" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option4">
-      Opcion 4
-    </label>
-    <label for="option5" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option5">
-      Opcion 5
-    </label>
-    <label for="option6" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option6">
-      Opcion 6
-    </label>
-    <label for="option7" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option7">
-      Opcion 7
-    </label>
-    <label for="option8" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option8">
-      Opcion 8
-    </label>
-    <label for="option9" class="checkbox-labels">
-      <input type="checkbox" class="checkbox active" id="option9">
-      Opcion 9
-    </label> -->
   </div>
 </template>
 

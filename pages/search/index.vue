@@ -9,7 +9,7 @@
       btn-size="large"
       :icon-size=18
       @click="showFilters = !showFilters"
-      >Filtrar propiedades
+      >Filtrar Vehiculos
     </AtomsButtons>
     <OnClickOutside @trigger="showFilters = false" :class="{'hidden': !showFilters, 'flex' : showFilters}" class="filters-overflow">
       <AtomsButtons

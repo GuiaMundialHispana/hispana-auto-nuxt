@@ -20,7 +20,7 @@
     >
       <AtomsIcon name="general/pencil" class="text-neutral-white" />
     </NuxtLink>
-    <NuxtLink :to="`/search/${property.title}`" @click="saveId(propertyId)">
+    <NuxtLink :to="`/search/${property.slug}`">
       <figure class="h-52 bg-gray-10">
         <div class="advertisements" v-if="
           $route.path === '/profile' && statusMessage !== ''"
@@ -30,7 +30,7 @@
         <img :src="`${property.image}`" :alt="property.title" class="object-cover h-full w-full">
       </figure>
     </NuxtLink>
-    <NuxtLink :to="`/search/${property.title}`" @click="saveId(propertyId)">
+    <NuxtLink :to="`/search/${property.slug}`">
       <p class="property-title">{{property.title }}</p>
       <!-- Caracteristicas -->
       <MoleculesCharacteristics class="my-3"
@@ -161,9 +161,6 @@ export default {
           timer: 2000
         });
       }
-    },
-    saveId(propertyId) {
-      sessionStorage.setItem('propertyId', propertyId);
     },
   },
   mounted() {

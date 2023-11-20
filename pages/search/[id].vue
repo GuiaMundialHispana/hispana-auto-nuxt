@@ -26,13 +26,8 @@
 
 <script setup>
 const config = useRuntimeConfig();
-const propertyId = ref('');
 
-if(process.client) {
-  propertyId.value = sessionStorage.getItem('propertyId');
-}
-
-const { data: property, pending, error} = await useLazyFetch(`advertisements/${propertyId.value}`, {
+const { data: property, pending, error} = await useLazyFetch(`advertisements/${useRoute().params.id}`, {
   method: 'GET',
   baseURL: config.public.API,
   transform:(_property) => _property.results,
@@ -42,8 +37,4 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${p
     }
   }
 });
-
-// definePageMeta({
-//   middleware: ["not-found"]
-// });
 </script>

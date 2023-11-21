@@ -29,7 +29,8 @@
         <MoleculesFeaturedVehicles :property-id="plan.auto_id" plantype="exclusive" :property="plan.auto" />
       </swiper-slide>
     </Swiper>
-    <Swiper
+  </section>
+  <Swiper
       v-if="pending"
       :modules="[SwiperFreeMode, SwiperNavigation, SwiperAutoplay]"
       :effect="'fade'"
@@ -49,7 +50,6 @@
         </div>
       </swiper-slide>
     </Swiper>
-  </section>
 </template>
 
 <script setup>

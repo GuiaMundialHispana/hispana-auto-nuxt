@@ -29,31 +29,27 @@
         <MoleculesFeaturedVehicles :property-id="plan.id" plantype="silver" :property="plan.auto" />
       </swiper-slide>
     </Swiper>
-    <Swiper
-      v-if="pending"
-      :modules="[SwiperFreeMode, SwiperNavigation, SwiperAutoplay]"
-      :effect="'fade'"
-      :lazy="true"
-      :space-between="32"
-      slides-per-view="auto"
-      :autoplay="{
-        delay: 4000,
-        disableOnInteraction: true
-      }"
-      :navigation="{
-        nextEl: '.nextSilver',
-        prevEl: '.prevSilver'
-      }"
-    >
-      <swiper-slide v-for="index in 5" :key="index">
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
-      </swiper-slide>
-    </Swiper>
   </section>
+  <Swiper
+    v-if="pending"
+    :modules="[SwiperFreeMode, SwiperNavigation, SwiperAutoplay]"
+    :effect="'fade'"
+    :lazy="true"
+    :space-between="32"
+    slides-per-view="auto"
+    :autoplay="{
+      delay: 4000,
+      disableOnInteraction: true
+    }"
+  >
+    <swiper-slide v-for="index in 5" :key="index">
+      <div class="skeleton">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-date"></div>
+        <div class="skeleton-body"></div>
+      </div>
+    </swiper-slide>
+  </Swiper>
 </template>
 
 <script setup>

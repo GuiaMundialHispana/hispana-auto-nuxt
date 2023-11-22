@@ -12,7 +12,7 @@
       :to="{
         path: `edit-vehicle`,
         query: {
-          property_id: propertyId
+          slug: property.slug
         }
       }"
       class="btn-icon small active absolute left-4 z-10 top-1"

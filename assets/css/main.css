@@ -90,3 +90,7 @@ input[type=number] {
 .skeleton {
   @apply bg-neutral-20 animate-pulse;
 }
+
+span[role=alert] {
+  @apply text-[red] font-medium text-sm;
+}

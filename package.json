@@ -26,6 +26,9 @@
     "nuxt-icons": "^3.1.0",
     "nuxt-swiper": "^1.1.0",
     "sweetalert2": "^11.7.3",
-    "vue-sweetalert2": "^5.0.5"
+    "vue-sweetalert2": "^5.0.5",
+    "@vee-validate/nuxt": "^4.11.8",
+    "@vee-validate/yup": "^4.11.8",
+    "yup": "^1.2.0"
   }
 }

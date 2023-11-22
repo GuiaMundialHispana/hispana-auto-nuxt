@@ -22,14 +22,14 @@
             <AtomsIcon name="general/calendar_month" :size=19 class="text-primary-90 mr-2.5" />
             Año de fabricación: {{ property.year}}
           </li>
-          <li class="md:border-r border-primary-100 xl:px-14 md:px-8">
+          <li class="xl:px-14 md:px-8">
             <AtomsIcon name="general/mileage" :size=19 class="text-primary-100 mr-2.5" />
             {{ showParsedNumber(property.price_us) }} km
           </li>
-          <li class="xl:pl-14 md:pl-8">
+          <!-- <li class="xl:pl-14 md:pl-8">
             <AtomsIcon name="general/share-location" :size=19 class="text-primary-100 mr-2.5" />
             {{ property.address }}
-          </li>
+          </li> -->
         </ul>
       </div>
       <!-- User information -->
@@ -177,7 +177,7 @@ export default {
 <style lang="postcss" scoped>
 .user-image {
   @apply w-24 h-24 rounded-full border-4 border-solid border-primary-50 overflow-hidden mx-auto mb-2;
-  & img { @apply w-full h-full bg-cover bg-center; }
+  & img { @apply w-full h-full object-cover object-center; }
 }
 
 .user-name { @apply text-neutral-black text-base font-semibold text-center; }

@@ -1,33 +1,25 @@
 <script setup>
+import { useForm } from "vee-validate";
+import * as yup from "yup";
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
 
+const emit = defineEmits(['nexts']);
 const use_posts = usePostsStore();
 const config = useRuntimeConfig();
 const currencyTab = ref(true);
 const mileageTab = ref(true);
-const title = ref('');
 const make_id = ref(null);
 const year = ref(null);
 const makes = ref([]);
 const models = ref([]);
 const model_id = ref(null);
-const exterior_color = ref(null);
-const interior_color = ref(null);
-const air_conditioned = ref(Number);
-const traction = ref("");
-const transmission = ref("");
-const engine = ref("");
-const air_bag = ref(Number);
-const fuel_type = ref("");
 let price = ref(Number);
 let price_us = ref(Number);
 let price_temp = ref(Number);
 let mileage_temp = ref(Number);
 let mileage_km = ref(Number);
 let mileage_m = ref(Number);
-const description = ref('');
-const condition = ref('');
 const vehicleStatus = [
   {
     name: 'Nuevo',
@@ -38,51 +30,43 @@ const vehicleStatus = [
     value: 'Used'
   },
 ];
-let countries = [];
-let country = ref(0);
-let sectors = reactive([]);
+const countries = useGetCountry().countries;
+const country = ref("");
 let sector = ref(0);
 let displaySector = ref(false);
-let cities = reactive([]);
 let city = ref([]);
 let displayCity = ref(false);
 let categories = [];
-let lat = null;
-let log = null;
-let address = ref('');
+let lat = ref(null);
+let log = ref(null);
 let pricePlaceholder = ref('pesos dominicanos');
 let mileagePlaceholder = ref('Kilómetros (KM)');
 let priceInput = ref('');
 
-let countriesApi = await $fetch('generals/countries', {
-  baseURL: config.public.API
+const schema = yup.object({
+  title: yup.string().required("El nombre es requrido"),
+  description: yup.string().required("La descripcion es requerida"),
+  make: yup.number().required("La marca es requerida"),
+  model: yup.number().required("El modelo es requerido"),
+  condition: yup.string().required("La condicion es requerida"),
+  year: yup.number().required("El Año es requerido"),
+  country: yup.string().required("El pais es requerido"),
+  sector: yup.string().required("El sector es requerido"),
+  city: yup.string().required("La ciudad es requerida"),
+  mileage_temp: yup.number().required("El Kilometraje es requerido"),
+  ext_color: yup.string().required("El color exterior es requerido"),
+  inter_color: yup.string().required("El color exterior es requerido"),
+  air_conditioned: yup.number().required("Este campo es requerido"),
+  traction: yup.number().required("Este campo es requerido"),
+  transmission: yup.string().required("Este campo es requerido"),
+  engine: yup.string().required("Este campo es requerido"),
+  air_bag: yup.number().required("Este campo es requerido"),
+  fuel_type: yup.string().required("Este campo es requerido"),
 });
-countriesApi.results.data.forEach(element => {
-  if(element.id === 63 || element.id === 236) {
-    countries.push(element)
-  }
+
+const { handleSubmit, setFieldValue} = useForm({
+  validationSchema: schema,
 });
-
-async function getStates(country_id) {
-  const statesApi = await $fetch(`generals/states/${country_id}`, {
-    baseURL: config.public.API
-  });
-  sectors.push(statesApi.results.data);
-};
-
-async function getCities(sector_id) {
-  const citiesApi = await $fetch(`generals/cities/${sector_id}`, {
-    baseURL: config.public.API
-  });
-  cities.push(citiesApi.results.data);
-};
-
-function getAddress(lant, long, location) {
-  lat = lant;
-  log = long;
-  address.value = location;
-  console.log(lat, log, address.value)
-};
 
 function currencyFormat() {
   let valor = priceInput.value.replace(/[^\d.]/g, '');
@@ -95,6 +79,7 @@ function currencyFormat() {
     price_temp.value = numero;
   }
 }
+
 function validateInput(event) {
   const inputValue = event.target.value;
   const regex = /^[0-9.]*$/;
@@ -128,17 +113,32 @@ watch(make_id,() => {
   });
 });
 
+let sectors = ref([])
 watch(country,(country_id) => {
-  getStates(country_id);
-  sectors = reactive([]);
-  cities = reactive([]);
   displaySector.value = true;
+  sectors.value = [];
+  const { data } = useFetch(`generals/states/${country_id}`, {
+    method: 'GET',
+    baseURL: config.public.API,
+    server: false,
+    transform(data) {
+      sectors.value.push(data.results.data)
+    }
+  })
 });
 
+let cities = ref([]);
 watch(sector,(sector_id) => {
-  getCities(sector_id);
-  cities = reactive([]);
   displayCity.value = true;
+  cities.value = [];
+  const { data } = useFetch(`generals/cities/${sector_id}`, {
+    method: 'GET',
+    baseURL: config.public.API,
+    server: false,
+    transform(data) {
+      cities.value.push(data.results.data)
+    }
+  })
 });
 
 watch(currencyTab,(new_value) => {
@@ -184,32 +184,32 @@ watch(price_temp,(new_price) => {
   }
 });
 
-function save_data() {
-  use_posts.title = title.value;
+const onSubmit = handleSubmit((values) => {
+  use_posts.title = values.title;
   use_posts.price = price.value;
   use_posts.price_us = price_us.value;
-  use_posts.lat = lat;
-  use_posts.log = log;
-  // use_posts.address = address.value;
-  use_posts.country_id = country.value;
-  use_posts.town_id = sector.value;
-  use_posts.city_id = city.value;
-  use_posts.condition = condition.value;
-  use_posts.description = description.value;
-  use_posts.make_id = parseInt(make_id.value);
-  use_posts.model_id = parseInt(model_id.value);
-  use_posts.exterior_color = exterior_color.value;
-  use_posts.interior_color = interior_color.value;
-  use_posts.air_conditioned = air_conditioned.value;
-  use_posts.traction = traction.value;
-  use_posts.transmission = transmission.value;
-  use_posts.engine = engine.value;
-  use_posts.air_bag = air_bag.value;
-  use_posts.fuel_type = fuel_type.value;
-  use_posts.year = year.value;
+  use_posts.lat = lat.value;
+  use_posts.log = log.value;
+  use_posts.country_id = values.country;
+  use_posts.town_id = values.sector;
+  use_posts.city_id = values.city;
+  use_posts.condition = values.condition;
+  use_posts.description = values.description;
+  use_posts.make_id = parseInt(values.make);
+  use_posts.model_id = parseInt(values.model);
+  use_posts.exterior_color = values.ext_color;
+  use_posts.interior_color = values.inter_color;
+  use_posts.air_conditioned = values.air_conditioned;
+  use_posts.traction = values.traction;
+  use_posts.transmission = values.transmission;
+  use_posts.engine = values.engine;
+  use_posts.air_bag = values.air_bag;
+  use_posts.fuel_type = values.fuel_type;
+  use_posts.year = values.year;
   use_posts.mileage = parseInt(mileage_m.value);
   use_posts.kilometer = parseInt(mileage_km.value);
-};
+  emit('nexts');
+});
 
 </script>
 
@@ -217,35 +217,39 @@ function save_data() {
   <h4 class="mt-11 mb-7 text-center">
     Cuéntanos sobre tu <span class="text-primary-90">vehículo </span>
   </h4>
-  <div class="mx-4 px-4 md:px-8 sm:grid sm:grid-cols-2 sm:mx-auto gap-4 max-w-[995px]">
+  <form @submit="onSubmit" :validation-schema="schema" class="mx-4 px-4 md:px-8 sm:grid sm:grid-cols-2 sm:mx-auto gap-4 max-w-[995px]">
     <!-- Titulo -->
     <label class="col-span-2 sm:mb-2 mb-5">
       Título de la publicación
-      <input class="form-control" v-model="title" placeholder="Escriba el título" type="text">
+      <Field class="form-control" name="title" type="text" placeholder="Escriba el título" />
+      <ErrorMessage name="title" />
     </label>
     <!-- Descripcion -->
     <div class="flex flex-col col-span-2">
       <label for="description">Descripción</label>
-      <textarea id="description" type="text" v-model="description" placeholder="Descripcion de la propiedad"></textarea>
+      <Field as="textarea" name="description" type="text" placeholder="Descripcion del vehiculo" />
+      <ErrorMessage name="description" />
     </div>
     <div class="col-span-2 gap-4 sm:grid grid-cols-2">
       <!-- Marca -->
       <label class="w-full sm:mb-2 mb-5">
         Marca
-        <select class="form-control col-span-2" v-model="make_id">
+        <Field name="make" as="select" class="form-control col-span-2" v-model="make_id">
           <option v-for="make_id in makes" :value="make_id.id" :key="make_id.id" class="option-label">
-          {{ make_id.name }}
+            {{ make_id.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="make" />
       </label>
       <!-- Modelo -->
       <label class="w-full sm:mb-2 mb-5">
         Modelo
-        <select class="form-control col-span-2" v-model="model_id">
+        <Field name="model" as="select" class="form-control col-span-2" v-model="model_id">
           <option v-for="model_id in models" :value="model_id.id" :key="model_id.id" class="option-label">
-          {{ model_id.name }}
+            {{ model_id.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="model" />
       </label>
       <!-- Price -->
       <div class="flex sm:mb-2 mb-5">
@@ -275,138 +279,136 @@ function save_data() {
       <!-- Estado -->
       <label for="vehicleStatus" class="mb-2">
         Estado
-        <select class="form-control" v-model="condition" id="vehicleStatus">
+        <Field name="condition" as="select" class="form-control" id="vehicleStatus">
           <option v-for="condition in vehicleStatus" :key="condition" :value="condition.value" class="option-label">
             {{ condition.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="condition" />
       </label>
       <!-- year -->
       <label class="w-full sm:mb-2 mb-5">
         Año
-        <input class="form-control" v-model="year" placeholder="Escriba el Año" type="text">
+        <Field class="form-control" name="year" type="number" placeholder="Escriba el Año" />
+        <ErrorMessage name="year" />
       </label>
-      <!-- Map -->
-      <!-- <div class="col-span-2">
-        <ClientOnly>
-          <PopulationPostVehicleMap @send-location="getAddress"/>
-        </ClientOnly>
-      </div> -->
-      <!-- ubicacion -->
-      <!-- <label class="w-full sm:mb-2 mb-5 col-span-2">
-        Ubicación
-        <input class="form-control" readonly v-model="address" placeholder="Direccion" type="text">
-      </label> -->
       <!-- Pais -->
       <label class="w-full sm:mb-2 mb-5">
         País
-        <select class="form-control col-span-3" v-model="country">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
+        <Field name="country" as="select" v-model="country" class="form-control">
+          <option v-for="country in countries" :key="country" :value="country.id" class="option-label">
+            {{ country.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="country" />
       </label>
       <!-- Ciudad -->
       <label class="w-full sm:mb-2 mb-5">
         Ciudad
-        <select class="form-control col-span-3" v-model="sector" :disabled="!displaySector">
+        <Field name="sector" as="select" v-model="sector" class="form-control" :disabled="!displaySector">
           <option v-for="sector in sectors[0]" :value="sector.id" :key="sector.id" class="option-label">
-          {{ sector.name }}
+            {{ sector.name }}
           </option>
-        </select>
+        </Field>
+      <ErrorMessage name="sector" />
       </label>
       <!-- Sector -->
       <label class="w-full sm:mb-2 mb-5">
         Sector
-        <select class="form-control" v-model="city" :disabled="!displayCity">
+        <Field name="city" as="select" v-model="city" :disabled="!displayCity" class="form-control">
           <option v-for="item in cities[0]" :value="item.id" :key="item.id" class="option-label">
-          {{ item.name }}
+            {{ item.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="city" />
       </label>
       <!-- Kilometraje -->
-      <div class="flex sm:mb-2 mb-5">
-        <label class="w-full">
-          Kilometraje
-          <input
-          type="number"
-            class="form-control"
-            v-model="mileage_temp" 
-            :placeholder="`Kilometraje en `+ mileagePlaceholder"
-          >
-        </label>
-        <div class="flex items-center ml-2">
-          <button 
-            class="value-toggle_btn border-l rounded-l-md" 
-            :class="{'active': mileageTab}" 
-            @click="mileageTab = true">KM
-          </button>
-          <button 
-            class="value-toggle_btn border-r rounded-r-md" 
-            :class="{'active': !mileageTab}" 
-            @click="mileageTab = false">M
-          </button>
+      <div class="flex flex-wrap items-center sm:mb-2 mb-5">
+        <label class="w-full flex-nowrap flex-none">Kilometraje</label>
+        <div class="flex items-center w-full mb-2">
+          <Field class="form-control w-full" name="mileage_temp" v-model="mileage_temp"  type="number" :placeholder="`Kilometraje en `+ mileagePlaceholder" />
+          <div class="flex items-center ml-2">
+            <button 
+              class="value-toggle_btn border-l rounded-l-md" 
+              :class="{'active': mileageTab}" 
+              @click="mileageTab = true">KM
+            </button>
+            <button 
+              class="value-toggle_btn border-r rounded-r-md" 
+              :class="{'active': !mileageTab}" 
+              @click="mileageTab = false">M
+            </button>
+          </div>
         </div>
+        <ErrorMessage name="mileage_temp" />
       </div>
       <!-- Color exterior -->
       <label class="w-full sm:mb-2 mb-5">
         Color exterior
-        <input type="text" v-model="exterior_color" class="form-control" />
+        <Field class="form-control" name="ext_color" placeholder="Color exterior" />
+        <ErrorMessage name="ext_color" />
       </label>
       <!-- Color Interior -->
       <label class="w-full sm:mb-2 mb-5">
         Color interior
-        <input type="text" v-model="interior_color" class="form-control" />
+        <Field class="form-control" name="inter_color" placeholder="Color interior" />
+        <ErrorMessage name="inter_color" />
       </label>
       <!-- Aire acondicionado -->
       <label class="w-full sm:mb-2 mb-5">
         Aire acondicionado
-        <select class="form-control col-span-2" v-model="air_conditioned">
+        <Field name="air_conditioned" as="select" class="form-control" id="vehicleStatus">
           <option value="0">No</option>
           <option value="1">Si</option>
-        </select>
+        </Field>
+        <ErrorMessage name="air_conditioned" />
       </label>
       <!-- Tracciön -->
       <label class="w-full sm:mb-2 mb-5">
         Tracción
-        <input type="text" v-model="traction" class="form-control" />
+        <Field class="form-control" name="traction" type="text" />
+        <ErrorMessage name="traction" />
       </label>
       <!-- Transmisión -->
       <label class="w-full sm:mb-2 mb-5">
         Transmisión
-        <select v-model="transmission" class="form-control">
+        <Field name="transmission" as="select" class="form-control">
           <option value="automática">Automática</option>
           <option value="mecánica">Mecánica</option>
-        </select>
+        </Field>
+        <ErrorMessage name="transmission" />
       </label>
       <!-- Motor -->
       <label class="w-full sm:mb-2 mb-5">
         Motor
-        <input type="text" v-model="engine" class="form-control" />
+        <Field class="form-control" name="engine" type="text" />
+        <ErrorMessage name="engine" />
       </label>
       <!-- Bolsa de aire -->
       <label class="w-full sm:mb-2 mb-5">
         Bolsa de aire
-        <select class="form-control col-span-2" v-model="air_bag">
+        <Field name="air_bag" as="select" class="form-control">
           <option value="0">No</option>
           <option value="1">Si</option>
-        </select>
+        </Field>
+        <ErrorMessage name="air_bag" />
       </label>
       <!-- Combustible -->
       <label class="w-full sm:mb-2 mb-5">
         Combustible
-        <input type="text" v-model="fuel_type" class="form-control" />
+        <Field class="form-control" name="fuel_type" type="text" />
+        <ErrorMessage name="fuel_type" />
       </label>
-    </div>   
-  </div>
-  <nav class="control-steps-PostVehicle">
-    <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
-      Atras
-    </AtomsButtons>
-    <AtomsButtons @click="$emit('nexts'), save_data()">
-      Continuar
-    </AtomsButtons>
-  </nav>
+    </div>
+    <div class="col-span-3 flex justify-center w-full gap-4">
+      <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
+        Atras
+      </AtomsButtons>
+      <AtomsButtons @click="onSubmit">
+        Continuar
+      </AtomsButtons>
+    </div>
+  </form>
 </template>
 
 <style lang="postcss" scoped>

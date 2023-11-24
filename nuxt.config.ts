@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Hispana Auto',
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
       ],

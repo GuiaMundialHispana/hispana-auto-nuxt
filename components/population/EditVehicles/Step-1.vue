@@ -3,7 +3,7 @@ import { usePostsStore } from '~/stores/Post';
 
 const use_posts = usePostsStore();
 const config = useRuntimeConfig();
-let categorySelected = ref(0);
+let categorySelected = ref(null);
 
 const { data, pending } = useLazyFetch('generals/categories', {
   baseURL: config.public.API
@@ -52,8 +52,8 @@ const emit = defineEmits(['back', 'nexts'])
       v-for="category in data.results"
       :key="category"
       class="option"
-      :class="[{checked: categorySelected === category.id}]">
-      <input type="radio" :value="category.id" v-model="categorySelected">
+      :class="[{checked: use_posts.auto_category_id === category.id}]">
+      <input type="radio" :value="category.id" v-model="use_posts.auto_category_id">
       {{ category.name }}
     </label>
   </div>

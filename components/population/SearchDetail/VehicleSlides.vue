@@ -45,31 +45,28 @@
   </section>
 </template>
 
-<script>
-import { ref } from 'vue';
-import { Thumbs } from 'swiper';
-export default {
-  props: ['images','planType'],
-  setup(props) {
-    const thumbsSwiper = ref(null);
-    const setThumbsSwiper = (swiper) => {
-      thumbsSwiper.value = swiper;
-    };
-    const showModal = ref(false);
-    const renderPlanText = computed(() => {
-      if(props.planType === 1) {
-        return 'vip';
-      } else if (props.planType === 3 ) {
-        return 'silver';
-      } else if ( props.planType === 2) {
-        return 'exclusive';
-      } else if(props.planType === 4 ) {
-        return 'destacado';
-      }
-    });
-    return { Thumbs, thumbsSwiper, setThumbsSwiper, showModal, renderPlanText};
-  },
-}
+<script setup>
+import { ref, watch } from 'vue';
+
+const props = defineProps(['images','planType']);
+
+const thumbsSwiper = ref(null);
+const setThumbsSwiper = (swiper) => {
+  thumbsSwiper.value = swiper;
+};
+
+const showModal = ref(false);
+const renderPlanText = computed(() => {
+  if(props.planType === 1) {
+    return 'vip';
+  } else if (props.planType === 3 ) {
+    return 'silver';
+  } else if ( props.planType === 2) {
+    return 'exclusive';
+  } else if(props.planType === 4 ) {
+    return 'destacado';
+  }
+});
 </script>
 
 <style lang="postcss" scoped>

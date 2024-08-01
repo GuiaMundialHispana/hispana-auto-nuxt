@@ -9,7 +9,7 @@
       :user="property.user"
     />
     <PopulationSearchDetailVehicleLoan :property="property.auto" class="md:px-14 px-4" />
-    <OrganismExploreVehicles :property_id='property.plan_id' />
+    <OrganismExploreVehicles :property_id='property.auto.id' />
   </div>
   <div class="p-16" v-if="pending">
     <OrganismSkeleton class="md:h-[560px] h-[360px] max-w-6xl mb-7" />

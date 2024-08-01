@@ -13,7 +13,7 @@
         class="swiper-hero"
       >
         <swiper-slide v-for="image in modalImages" :key="image">
-          <img :src="`${image.image}`" class="w-full max-h-[800px] object-cover rounded-lg">
+          <img :src="`${image.image}`" class="w-full max-h-[540px] object-cover rounded-lg">
         </swiper-slide>
       </swiper>
     </OnClickOutside>

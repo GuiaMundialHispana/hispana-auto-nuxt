@@ -235,7 +235,7 @@ export default {
     & p {
       @apply text-base text-neutral-black font-semibold flex flex-col text-start;
       & span {
-        @apply text-[#d9d9d9] text-sm font-normal 
+        @apply text-[#6a6363] text-sm font-normal 
       }
     }
   }

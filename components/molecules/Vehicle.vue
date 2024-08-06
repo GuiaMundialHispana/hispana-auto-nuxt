@@ -20,7 +20,7 @@
     >
       <AtomsIcon name="general/pencil" class="text-neutral-white" />
     </NuxtLink>
-    <NuxtLink :to="`/search/${property.slug}`">
+    <NuxtLink :to="property.slug !== '' ? `/search/${property.slug}` : '/search?condition=New'">
       <figure class="h-52 bg-gray-10">
         <div class="advertisements" v-if="
           $route.path === '/profile' && statusMessage !== ''"

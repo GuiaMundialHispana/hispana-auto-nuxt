@@ -43,7 +43,7 @@
         />
       </nav>
       <swiper-slide v-for="image in property.images" :key="image">
-        <NuxtLink :to="`/search/${property.slug}`" class="h-[254px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
+        <NuxtLink :to="property.slug !== '' ? `/search/${property.slug}` : '/search?condition=New'" class="h-[254px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
           <img
             :src="`${image.image}`"
             :alt="property.title"

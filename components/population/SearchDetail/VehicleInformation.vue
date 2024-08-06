@@ -199,20 +199,6 @@ export default {
   & li:last-child p { @apply border-b-0; }
 }
 
-/* .characteristics-table {
-  @apply rounded-lg border border-[#ADADAD] ;
-
-  & li {
-    @apply grid grid-cols-2;
-
-    & h3 { @apply px-7 py-2.5 border-b border-r border-[#ADADAD] font-semibold text-base text-neutral-black; }
-    & p { @apply px-7 py-2.5 border-b border-gray-100 font-normal text-base text-neutral-black; }
-  }
-
-  & li:last-child h3 { @apply border-b-0; }
-  & li:last-child p { @apply border-b-0; }
-} */
-
 .btn-loan { 
   @apply md:ml-auto md:w-max w-full border-2 border-gray-100 rounded-lg h-10 flex items-center justify-center text-sm text-neutral-black font-normal px-2.5 hover:text-neutral-white hover:bg-primary-100 hover:font-semibold hover:border-primary-100;
 }
@@ -235,7 +221,7 @@ export default {
     & p {
       @apply text-base text-neutral-black font-semibold flex flex-col text-start;
       & span {
-        @apply text-[#6a6363] text-sm font-normal 
+        @apply text-[#6a6363] text-sm font-normal capitalize;
       }
     }
   }

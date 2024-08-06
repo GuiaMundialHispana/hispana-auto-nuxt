@@ -5,6 +5,6 @@
 		<OrganismVipVehicles />
 		<OrganismSilverVehicles />
 		<PopulationHomeBenefits />
-		<OrganismExploreVehicles :property_id=1 />
+		<!-- <OrganismExploreVehicles :property_id=1 /> -->
 	</div>
 </template>

@@ -10,38 +10,14 @@
       v-if="$route.fullPath != '/profile?tab=anuncio'"
     />
     <Swiper
-      :modules="[SwiperFreeMode, SwiperNavigation]"
-      :effect="'fade'"
+      :modules="[SwiperFreeMode, SwiperNavigation, SwiperAutoplay]"
       :lazy="true"
+      :space-between="32"
       slides-per-view="auto"
-      :space-between="2"
       :autoplay="{
-        delay: 4000,
-        disableOnInteraction: true
-      }"
-      :navigation="{
-        nextEl: '.nextF',
-        prevEl: '.prevF'
+        delay: 5000,
       }"
     >
-      <nav>
-        <AtomsButtons
-          class="prevF"
-          btn-type="btn-icon"
-          btn-size="xsmall"
-          btn-style="outline-gray"
-          icon-name="arrows/arrow-left"
-          :icon-size=15
-        />
-        <AtomsButtons
-          class="nextF"
-          btn-type="btn-icon"
-          btn-size="xsmall"
-          btn-style="outline-gray"
-          icon-name="arrows/arrow-right"
-          :icon-size=15
-        />
-      </nav>
       <swiper-slide v-for="image in property.images" :key="image">
         <NuxtLink :to="property.slug !== '' ? `/search/${property.slug}` : '/search?condition=New'" class="h-[254px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
           <img

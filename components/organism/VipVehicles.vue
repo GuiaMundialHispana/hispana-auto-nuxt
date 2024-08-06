@@ -1,5 +1,16 @@
 <template>
-  <section v-if="property && property.length > 0">
+  <div v-if="pending" class="pt-6 md:pt-14 lg:px-16 md:px-6 px-4 mx-auto max-w-[97rem];">
+    <div class="container flex flex-wrap gap-8">
+      <div v-for="index in 3" :key="index">
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-date"></div>
+          <div class="skeleton-body"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section v-if="!pending && property && property.length > 0">
     <div class="flex justify-between border-b border-[#F5F5F5] py-2 mb-6">
       <h2 class="text-[28px] leading-8 text-center md:text-left mx-auto md:mx-0 font-medium">
         Vehículos VIP
@@ -27,30 +38,6 @@
     >
       <swiper-slide v-for="plan in property" :key="plan">
         <MoleculesFeaturedVehicles :property-id="plan.id" plantype="vip" :property="plan.auto" />
-      </swiper-slide>
-    </Swiper>
-    <Swiper
-      v-if="pending"
-      :modules="[SwiperFreeMode, SwiperNavigation, SwiperAutoplay]"
-      :effect="'fade'"
-      :lazy="true"
-      :space-between="32"
-      slides-per-view="auto"
-      :autoplay="{
-        delay: 4000,
-        disableOnInteraction: true
-      }"
-      :navigation="{
-        nextEl: '.nextVIP',
-        prevEl: '.prevVIP'
-      }"
-    >
-      <swiper-slide v-for="index in 5" :key="index">
-        <div class="skeleton">
-          <div class="skeleton-image"></div>
-          <div class="skeleton-date"></div>
-          <div class="skeleton-body"></div>
-        </div>
       </swiper-slide>
     </Swiper>
   </section>

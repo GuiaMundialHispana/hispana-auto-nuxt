@@ -23,7 +23,7 @@ export default {
   ],
   directAccess: [
     {
-      name: 'Hispana Auto',
+      name: 'Grupo Carros & mas',
       route: 'https://hispana-auto-nuxt.vercel.app/'
     },
     {

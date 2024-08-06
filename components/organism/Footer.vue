@@ -4,7 +4,7 @@
       <div class="xl:col-span-5 lg:col-span-12 col-span-12">
         <figure class="mb-6">
           <NuxtLink to="/">
-            <img src="/img/logo-footer.png" class="w-64 xl:mx-0 mx-auto" alt="Guia Mundial Hispana" />
+            <img src="/img/logo-transparent.svg" class="w-64 xl:mx-0 mx-auto" alt="Guia Mundial Hispana" />
           </NuxtLink>
         </figure>
         <div>

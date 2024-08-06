@@ -3,7 +3,7 @@
     <div class="md:pl-14 relative z-10 md:text-left text-center px-4 max-w-[97rem] mx-auto">
       <h1 class="lg:whitespace-nowrap lg:text-[40px] lg:leading-10">Cada vehículo tiene una historia,<br class="md:block hidden"><span class="text-primary-90 font-bold">descubre la tuya con nosotros</span>
       </h1>
-      <p class=" pt-4 text-sm lg:whitespace-nowrap">Busca, encuentra y conduce el vehículo perfecto con  <strong>Hispana Auto</strong>, el buscador de vehículos<br class="md:block hidden"> que te ofrece la mejor selección de opciones.</p>
+      <p class=" pt-4 text-sm lg:whitespace-nowrap">Busca, encuentra y conduce el vehículo perfecto con  <strong>Grupo Carros & mas</strong>, el buscador de vehículos<br class="md:block hidden"> que te ofrece la mejor selección de opciones.</p>
     </div>
     <img src="/img/hero.png" alt="Building" class="absolute z-0 top-0 w-full h-full object-cover object-top md:block hidden">
     <PopulationHomeFilterProperties class="hidden lg:block left-1/2 -translate-x-2/4"/>

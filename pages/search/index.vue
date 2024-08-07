@@ -48,7 +48,25 @@
     </div>
     <div class="mt-8 pb-14">
       <ul class="property-list" v-if="!peending">
-        <li v-for="property in properties" :key="property">
+        <li v-for="property in propertiesVip" :key="property">
+          <MoleculesVehicle
+            :property="property.auto"
+            :property-id="property.auto_id"
+          />
+        </li>
+        <li v-for="property in propertiesExclusive" :key="property">
+          <MoleculesVehicle
+            :property="property.auto"
+            :property-id="property.auto_id"
+          />
+        </li>
+        <li v-for="property in propertiesSilver" :key="property">
+          <MoleculesVehicle
+            :property="property.auto"
+            :property-id="property.auto_id"
+          />
+        </li>
+        <li v-for="property in propertiesBasic" :key="property">
           <MoleculesVehicle
             :property="property.auto"
             :property-id="property.auto_id"
@@ -105,6 +123,10 @@ const viewport = useViewport();
 
 //Mostrar propiedades
 let properties = ref([]);
+let propertiesVip = ref([]);
+let propertiesExclusive = ref([]);
+let propertiesSilver = ref([]);
+let propertiesBasic = ref([]);
 let showFilters = ref(false);
 const makeId = ref(null);
 let priceType = useRoute().query.priceType;
@@ -192,6 +214,18 @@ function getAds() {
     ],
     transform(data) {
       properties.value = data.results.data;
+      let response = data.results.data;
+      propertiesVip.value = [];
+      propertiesExclusive.value = [];
+      propertiesSilver.value = [];
+      propertiesBasic.value = [];
+      response.forEach(element => {
+        if(element.plan_id === 1) propertiesVip.value.push(element)
+        if(element.plan_id === 2) propertiesExclusive.value.push(element)
+        if(element.plan_id === 3) propertiesSilver.value.push(element)
+        if(element.plan_id === 4) propertiesBasic.value.push(element)
+        properties.value.push(element)
+      });
     },
     onResponse({response}) {
       if(response.status === 200 ) {

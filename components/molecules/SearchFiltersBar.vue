@@ -383,6 +383,7 @@ function clearFilter() {
   emit('price', price.value = '');
   emit('unitType', '');
   emit('unit',mileage.value = '');
+  emit('year', year.value = '');
 };
 </script>
 

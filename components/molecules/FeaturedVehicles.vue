@@ -12,7 +12,7 @@
     <Swiper
       :modules="[SwiperFreeMode, SwiperNavigation, SwiperAutoplay]"
       :lazy="true"
-      :space-between="32"
+      :space-between="2"
       slides-per-view="auto"
       :autoplay="{
         delay: 5000,

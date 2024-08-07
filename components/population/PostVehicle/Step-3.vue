@@ -57,7 +57,7 @@ const schema = yup.object({
   ext_color: yup.string().required("El color exterior es requerido"),
   inter_color: yup.string().required("El color exterior es requerido"),
   air_conditioned: yup.number().required("Este campo es requerido"),
-  traction: yup.number().required("Este campo es requerido"),
+  traction: yup.string().required("Este campo es requerido"),
   transmission: yup.string().required("Este campo es requerido"),
   engine: yup.string().required("Este campo es requerido"),
   air_bag: yup.number().required("Este campo es requerido"),
@@ -366,7 +366,10 @@ const onSubmit = handleSubmit((values) => {
       <!-- Tracciön -->
       <label class="w-full sm:mb-2 mb-5">
         Tracción
-        <Field class="form-control" name="traction" type="text" />
+        <Field name="traction" as="select" class="form-control">
+          <option value="2WD">2WD</option>
+          <option value="4WD">4WD</option>
+        </Field>
         <ErrorMessage name="traction" />
       </label>
       <!-- Transmisión -->

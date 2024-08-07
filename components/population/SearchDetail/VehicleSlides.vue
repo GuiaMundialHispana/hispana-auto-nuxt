@@ -14,6 +14,7 @@
       class="swiper-hero"
       >
         <swiper-slide
+          @click="showModal = true"
           v-for="image in images"
           :key="image"
         >

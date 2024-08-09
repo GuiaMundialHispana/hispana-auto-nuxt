@@ -16,7 +16,13 @@
       Foto de <a href="https://unsplash.com/es/@chatelp?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Pierre Châtel-Innocenti</a> en <a href="https://unsplash.com/es/fotos/N5RN0JE5kaY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
     </p>
   </section>
-  <OrganismExclusiveVehicles class="mb-20" />
-  <OrganismVipVehicles class="mb-20"  />
-  <OrganismSilverVehicles class="mb-20" />
+  <div class="mb-10">
+    <OrganismExclusiveVehicles />
+  </div>
+  <div class="mb-10">
+    <OrganismVipVehicles />
+  </div>
+  <div class="mb-10">
+    <OrganismSilverVehicles />
+  </div>
 </template>

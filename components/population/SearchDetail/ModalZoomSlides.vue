@@ -12,7 +12,7 @@
         :modules="[SwiperFreeMode,SwiperNavigation]"
         class="swiper-hero"
       >
-        <swiper-slide v-for="image in modalImages" :key="image">
+        <swiper-slide v-for="image in modalImages" :key="image" class="!flex items-center">
           <img :src="`${image.image}`" class="w-full max-h-[540px] object-cover rounded-lg">
         </swiper-slide>
       </swiper>

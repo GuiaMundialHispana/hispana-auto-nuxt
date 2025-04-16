@@ -54,11 +54,11 @@
               />
               <OnClickOutside @trigger="show_drop = 0">
                 <div class="status-dropdown" v-if="show_drop === item.id">
-                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'inactive', changeStatus(item.property.id)">
+                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'inactive', changeStatus(item.auto.id)">
                     <input type="radio" name="status">
                     Inactivar
                   </div>
-                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'trashed', changeStatus(item.property.id)">
+                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'trashed', changeStatus(item.auto.id)">
                     <input type="radio" name="status">
                     Borrar
                   </div>
@@ -164,7 +164,7 @@
               />
               <OnClickOutside @trigger="show_drop = 0">
                 <div class="status-dropdown" v-if="show_drop === item.id">
-                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'trashed', changeStatus(item.property.id)">
+                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'trashed', changeStatus(item.auto.id)">
                     <input type="radio" name="status">
                     Borrar
                   </div>
@@ -208,7 +208,7 @@
               />
               <OnClickOutside @trigger="show_drop = 0">
                 <div class="status-dropdown" v-if="show_drop === item.id">
-                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'inactive', changeStatus(item.property.id)">
+                  <div class="flex items-center gap-3 cursor-pointer" @click="api_status = 'inactive', changeStatus(item.auto.id)">
                     <input type="radio" name="status">
                     Inactivar
                   </div>

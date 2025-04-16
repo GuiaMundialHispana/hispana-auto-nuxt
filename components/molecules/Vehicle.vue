@@ -27,7 +27,12 @@
         >
           <p :class="statusBackground">{{ statusMessage }}</p>
         </div>
-        <img :src="`${property.image}`" :alt="property.title" class="object-cover h-full w-full">
+        <NuxtImg
+          :src="`${property.image}`"
+          placeholder="/img/logo-header.png"
+          :alt="property.title"
+          class="object-cover h-full w-full"
+        />
       </figure>
     </NuxtLink>
     <NuxtLink :to="`/search/${property.slug}`">

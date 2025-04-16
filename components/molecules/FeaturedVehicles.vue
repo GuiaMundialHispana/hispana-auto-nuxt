@@ -20,11 +20,12 @@
     >
       <swiper-slide v-for="image in property.images" :key="image">
         <NuxtLink :to="property.slug !== '' ? `/search/${property.slug}` : '/search?condition=New'" class="h-[254px] relative flex justify-center pb-2 bg-gray-10 rounded-lg figure">
-          <img
+          <NuxtImg
             :src="`${image.image}`"
             :alt="property.title"
+            placeholder="/img/logo-header.png"
             class="object-cover h-full w-full absolute top-0 left-0 rounded-lg"
-          >
+          />
           <p class="property-name">{{ property.title }}</p>
         </NuxtLink>
       </swiper-slide>

@@ -21,7 +21,12 @@
           <div class="overlay">
             <AtomsIcon name="general/zoom" :size=35 class="text-neutral-white" />
           </div>
-          <img :src="`${image.image}`" class="w-full h-full object-cover rounded-lg" />
+          <NuxtImg
+            :src="`${image.image}`"
+            placeholder="/img/logo-header.png"
+            alt="Grupo auto"
+            class="w-full h-full object-cover rounded-lg"
+          />
           <atoms-property-plans :plan-type="renderPlanText" plan-position="top" class="z-20 top-0 absolute !rounded-none" />
         </swiper-slide>
     </Swiper>
@@ -41,7 +46,12 @@
       }"
     >
       <swiper-slide v-for="image in images" :key="image">
-        <img :src="`${image.image}`" class="w-full h-full object-cover rounded-lg" />
+        <NuxtImg
+          :src="`${image.image}`"
+          placeholder="/img/logo-header.png"
+          alt="Grupo auto"
+          class="w-full h-full object-cover rounded-lg"
+        />
       </swiper-slide>
     </swiper>
 

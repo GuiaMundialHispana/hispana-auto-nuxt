@@ -1,4 +1,13 @@
 <template>
+  <Head v-if="property">
+    <Title>{{ property.auto.title }}</Title>
+    <Meta name="title" :content="property.auto.title" />
+    <Meta name="description" :content="property.auto.description" />
+    <Meta property="og:url" :content="currentUrl" />
+    <Meta property="og:title" :content="property.auto.title" />
+    <Meta property="og:description" :content="property.auto.description" />
+    <Meta property="og:image" :content="property.auto.image" />
+  </Head>
   <div v-if="property">
     <PopulationSearchDetailVehicleSlides
       :plan-type="property.plan_id"
@@ -37,4 +46,24 @@ const { data: property, pending, error} = await useLazyFetch(`advertisements/${u
     }
   }
 });
+
+const url = useRequestURL();
+const route = useRoute();
+const origin = computed(() => `${url.protocol}//${url.host}`);
+const currentUrl = computed(() => `${origin.value}${route.fullPath}`);
+watch(property, () => {
+  useSchemaOrg({
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateListing',
+    name: property.value.auto.name,
+    image: property.value.auto.image,
+    description: property.value.auto.description,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      price: property.value.auto.price_us,
+      itemCondition: 'New',
+    }
+  })
+})
 </script>

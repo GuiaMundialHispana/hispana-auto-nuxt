@@ -236,7 +236,6 @@ export default {
       } else { this.dropdownLists[list] = true; }
     },
     async searchProperties() {
-      // console.log(this.queryBody)
       useRouter().push({
         path: '/search', 
         query: this.queryBody 

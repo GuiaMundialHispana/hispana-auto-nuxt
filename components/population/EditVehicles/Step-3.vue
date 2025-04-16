@@ -81,7 +81,6 @@ function getAddress(lant, long, location) {
   lat = lant;
   log = long;
   address.value = location;
-  console.log(lat, log, address.value)
 };
 
 function currencyFormat() {
@@ -123,9 +122,7 @@ watch(make_id,() => {
   const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
     baseURL: config.public.API,
     transform(models_data) {
-      console.log(models_data)
       models.value.push(models_data.results);
-      console.log(models.value)
     }
   });
 });

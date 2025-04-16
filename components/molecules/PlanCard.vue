@@ -36,7 +36,7 @@
       <!--  -->
       <AtomsButtons btn-size="xsmall" class="w-full">
         <span class="total-plans">{{ planQuantity }}</span>
-        <p v-if="updatePrice > 0">RD$ {{ updatePrice  }}</p>
+        <p v-if="updatePrice > 0">RD$ {{ showParsedNumber(updatePrice) }}</p>
         <p v-else>Gratis</p>
       </AtomsButtons>
     </div>
@@ -180,7 +180,7 @@ export default {
   & .price { @apply text-neutral-black text-3xl font-semibold text-center mb-4; }
   & .free-price { @apply  text-primary-100 text-3xl text-center font-semibold; }
   & .action-buttons {
-    @apply flex items-center gap-1.5 md:flex-row flex-col justify-center mt-4;
+    @apply flex flex-wrap items-center gap-1.5 md:flex-row flex-col justify-center mt-4;
 
     & .plan-quantity {
       @apply max-w-[118px] w-full h-8 bg-neutral-white border border-[#ADADAD] rounded-lg flex items-center justify-between px-3 py-1;

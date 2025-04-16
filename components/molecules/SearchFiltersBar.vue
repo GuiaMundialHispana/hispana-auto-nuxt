@@ -340,7 +340,6 @@ watch(mileage_picked, (new_mileage_picked) => {
 })
 
 watch(mileage, (new_mileage) => {
-  console.log(new_mileage)
   emit('unit',new_mileage);
 })
 

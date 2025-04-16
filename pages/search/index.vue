@@ -175,7 +175,6 @@ function getUnit(units: null) {
 }
 
 function getYear(years:null) {
-  console.log(years)
   year = years;
   getAds();
 }

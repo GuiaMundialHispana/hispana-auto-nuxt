@@ -22,6 +22,11 @@ export default defineNuxtConfig({
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: "description", content: 'Busca, encuentra y conduce el vehículo perfecto con Grupo Carros & más, el buscador de vehículos que te ofrece la mejor selección de opciones.' },
+        { property: 'og:title', content: 'Grupo Carros & más' },
+        { property: 'og:description', content: 'Busca, encuentra y conduce el vehículo perfecto con Grupo Carros & más, el buscador de vehículos que te ofrece la mejor selección de opciones.' },
+        { property: 'og:image', content: 'https://www.grupocarrosymas.com/img/logo-header.svg' },
+        { property: 'og:url', content: 'https://www.grupocarrosymas.com/' },
+        { property: 'og:type', content: 'website' },
       ],
       script: [
         {

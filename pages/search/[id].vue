@@ -4,9 +4,13 @@
     <Meta name="title" :content="property.auto.title" />
     <Meta name="description" :content="property.auto.description" />
     <Meta property="og:url" :content="currentUrl" />
+    <Meta property="og:type" content="article" />
     <Meta property="og:title" :content="property.auto.title" />
     <Meta property="og:description" :content="property.auto.description" />
     <Meta property="og:image" :content="property.auto.image" />
+    <Meta property="og:locale" content="es_ES" />
+    <Meta name="twitter:card" :content="property.auto.image" />
+    <Meta name="image" :content="property.auto.image" />
   </Head>
   <div v-if="property">
     <PopulationSearchDetailVehicleSlides

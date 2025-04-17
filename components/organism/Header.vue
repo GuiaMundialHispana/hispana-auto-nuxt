@@ -25,8 +25,17 @@
             >
               <NuxtLink :to='item.route'  @click="showMenu = false">{{item.name}}</NuxtLink>
             </li>
-            <li class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer" v-show="auth.isLoggedIn">
-              <NuxtLink to="/PostVehicle">Vender</NuxtLink>
+            <li class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer" @click="checkSell" :class="{'router-link-active': route.fullPath === '/PostVehicle'}">
+              Vender
+            </li>
+            <li class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer" :class="{'active': route.fullPath === '/featuredProperties'}">
+              <NuxtLink to='/featuredProperties'  @click="showMenu = false">Destacados</NuxtLink>
+            </li>
+            <li class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer" :class="{'active': route.fullPath === '/contact'}">
+              <NuxtLink to='/contact'  @click="showMenu = false">Contacto</NuxtLink>
+            </li>
+            <li class="text-sm text-neutral-black font-normal hover:text-primary-100 mb-4 lg:mb-0 cursor-pointer" :class="{'active': route.fullPath === '/plans'}">
+              <NuxtLink to='/plans'  @click="showMenu = false">Planes</NuxtLink>
             </li>
             <li class="mb-4 lg:mb-0" v-show="!auth.isLoggedIn">
               <AtomsButtons @click="showMenu = false; displayModal = true">
@@ -119,23 +128,12 @@ export default {
       showMenu: false,
       userDropdown: false,
       displayModal: false,
+      route: useRoute(),
       menu: [
       {
         name: 'Comprar',
         route: '/search?condition=New&priceType=RD',
       },
-      {
-        name: 'Destacados',
-        route: '/featuredProperties'
-      },
-      {
-        name: 'Contacto',
-        route: '/contact'
-      },
-      {
-        name: 'Planes',
-        route: '/plans'
-      }
       ]
     }
   },
@@ -153,8 +151,19 @@ export default {
       } else {
         document.body.classList.remove('modal-open')
       }
-    }
+    },
   },
+  methods: {
+    checkSell() {
+      if(this.auth.isLoggedIn) {
+        navigateTo('/PostVehicle');
+        this.showMenu = false
+      } else {
+        this.showMenu = false
+        this.displayModal = true
+      }
+    }
+  }
 }
 </script>
 

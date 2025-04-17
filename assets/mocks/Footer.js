@@ -23,20 +23,16 @@ export default {
   ],
   directAccess: [
     {
-      name: 'Grupo Carros & mas',
-      route: 'https://hispana-auto-nuxt.vercel.app/'
+      name: 'Grupo Carros & más',
+      route: 'https://www.grupocarrosymas.com/'
     },
     {
-      name: 'Hispana Negocios',
-      route: 'https://hispana-negocios.vercel.app/'
-    },
-    {
-      name: 'Hispana Afiliados',
-      route: 'https://world-hispanic-guide.vercel.app/'
+      name: 'Grupo Negocios & más',
+      route: 'https://www.gruponegociosymas.com/'
     },
     {
       name: 'Guía Mundial Hispana',
-      route: 'https://world-hispanic-guide.vercel.app/'
+      route: 'https://www.guiamundialhispana.com/'
     }
   ],
   socialLinks: [

@@ -13,10 +13,15 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Grupo Carros & mas',
+      title: 'Grupo Carros & más',
+      titleTemplate: '%s',
+      htmlAttrs: {
+        lang: 'es'
+      },
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
       meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: "description", content: 'Busca, encuentra y conduce el vehículo perfecto con Grupo Carros & más, el buscador de vehículos que te ofrece la mejor selección de opciones.' },
       ],
       script: [
         {

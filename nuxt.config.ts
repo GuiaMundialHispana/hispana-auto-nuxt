@@ -6,7 +6,7 @@ export default defineNuxtConfig({
 
   routeRules:{
     '/profile': { ssr: false },
-    '/edit-vehicle': { ssr: false },
+    '/edit-ad': { ssr: false },
     '/create-ad': { ssr: false },
     '/payment': {ssr: false}
   },

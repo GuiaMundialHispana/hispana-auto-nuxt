@@ -1,7 +1,7 @@
 <template>
   <div class="plan-wrapper">
     <!-- plan.id != 4 &&   -->
-    <span class="user-quantity" v-if="$route.path === '/create-ad' || $route.path === '/create-ad' || $route.path === '/edit-vehicle'">
+    <span class="user-quantity" v-if="$route.path === '/create-ad' || $route.path === '/create-ad' || $route.path === '/edit-ad'">
       {{ userQuantity }}
     </span>
     <span class="plan-category" :class="[renderPlanText]">{{ plan.name }}</span>
@@ -51,7 +51,7 @@
       </AtomsButtons>
     </div>
     <div v-if="!seleccionado">
-      <AtomsButtons v-if="$route.path === '/create-ad' && userQuantity > 0  || $route.path === '/edit-vehicle' && userQuantity > 0"
+      <AtomsButtons v-if="$route.path === '/create-ad' && userQuantity > 0  || $route.path === '/edit-ad' && userQuantity > 0"
         btn-style="outline-gray"
         class="my-1 w-full"
         :class="{active: active}"
@@ -60,7 +60,7 @@
         Seleccionar
       </AtomsButtons>
     </div>
-    <p class="price" v-if="plan.id != 4  && $route.path != '/create-ad' && $route.path != 'create-ad' && $route.path != '/edit-vehicle'">
+    <p class="price" v-if="plan.id != 4  && $route.path != '/create-ad' && $route.path != 'create-ad' && $route.path != '/edit-ad'">
       <span class="text-base"> RD$ </span>{{ showParsedNumber(plan.price)  }}
     </p>
     <p v-if="plan.id === 4 && useRoute().path !== '/create-ad'" class="free-price mt-4">

@@ -77,7 +77,7 @@ async function processPayment() {
     name.value,
     useRoute().query.quantity,
     useRoute().query.planId,
-    refer
+    refer.value
   );
 };
 

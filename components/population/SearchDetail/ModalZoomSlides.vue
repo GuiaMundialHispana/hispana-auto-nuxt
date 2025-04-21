@@ -13,7 +13,12 @@
         class="swiper-hero"
       >
         <swiper-slide v-for="image in modalImages" :key="image" class="!flex items-center">
-          <img :src="`${image.image}`" class="w-full max-h-[540px] object-cover rounded-lg">
+          <NuxtImg
+            :src="`${image.image}`"
+            placeholder="/img/logo-header.png"
+            alt="Grupo auto"
+            class="w-full max-h-[540px] object-cover rounded-lg"
+          />
         </swiper-slide>
       </swiper>
     </OnClickOutside>

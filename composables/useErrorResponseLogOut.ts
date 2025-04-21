@@ -19,7 +19,7 @@ export default async function useLogOut() {
       localStorage.removeItem('token');
       useUserStore().$reset();
       isLogged.value = false;
-      localStorage.removeItem('token');
+      localStorage.removeItem('ref');
       refer.value = '';
       useRouter().push("/").then(() => {
         Swal.fire({
@@ -36,7 +36,7 @@ export default async function useLogOut() {
       localStorage.removeItem('token');
       useUserStore().$reset();
       isLogged.value = false;
-      localStorage.removeItem('token');
+      localStorage.removeItem('ref');
       refer.value = '';
       useRouter().push("/").then(() => {
         Swal.fire({

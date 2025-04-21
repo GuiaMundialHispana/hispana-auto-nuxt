@@ -117,7 +117,6 @@ export default {
   methods: {
     payment() {
       if(this.auth.isLoggedIn) {
-        console.log(this.refer)
         let planInformation =  {
           newPrice: this.updatePrice,
           quantity: this.planQuantity,

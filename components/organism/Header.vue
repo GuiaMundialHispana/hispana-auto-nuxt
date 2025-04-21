@@ -92,7 +92,7 @@
             <li v-show="auth.isLoggedIn">
               <AtomsLink
                 @click="showMenu = false"
-                link-to="/PostVehicle"
+                link-to="/create-ad"
                 icon-name="general/plus"
                 icon-position="left"
                 :icon-size=14
@@ -162,7 +162,7 @@ export default {
   methods: {
     checkSell() {
       if(this.auth.isLoggedIn) {
-        navigateTo('/PostVehicle');
+        navigateTo('/create-ad');
         this.showMenu = false
       } else {
         this.showMenu = false

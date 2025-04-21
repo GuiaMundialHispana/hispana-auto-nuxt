@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
       config: useRuntimeConfig(),
       token: '',
       route: useRouter(),
+      refer: useState('refer')
     }
   },
   actions: {
@@ -60,10 +61,12 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token');
 
       try {
+        localStorage.removeItem('ref')
         Swal.hideLoading();
         Swal.close();
         useUserStore().$reset();
         useRouter().push("/")
+        this.refer = ''
       } 
       catch (error) {
        console.log(error);

@@ -26,19 +26,6 @@ export const useUserStore = defineStore('user', {
     }
   },
   actions: {
-    async getGoogle(){
-      const { data,error }  = await useFetch(this.$config.public.API+'auth/social/google',{
-        method: 'GET',
-        headers: {
-          'access-control-allow-origin': "*",
-          'Content-Type':"application/json",
-          'Accept': "application/json",
-        }
-
-      });
-      const res = error;
-      const res2 = data;
-    },
     async sendPassWordEmail() {
       const { data, pending } = await useFetch('auth/forgot-password',{
         method: 'POST',

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col w-full  items-center justify-center">
+  <form @submit.prevent="onSubmit" class="flex flex-col w-full items-center justify-center">
     <div class="relative w-full">
       <Field class="form-control" name="email" type="email" placeholder="Correo electrónico" />
       <AtomsIcon
@@ -20,7 +20,7 @@
     <ErrorMessage name="password" class="error" />
     <NuxtLink to="/forgotPassword" @click="$emit('close')" class="text-primary-100 ml-auto w-max block">Olvidé la contraseña</NuxtLink>
     <AtomsButtons btn-size="medium" type="submit" :is-disabled="!meta.dirty || !meta.valid">Entrar</AtomsButtons>
-  </div>
+  </form>
 </template>
 
 <script lang="ts" setup>

@@ -5,7 +5,7 @@
         Descubre que más tenemos <span class="text-primary-100">para ti</span>
       </h2>
       <div class="flex items-center">
-        <NuxtLink to="/search?type=All" class="font-normal mx-auto md:mt-0 mt-3 md:mr-5 leading-[22px] text-sm text-primary-100 cursor-pointer text-center">Ver todos</NuxtLink>
+        <NuxtLink to="/resultados?type=All" class="font-normal mx-auto md:mt-0 mt-3 md:mr-5 leading-[22px] text-sm text-primary-100 cursor-pointer text-center">Ver todos</NuxtLink>
         <div class="hidden md:flex gap-4 items-center">
           <AtomsButtons class="prev" btn-type="btn-icon" btn-style="outline-gray" icon-name="arrows/arrow-left" btn-size="xsmall" :icon-size=15 />
           <AtomsButtons class="next" btn-type="btn-icon" btn-style="outline-gray" icon-name="arrows/arrow-right" btn-size="xsmall" :icon-size=15 />

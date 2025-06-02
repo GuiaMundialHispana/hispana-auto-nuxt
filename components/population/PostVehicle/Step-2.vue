@@ -1,32 +1,71 @@
-<script setup>
-import { useUserStore } from '~/stores/User';
+<script lang="ts" setup>
 import { usePostsStore } from '~/stores/Post';
 
-const user_store = useUserStore();
 const use_posts = usePostsStore();
-
-// let plans = [];
 let next = ref(false);
 const config = useRuntimeConfig();
+const token = useState('token');
+const plans = ref([]);
 
-const { data:plans,pending } = await useLazyFetch('user-plans',{
+const { data:userPlans, pending } = await useLazyFetch('user-plans',{
   method: 'GET',
-  headers: {
-    'Authorization': `Bearer ${user_store.token}`
-  },
-  baseURL: config.public.API
+  server:false,
+  headers: {'Authorization': `Bearer ${token.value}`},
+  baseURL: config.public.API,
+  transform(data) {
+    return data.results;
+  }
+});
+
+const { data:generalPlans } = useLazyFetch('generals/plans',{
+  method: 'GET',
+  server:false,
+  baseURL: config.public.API,
+  transform(data) {
+    return data.results;
+  }
+});
+
+watch([userPlans, generalPlans], ([userPlans, generalPlans]) => {
+  if (userPlans && generalPlans) {
+    plans.value = []; // Reinicia el array de planes
+    const userPlanIds = userPlans?.map(item => item.plan_id) ?? [];
+
+    const availablePlans = generalPlans?.filter(gp => !userPlanIds.includes(gp.id) && gp.id !== 4) ?? [];
+
+    if (availablePlans.length > 0) {
+      userPlans.forEach((plan) => {
+        plans.value.push({
+          plan: plan.plan,
+          quantity: plan.quantity
+        });
+      });
+      availablePlans.forEach((plan) => {
+        plans.value.push({
+          plan: plan,
+          quantity: 0
+        });
+      });
+    } else {
+      userPlans.forEach((plan) => {
+        plans.value.push({
+          plan: plan.plan,
+          quantity: plan.quantity
+        });
+      });
+    }
+  }
 });
 
 function send_plan(id,pictures) {
   use_posts.plan_id = id;
   use_posts.plan_pictures = pictures;
   next.value = true;
-};
-
+}
 </script>
 
 <template>
-  <h4> Planes disponibles para esta publicación.</h4>
+  <h4>Planes disponibles para esta publicación.</h4>
   <div v-if="pending" class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-16">
     <div class="border border-gray-10 rounded-lg p-6 relative">
       <div class="w-full h-10 skeleton rounded-lg mb-4"></div>
@@ -73,9 +112,8 @@ function send_plan(id,pictures) {
       <div class="w-full h-8 skeleton rounded-lg mb-4"></div>
     </div>
   </div>
-  <ul v-if="plans && !pending" class="plans-list">
-    <li v-for="plan in plans.results" :key="plan">
-      <!-- {{ plan }} -->
+  <ul v-if="!pending && plans" class="plans-list">
+    <li v-for="plan in plans" :key="plan">
       <MoleculesPlanCard
         class="h-full"
         @pay="send_plan"
@@ -85,11 +123,11 @@ function send_plan(id,pictures) {
     </li>
   </ul>
   <div class="flex justify-center">
-    <AtomsLink link-to="/plans" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
+    <AtomsLink link-to="/planes" class="mx-auto my-6">Adquirir mas planes</AtomsLink>
   </div>
-  <nav class="control-steps-PostVehicle">
+  <nav class="control-steps-postProperty">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
-      Atras
+      Atrás
     </AtomsButtons>
     <AtomsButtons @click="$emit('nexts')" :disabled="!next">
       Continuar

@@ -11,20 +11,16 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import useRefresh from '~/composables/RefreshToken';
+import useRefresh from '~/composables/RefreshToken';;
 import { useUserStore } from '~/stores/User';
 import { useAuthStore  } from '~/stores/Auth';
 
 const user_store = useUserStore();
 const auth_store = useAuthStore();
+const { refresh_token } = useRefresh();
 const route = useRoute();
 const refer = useState<string>('refer', () => '');
 
-const miFuncionGlobal = () => {
-  if(auth_store.isLoggedIn) {
-    user_store.refresh_token();
-  }
-}
 
 if(import.meta.client) {
   let tokenReferClient = localStorage.getItem('ref');
@@ -40,8 +36,12 @@ if(import.meta.client) {
 }
 
 onMounted(() => {
-  useRefresh(miFuncionGlobal)
-
+  setInterval(async () => {
+    if(auth_store.isLoggedIn) {
+      console.log('Refreshing token...');
+      await refresh_token();
+    }
+  }, 120000);
   const handleBeforeUnload = () => {
     localStorage.removeItem('ref');
   };

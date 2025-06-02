@@ -1,7 +1,6 @@
 <template>
   <div class="plan-wrapper">
-    <!-- plan.id != 4 &&   -->
-    <span class="user-quantity" v-if="$route.path === '/create-ad' || $route.path === '/create-ad' || $route.path === '/edit-ad'">
+    <span class="user-quantity" v-if="userQuantity && $route.path === '/create-ad' || $route.path === '/create-ad' || $route.path === '/edit-ad'">
       {{ userQuantity }}
     </span>
     <span class="plan-category" :class="[renderPlanText]">{{ plan.name }}</span>
@@ -36,13 +35,13 @@
       <!--  -->
       <AtomsButtons btn-size="xsmall" class="w-full">
         <span class="total-plans">{{ planQuantity }}</span>
-        <p v-if="updatePrice > 0">RD$ {{ showParsedNumber(updatePrice) }}</p>
+        <p v-if="updatePrice > 0">RD$ {{showParsedNumber(updatePrice)}}</p>
         <p v-else>Gratis</p>
       </AtomsButtons>
     </div>
     <div class="my-4 w-full">
       <slot v-if="seleccionado && $route.path != '/create-ad'" />
-      <AtomsButtons 
+      <AtomsButtons
         v-if="plan.id != 4"
         @click="payment()"
         btn-style="outline-gray"
@@ -69,91 +68,97 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import Swal from 'sweetalert2';
+import { ref, computed } from 'vue';
 import { useAuthStore } from '~/stores/Auth';
 
-export default {
-  props: {
-    plan: {
-      type: Object,
-      default: () => {}
-    },
-    userQuantity: {
-      type: Number
-    },
-    seleccionado: {
-      type: Boolean,
-      default: false
-    }
+const user = useState('user');
+const isLogged = useState('isLogged');
+// Props
+const props = defineProps({
+  plan: {
+    type: Object,
+    default: () => ({})
   },
-  data() {
-    return {
-      auth: useAuthStore(),
-      planQuantity: 1,
-      priceUpdated: 0,
-      active: false,
-      refer: useState('refer')
-    }
-  },
-  computed: {
-    renderPlanText() {
-      if(this.plan.name === 'VIP') {
-        return 'vip';
-      } else if (this.plan.name === 'SILVER') {
-        return 'silver';
-      } else if (this.plan.name === 'EXCLUSIVO') {
-        return 'exclusive';
-      } else if(this.plan.name === 'DESTACADOS') {
-        return '';
-      }
-    },
-    updatePrice() {
-      return parseInt(this.plan.price * this.planQuantity);
-    },
-    disabledPayment() {
-      if(this.planQuantity <= 0) { return true } else { false}
-    },
-  },
-  methods: {
-    payment() {
-      if(this.auth.isLoggedIn) {
-        let planInformation =  {
-          newPrice: this.updatePrice,
-          quantity: this.planQuantity,
-          price: this.plan.price,
-          name:this.plan.name,
-          pictures: this.plan.pictures,
-          planId: this.plan.id,
-          ref: this.refer,
-        }
-        this.$swal.fire({
-          title: '¿Deseas pagar este plan?',
-          showDenyButton: false,
-          showCancelButton: true,
-          confirmButtonText: 'Pagar plan',
-          denyButtonText: 'Seleccionar otro plan',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            useRouter().push({
-              path: '/payment',
-              query: planInformation
-            })
-          }
-        })
-      } else {
-        this.$swal.fire({
-          icon: 'error',
-          text: 'Debes iniciar sesion',
-          showConfirmButton: false,
-          timer: 2000
+  userQuantity: {
+    type: Number
+},
+seleccionado: {
+  type: Boolean,
+default: false
+}
+});
+
+// Stores y router
+const auth = useAuthStore();
+const router = useRouter();
+const route = useRoute();
+
+// Refs y estado local
+const planQuantity = ref(1);
+const priceUpdated = ref(0);
+const active = ref(false);
+
+// Computed
+const renderPlanText = computed(() => {
+  const name = props.plan.name;
+  if (name === 'VIP') return 'vip';
+  if (name === 'SILVER') return 'silver';
+  if (name === 'EXCLUSIVO') return 'exclusive';
+  if (name === 'DESTACADOS') return '';
+});
+
+const updatePrice = computed(() => {
+  return parseInt(props.plan.price * planQuantity.value);
+});
+
+const disabledPayment = computed(() => {
+  return planQuantity.value <= 0;
+});
+
+// Métodos
+const refer = useState('refer');
+function payment() {
+  if (isLogged.value) {
+    const planInformation = {
+      newPrice: updatePrice.value,
+      quantity: planQuantity.value,
+      price: props.plan.price,
+      name: props.plan.name,
+      pictures: props.plan.pictures,
+      planId: props.plan.id,
+      ref: refer.value
+    };
+
+    Swal.fire({
+      title: '¿Deseas pagar este plan?',
+      showDenyButton: false,
+      showCancelButton: true,
+      confirmButtonText: 'Pagar plan',
+      denyButtonText: 'Seleccionar otro plan',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push({
+          path: '/payment',
+          query: planInformation
         });
       }
-    },
-    showParsedNumber(number) {
-      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+    });
+  } else {
+    Swal.fire({
+      icon: 'error',
+      text: 'Debes iniciar sesión',
+      showConfirmButton: false,
+      timer: 2000
+    });
   }
 }
+
+function showParsedNumber(number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 </script>
 
 <style lang="postcss" scoped>

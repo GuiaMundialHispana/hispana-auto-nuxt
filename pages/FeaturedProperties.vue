@@ -5,7 +5,7 @@
       </h1>
       <p class="pt-6 md:pt-8 text-sm lg:whitespace-nowrap text-neutral-black">Cada vehículo tiene una historia<strong> descubre la tuya con nosotros</strong></p>
       <AtomsLink
-        linkTo="/search?condition=New&priceType=RD" 
+        linkTo="/resultados?condition=New&priceType=RD"
         btn-size="large" 
         class="my-5 font-semibold">
         Buscar más vehículos

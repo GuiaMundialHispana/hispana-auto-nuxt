@@ -1,17 +1,15 @@
 <script setup>
 import Swal from 'sweetalert2';
-import { useUserStore } from '~/stores/User';
 import { usePostsStore } from '~/stores/Post';
 
 const use_posts = usePostsStore();
-const user_store = useUserStore();
 const config = useRuntimeConfig();
 let step = ref(1);
 
 definePageMeta({
   middleware: 'check-auth'
 });
-
+const token = useState('token')
 async function createAdvertisement() {
   Swal.showLoading();
   const form = new FormData();
@@ -20,7 +18,6 @@ async function createAdvertisement() {
   form.append('title', use_posts.title);
   form.append('price', use_posts.price);
   form.append('price_us', use_posts.price_us);
-  // form.append('address', use_posts.address);
   form.append('description', use_posts.description);
   form.append('town_id', use_posts.town_id);
   form.append('city_id', use_posts.city_id);
@@ -46,10 +43,10 @@ async function createAdvertisement() {
     form.append('images[' + index + ']',element);
   });
 
-  await useFetch('advertisements',{
+  await $fetch('advertisements',{
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${user_store.token}`,
+      'Authorization': `Bearer ${token.value}`,
       'Accept': 'application/json'
     },
     body: form,
@@ -57,6 +54,7 @@ async function createAdvertisement() {
     onResponse({ response }) {
       Swal.hideLoading();
       const res = response._data;
+      console.log(res)
       if(res.code === 200 ) {
         Swal.fire({
           icon: 'success',
@@ -64,10 +62,11 @@ async function createAdvertisement() {
           showConfirmButton: false,
           timer: 4000
         });
-        step.value = 5;
+        step.value = 6;
         setTimeout(() => {
           useRouter().push("/profile?tab=anuncio");
         }, 3000);
+        use_posts.$reset();
       }
 
       if(res.code === 400) {
@@ -94,7 +93,15 @@ async function createAdvertisement() {
           });
         }
       }
-    }    
+    },
+    onResponseError(error) {
+      if(error.response._data.code === 500){
+        Swal.fire({
+          icon: 'error',
+          text:  'Error del servidor, por favor intente más tarde.',
+        });
+      }
+    }
   });
 };
 

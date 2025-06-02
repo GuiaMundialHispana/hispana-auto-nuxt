@@ -45,6 +45,7 @@
 import { useAuthStore } from '~/stores/Auth';
 import Swal from 'sweetalert2';
 import { useUserStore } from '~/stores/User';
+import useUser from "~/composables/useUser";
 
 export default {
   props: {
@@ -96,7 +97,7 @@ export default {
               showConfirmButton: false,
               timer: 2000
             });
-            this.user_store.get_user();
+            useUser().getUser();
           }
         }
       });

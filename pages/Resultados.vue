@@ -4,12 +4,12 @@
       v-show="viewport.isLessThan('xl')"
       class="mt-5 font-semibold w-full"
       icon-position="right"
-      btn-style="solid-primary" 
+      btn-style="solid-primary"
       icon-name="general/search"
       btn-size="large"
       :icon-size=18
       @click="showFilters = !showFilters"
-      >Filtrar Vehiculos
+    >Filtrar Vehiculos
     </AtomsButtons>
     <OnClickOutside @trigger="showFilters = false" :class="{'hidden': !showFilters, 'flex' : showFilters}" class="filters-overflow">
       <AtomsButtons

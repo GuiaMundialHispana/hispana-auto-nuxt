@@ -125,3 +125,5 @@ span[role=alert] {
     }
   }
 }
+
+.control-steps-postProperty { @apply flex justify-center w-full gap-2.5 mt-6 mb-11; }

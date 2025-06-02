@@ -42,7 +42,7 @@
         </figure>
         <h6 class="user-name">{{ user.name }} {{ user.lastname }}</h6>
         <p class="user-position">Vendedor</p>
-        <div class="flex justify-center">
+        <div v-if="user.phone" class="flex justify-center">
           <a :href="`tel:${user.phone}`" class="contact-whatsapp mx-auto">
             <AtomsIcon name="general/mail" :size=18 class="mr-2.5"/>
             Contactar vendedor

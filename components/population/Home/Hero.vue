@@ -9,7 +9,7 @@
     <PopulationHomeFilterProperties class="hidden lg:block left-1/2 -translate-x-2/4"/>
     <div class="flex justify-center relative z-10 lg:hidden">
       <AtomsLink
-        linkTo="/search?type=All" 
+        linkTo="/resultados?condition=New&priceType=RD"
         btn-size="large" 
         class="my-5 font-semibold">
         Buscar vehículos

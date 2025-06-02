@@ -10,14 +10,14 @@ export default {
     // },
     {
       name: 'Contacto',
-      route: '/contact'
+      route: '/contacto'
     },
     {
       name: 'Aviso legal',
       route: '/Legal-warning'
     },
     {
-      name: 'Politica de privacidad',
+      name: 'Política de privacidad',
       route: '/Privacy-policy'
     }
   ],

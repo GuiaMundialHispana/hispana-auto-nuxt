@@ -232,7 +232,6 @@
 </template>
 
 <script>
-import { useUserStore } from '~/stores/User';
 import Swal from 'sweetalert2';
 
 export default {
@@ -267,7 +266,6 @@ export default {
           size: this.active_size
         },
       ],
-      user:useUserStore(),
       advertisement: false,
       propertys: [],
       actives: [],

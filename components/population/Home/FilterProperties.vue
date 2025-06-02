@@ -237,7 +237,7 @@ export default {
     },
     async searchProperties() {
       useRouter().push({
-        path: '/search', 
+        path: '/resultados',
         query: this.queryBody 
       })
     },

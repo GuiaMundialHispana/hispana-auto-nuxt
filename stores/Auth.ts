@@ -13,65 +13,6 @@ export const useAuthStore = defineStore('auth', {
       route: useRouter(),
       refer: useState('refer')
     }
-  },
-  actions: {
-    async login() {
-      Swal.showLoading()
-      const { data}  = await useFetch('auth/login',{
-        method: 'POST',
-        baseURL: this.config.public.API,
-        body: {
-          email: this.email,
-          password: this.password
-        },
-      });
-
-      try {
-        Swal.hideLoading();
-        const res = data.value.results;
-        Swal.fire({
-          icon: 'success',
-          text: 'Bienvenido',
-          showConfirmButton: false,
-          timer: 2000
-        });
-        //Save data in localStorage
-        navigateTo('/profile?tab=anuncio')
-        localStorage.setItem('token', res.access_token.original.access_token);
-      } 
-      catch (error) {
-        Swal.hideLoading();
-        $emit('close')
-        Swal.fire({
-          icon: 'error',
-          text: 'Confirma que tus datos esten correctos'
-        });
-      }
-    },
-    async logOut() {
-      Swal.showLoading()
-      await useFetch('auth/logout',{
-        method: 'POST',
-        baseURL: this.config.public.API,
-        body: {
-          token: localStorage.getItem('token')
-        }
-      });
-      this.isLoggedIn = false;
-      localStorage.removeItem('token');
-
-      try {
-        localStorage.removeItem('ref')
-        Swal.hideLoading();
-        Swal.close();
-        useUserStore().$reset();
-        useRouter().push("/")
-        this.refer = ''
-      } 
-      catch (error) {
-       console.log(error);
-      }
-    }
   }
 })
 

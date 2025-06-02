@@ -69,56 +69,23 @@ async function register(values: any) {
       password_confirmation: values.password_confirmation,
       refered_token: refer.value
     },
-    onResponse({response}) {
-      Swal.hideLoading();
-      if(response.status === 400) {
-        let errors = response._data.message;
-        Swal.fire({
-          icon: 'error',
-          html: '<ul></ul>',
-          didOpen: () => {
-            const b = Swal.getHtmlContainer().querySelector('ul');
-            Object.keys(errors).forEach(clave => {
-              const li = document.createElement('li');
-              li.classList.add('text-primary-100', 'text-left', 'text-sm', 'mb-2')
-              li.textContent = errors[clave];
-              b.appendChild(li);
-            });
-          },
-        });
-      }
-
-      if(response.status === 200) {
-        Swal.fire({
-          icon: 'success',
-          text: `${response._data.message}`
-        });
-        localStorage.setItem('token', response._data.results.access_token.original.access_token);
-        auth.isLoggedIn = true;
-        useRouter().push('/profile?tab=plan');
-        emit('close');
-      }
-    }
   })
-}
-
-async function regjister() {
-  Swal.showLoading()
-  await useFetch('auth/register',{
-    method: 'POST',
-    baseURL: config.public.API,
-    body: {
-      name: name.value,
-      lastname: lastname.value,
-      email: email.value,
-      password: password.value,
-      password_confirmation: password_confirmation.value,
-      refered_token: refer.value
-    },
-    onResponse({response}) {
-      Swal.hideLoading();
-      if(response.status === 400) {
-        let errors = response._data.message;
+    .then((response) => {
+      console.log(response);
+      Swal.fire({
+        icon: 'success',
+        text: `${response.message}`
+      });
+      localStorage.setItem('token', response.results.access_token.original.access_token);
+      auth.isLoggedIn = true;
+      useRouter().push('/profile?tab=plan');
+      emit('close');
+    })
+    .catch((error) => {
+      Swal.hideLoading()
+      if (error.response) {
+        console.log(error.response._data); // Aquí tienes el cuerpo de la respuesta de error
+        let errors = error.response._data.message;
         Swal.fire({
           icon: 'error',
           html: '<ul></ul>',
@@ -132,21 +99,11 @@ async function regjister() {
             });
           },
         });
+      } else {
+        console.log(error);
       }
-
-      if(response.status === 200) {
-        Swal.fire({
-          icon: 'success',
-          text: `${response._data.message}`
-        });
-        localStorage.setItem('token', response._data.results.access_token.original.access_token);
-        auth.isLoggedIn = true;
-        useRouter().push('/profile?tab=plan');
-        emit('close');
-      }
-    }
-  });
-};
+    })
+}
 </script>
 
 <style lang="postcss" scoped>

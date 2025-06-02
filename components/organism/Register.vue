@@ -1,46 +1,108 @@
 <template>
-  <div class="flex flex-col w-full items-center justify-center">
+  <form @submit.prevent="onSubmit" class="flex flex-col w-full items-center justify-center">
     <div class="relative w-full">
-      <input placeholder="Nombre" type="text" v-model="name">
+      <Field class="form-control" name="name" type="text" placeholder="Nombre" />
       <AtomsIcon name="general/user" :size=14 class="absolute text-primary-100 z-50 top-1/4 left-2" />
     </div>
+    <ErrorMessage name="name" class="error" />
     <div class="relative w-full">
-      <input placeholder="Apellido" type="text" v-model="lastname">
+      <Field class="form-control" name="lastname" type="text" placeholder="Apellido" />
       <AtomsIcon name="general/user" :size=14 class="absolute text-primary-100 z-50 top-1/4 left-2" />
     </div>
+    <ErrorMessage name="lastname" class="error" />
     <div class="relative w-full">
-      <input placeholder="Correo electrónico" type="email" v-model="email">
+      <Field class="form-control" name="email" type="email" placeholder="Correo electrónico" />
       <AtomsIcon name="general/email-slim" :size=14 class="absolute text-primary-100 z-50 top-1/4 left-2" />
     </div>
+    <ErrorMessage name="email" class="error" />
     <div class="relative w-full">
-      <input placeholder="Contraseña" type="password" v-model="password">
-      <AtomsIcon name="general/lock" :size=14 class="absolute text-primary-100 z-50 top-1/4 left-2" />
+      <Field class="form-control" name="password" type="password" placeholder="Contraseña" />
+      <AtomsIcon name="general/email-slim" :size=14 class="absolute text-primary-100 z-50 top-1/4 left-2" />
     </div>
+    <ErrorMessage name="password" class="error" />
     <div class="relative w-full">
-      <input placeholder="Repite contraseña" type="password" v-model="password_confirmation">
-      <AtomsIcon name="general/lock" :size=14 class="absolute text-primary-100 z-50 top-1/4 left-2" />
+      <Field class="form-control" name="password_confirmation" type="password" placeholder="Repite contraseña" />
+      <AtomsIcon name="general/email-slim" :size=14 class="absolute text-primary-100 z-50 top-1/4 left-2" />
     </div>
-    <AtomsButtons btn-size="medium"  @click="register()">
-      Registrar
-    </AtomsButtons>
-  </div>
+    <ErrorMessage name="password_confirmation" class="error" />
+    <AtomsButtons btn-size="medium" type="submit" :is-disabled="!meta.dirty || !meta.valid">Registrar</AtomsButtons>
+  </form>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import Swal from 'sweetalert2';
 import { useAuthStore } from '~/stores/Auth';
+import { useForm, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
+
+const auth = useAuthStore();
+const refer = useState('refer')
 
 const config = useRuntimeConfig();
-const auth = useAuthStore();
-let name = ref('');
-let lastname = ref('');
-let email = ref('');
-let password = ref('');
-let password_confirmation = ref('');
 const emit = defineEmits(['close']);
-const refer = useState('refer');
+const schema = yup.object({
+  email: yup.string().email('Correo electrónico inválido').required('El correo electrónico es obligatorio'),
+  password: yup.string().required('La contraseña es obligatoria'),
+  name: yup.string().required('El nombre es obligatorio'),
+  lastname: yup.string().required('El apellido es obligatorio'),
+  password_confirmation: yup.string().oneOf([yup.ref('password'), null], 'Las contraseñas deben coincidir').required('La confirmación de contraseña es obligatoria')
+});
 
-async function register() {
+const { handleSubmit, meta} = useForm({
+  validationSchema: schema,
+});
+
+const onSubmit = handleSubmit(async (values) => {
+  await register(values);
+});
+
+async function register(values: any) {
+  Swal.showLoading()
+  await $fetch('auth/register',{
+    method: 'POST',
+    baseURL: config.public.API,
+    body: {
+      name: values.name,
+      lastname: values.lastname,
+      email: values.email,
+      password: values.password,
+      password_confirmation: values.password_confirmation,
+      refered_token: refer.value
+    },
+    onResponse({response}) {
+      Swal.hideLoading();
+      if(response.status === 400) {
+        let errors = response._data.message;
+        Swal.fire({
+          icon: 'error',
+          html: '<ul></ul>',
+          didOpen: () => {
+            const b = Swal.getHtmlContainer().querySelector('ul');
+            Object.keys(errors).forEach(clave => {
+              const li = document.createElement('li');
+              li.classList.add('text-primary-100', 'text-left', 'text-sm', 'mb-2')
+              li.textContent = errors[clave];
+              b.appendChild(li);
+            });
+          },
+        });
+      }
+
+      if(response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          text: `${response._data.message}`
+        });
+        localStorage.setItem('token', response._data.results.access_token.original.access_token);
+        auth.isLoggedIn = true;
+        useRouter().push('/profile?tab=plan');
+        emit('close');
+      }
+    }
+  })
+}
+
+async function regjister() {
   Swal.showLoading()
   await useFetch('auth/register',{
     method: 'POST',

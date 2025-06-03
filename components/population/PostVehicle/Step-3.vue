@@ -44,11 +44,11 @@ let mileagePlaceholder = ref('Kilómetros (KM)');
 let priceInput = ref('');
 
 const schema = yup.object({
-  title: yup.string().required("El nombre es requrido"),
-  description: yup.string().required("La descripcion es requerida"),
+  title: yup.string().required("El nombre es requerido"),
+  description: yup.string().required("La descripción es requerida"),
   make: yup.number().required("La marca es requerida"),
   model: yup.number().required("El modelo es requerido"),
-  condition: yup.string().required("La condicion es requerida"),
+  condition: yup.string().required("La condición es requerida"),
   year: yup.number().required("El Año es requerido"),
   country: yup.string().required("El pais es requerido"),
   sector: yup.number().required("El sector es requerido"),
@@ -347,13 +347,55 @@ const onSubmit = handleSubmit((values) => {
       <!-- Color exterior -->
       <label class="w-full sm:mb-2 mb-5">
         Color exterior
-        <Field class="form-control" name="ext_color" placeholder="Color exterior" />
+        <Field class="form-control" name="ext_color" placeholder="Color exterior" as="select">
+          <option value="">Selecciona un color</option>
+          <option value="blanco">Blanco</option>
+          <option value="negro">Negro</option>
+          <option value="gris">Gris</option>
+          <option value="plata">Plata</option>
+          <option value="azul">Azul</option>
+          <option value="rojo">Rojo</option>
+          <option value="verde">Verde</option>
+          <option value="amarillo">Amarillo</option>
+          <option value="marron">Marrón</option>
+          <option value="naranja">Naranja</option>
+          <option value="beige">Beige</option>
+          <option value="dorado">Dorado</option>
+          <option value="vino">Vino</option>
+          <option value="verde-oscuro">Verde oscuro</option>
+          <option value="verde-oliva">Verde oliva</option>
+          <option value="azul">Azul</option>
+          <option value="azul-marino">Azul marino</option>
+          <option value="celeste">Celeste / Azul cielo</option>
+          <option value="violeta">Violeta / Púrpura</option>
+        </Field>
         <ErrorMessage name="ext_color" />
       </label>
       <!-- Color Interior -->
       <label class="w-full sm:mb-2 mb-5">
         Color interior
-        <Field class="form-control" name="inter_color" placeholder="Color interior" />
+        <Field class="form-control" name="inter_color" placeholder="Color interior" as="select">
+          <option value="">Selecciona un color</option>
+          <option value="blanco">Blanco</option>
+          <option value="negro">Negro</option>
+          <option value="gris">Gris</option>
+          <option value="plata">Plata</option>
+          <option value="azul">Azul</option>
+          <option value="rojo">Rojo</option>
+          <option value="verde">Verde</option>
+          <option value="amarillo">Amarillo</option>
+          <option value="marron">Marrón</option>
+          <option value="naranja">Naranja</option>
+          <option value="beige">Beige</option>
+          <option value="dorado">Dorado</option>
+          <option value="vino">Vino</option>
+          <option value="verde-oscuro">Verde oscuro</option>
+          <option value="verde-oliva">Verde oliva</option>
+          <option value="azul">Azul</option>
+          <option value="azul-marino">Azul marino</option>
+          <option value="celeste">Celeste / Azul cielo</option>
+          <option value="violeta">Violeta / Púrpura</option>
+        </Field>
         <ErrorMessage name="inter_color" />
       </label>
       <!-- Aire acondicionado -->
@@ -401,13 +443,22 @@ const onSubmit = handleSubmit((values) => {
       <!-- Combustible -->
       <label class="w-full sm:mb-2 mb-5">
         Combustible
-        <Field class="form-control" name="fuel_type" type="text" />
+        <Field class="form-control" name="fuel_type" as="select">
+          <option value="">Selecciona el tipo de combustible</option>
+          <option value="gasolina">Gasolina</option>
+          <option value="diesel">Diésel</option>
+          <option value="gas">Gas (GLP / GNC)</option>
+          <option value="hibrido">Híbrido (Gasolina + Eléctrico)</option>
+          <option value="hibrido-diesel">Híbrido Diésel</option>
+          <option value="electrico">Eléctrico</option>
+          <option value="hidrogeno">Hidrógeno</option>
+        </Field>
         <ErrorMessage name="fuel_type" />
       </label>
     </div>
     <div class="col-span-3 flex justify-center w-full gap-4">
       <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
-        Atras
+        Atrás
       </AtomsButtons>
       <AtomsButtons @click="onSubmit">
         Continuar

@@ -1,8 +1,11 @@
 <script setup>
 import {ref, watch} from 'vue';
 import { usePostsStore } from '~/stores/Post';
+import { Field, ErrorMessage, useForm } from "vee-validate";
+import * as yup from "yup";
+import {storeToRefs} from "pinia";
 
-const use_posts = usePostsStore();
+const use_posts =  usePostsStore();
 const config = useRuntimeConfig();
 const currencyTab = ref(true);
 const mileageTab = ref(true);
@@ -46,13 +49,54 @@ let displaySector = ref(false);
 let cities = reactive([]);
 let city = ref([]);
 let displayCity = ref(false);
-let categories = [];
-let lat = null;
-let log = null;
-let address = ref('');
 let pricePlaceholder = ref('pesos dominicanos');
 let mileagePlaceholder = ref('Kilómetros (KM)');
 let priceInput = ref('');
+
+const schema = yup.object({
+  title: yup.string().required("El nombre es requerido"),
+  description: yup.string().required("La descripción es requerida"),
+  make: yup.number().required("La marca es requerida"),
+  model: yup.number().required("El modelo es requerido"),
+  condition: yup.string().required("La condición es requerida"),
+  year: yup.number().required("El Año es requerido"),
+  country: yup.string().required("El pais es requerido"),
+  sector: yup.number().required("El sector es requerido"),
+  city: yup.number().required("La ciudad es requerida"),
+  mileage_temp: yup.number().required("El Kilometraje es requerido"),
+  ext_color: yup.string().required("El color exterior es requerido"),
+  inter_color: yup.string().required("El color exterior es requerido"),
+  air_conditioned: yup.number().required("Este campo es requerido"),
+  traction: yup.string().required("Este campo es requerido"),
+  transmission: yup.string().required("Este campo es requerido"),
+  engine: yup.string().required("Este campo es requerido"),
+  air_bag: yup.number().required("Este campo es requerido"),
+  fuel_type: yup.string().required("Este campo es requerido"),
+});
+
+const { handleSubmit, setValues, setFieldValue} = useForm({
+  validationSchema: schema,
+});
+
+setValues({
+  title: use_posts.title,
+  description: use_posts.description,
+  model: use_posts.model_id,
+  condition: use_posts.condition,
+  year: use_posts.year,
+  country: use_posts.country_id,
+  sector: use_posts.town_id,
+  city: use_posts.city_id,
+  mileage_temp: use_posts.mileage,
+  ext_color: use_posts.exterior_color,
+  inter_color: use_posts.interior_color,
+  air_conditioned: use_posts.air_conditioned,
+  traction: use_posts.traction,
+  transmission: use_posts.transmission,
+  engine: use_posts.engine,
+  air_bag: use_posts.air_bag,
+  fuel_type: use_posts.fuel_type
+})
 
 let countriesApi = await $fetch('generals/countries', {
   baseURL: config.public.API
@@ -75,12 +119,6 @@ async function getCities(sector_id) {
     baseURL: config.public.API
   });
   cities.push(citiesApi.results.data);
-};
-
-function getAddress(lant, long, location) {
-  lat = lant;
-  log = long;
-  address.value = location;
 };
 
 function currencyFormat() {
@@ -118,14 +156,16 @@ const { data: makes_data } = useFetch('generals/makes', {
   }
 });
 
-watch(make_id,() => {
-  const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
-    baseURL: config.public.API,
-    transform(models_data) {
-      models.value.push(models_data.results);
-    }
-  });
-});
+watchEffect(()=> {
+  if(use_posts.make_id) {
+    useFetch(`generals/models/${use_posts.make_id}`, {
+      baseURL: config.public.API,
+      transform(models_data) {
+        models.value.push(models_data.results);
+      }
+    });
+  }
+})
 
 watch(country,(country_id) => {
   getStates(country_id);
@@ -199,23 +239,26 @@ watch(price_temp,(new_price) => {
     <!-- Titulo -->
     <label class="col-span-2 sm:mb-2 mb-5">
       Título de la publicación
-      <input class="form-control" v-model="use_posts.title" placeholder="Escriba el título" type="text">
+      <Field class="form-control" name="title" type="text" placeholder="Escriba el título" />
+      <ErrorMessage name="title" />
     </label>
     <!-- Descripcion -->
     <div class="flex flex-col col-span-2">
       <label for="description">Descripción</label>
-      <textarea id="description" type="text" v-model="use_posts.description" placeholder="Descripcion de la propiedad"></textarea>
+      <Field as="textarea" name="description" type="text" placeholder="Descripcion del vehiculo" />
+      <ErrorMessage name="description" />
     </div>
     <div class="col-span-2 gap-4 sm:grid grid-cols-2">
       <!-- Marca -->
       <label class="w-full sm:mb-2 mb-5">
-        Marca
+        Marca {{make_id}}
         <select class="form-control col-span-2" v-model="use_posts.make_id">
           <option v-for="make_id in makes" :value="make_id.id" :key="make_id.id" class="option-label">
           {{ make_id.name }}
           </option>
         </select>
       </label>
+
       <!-- Modelo -->
       <label class="w-full sm:mb-2 mb-5">
         Modelo
@@ -253,88 +296,122 @@ watch(price_temp,(new_price) => {
       <!-- Estado -->
       <label for="vehicleStatus" class="mb-2">
         Estado
-        <select class="form-control" v-model="use_posts.condition" id="vehicleStatus">
+        <Field name="condition" as="select" class="form-control" id="vehicleStatus">
           <option v-for="condition in vehicleStatus" :key="condition" :value="condition.value" class="option-label">
             {{ condition.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="condition" />
       </label>
       <!-- year -->
       <label class="w-full sm:mb-2 mb-5">
         Año
-        <input class="form-control" v-model="use_posts.year" placeholder="Escriba el Año" type="text">
+        <Field class="form-control" name="year" type="number" placeholder="Escriba el Año" />
+        <ErrorMessage name="year" />
       </label>
-      <!-- Map -->
-      <!-- <div class="col-span-2">
-        <ClientOnly>
-          <PopulationPostVehicleMap @send-location="getAddress"/>
-        </ClientOnly>
-      </div> -->
-      <!-- ubicacion -->
-      <!-- <label class="w-full sm:mb-2 mb-5 col-span-2">
-        Ubicación
-        <input class="form-control" readonly v-model="address" placeholder="Direccion" type="text">
-      </label> -->
       <!-- Pais -->
       <label class="w-full sm:mb-2 mb-5">
         País
-        <select class="form-control col-span-3" v-model="use_posts.country_id">
-          <option v-for="country in countries" :value="country.id" :key="country.id" class="option-label">
-          {{ country.name }}
+        <Field name="country" as="select" v-model="country" class="form-control">
+          <option v-for="country in countries" :key="country" :value="country.id" class="option-label">
+            {{ country.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="country" />
       </label>
       <!-- Ciudad -->
       <label class="w-full sm:mb-2 mb-5">
         Ciudad
-        <select class="form-control col-span-3" v-model="sector" :disabled="!displaySector">
+        <Field name="sector" as="select" v-model="sector" class="form-control" :disabled="!displaySector">
           <option v-for="sector in sectors[0]" :value="sector.id" :key="sector.id" class="option-label">
-          {{ sector.name }}
+            {{ sector.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="sector" />
       </label>
       <!-- Sector -->
       <label class="w-full sm:mb-2 mb-5">
         Sector
-        <select class="form-control" v-model="city" :disabled="!displayCity">
+        <Field name="city" as="select" v-model="city" :disabled="!displayCity" class="form-control">
           <option v-for="item in cities[0]" :value="item.id" :key="item.id" class="option-label">
-          {{ item.name }}
+            {{ item.name }}
           </option>
-        </select>
+        </Field>
+        <ErrorMessage name="city" />
       </label>
       <!-- Kilometraje -->
-      <div class="flex sm:mb-2 mb-5">
-        <label class="w-full">
-          Kilometraje
-          <input
-          type="number"
-            class="form-control"
-            v-model="use_posts.mileage" 
-            :placeholder="`Kilometraje en `+ mileagePlaceholder"
-          >
-        </label>
-        <div class="flex items-center ml-2">
-          <button 
-            class="value-toggle_btn border-l rounded-l-md" 
-            :class="{'active': mileageTab}" 
-            @click="mileageTab = true">KM
-          </button>
-          <button 
-            class="value-toggle_btn border-r rounded-r-md" 
-            :class="{'active': !mileageTab}" 
-            @click="mileageTab = false">M
-          </button>
+      <div class="flex flex-wrap items-center sm:mb-2 mb-5">
+        <label class="w-full flex-nowrap flex-none">Kilometraje</label>
+        <div class="flex items-center w-full mb-2">
+          <Field class="form-control w-full" name="mileage_temp" v-model="mileage_temp"  type="number" :placeholder="`Kilometraje en `+ mileagePlaceholder" />
+          <div class="flex items-center ml-2">
+            <button
+              class="value-toggle_btn border-l rounded-l-md"
+              :class="{'active': mileageTab}"
+              @click="mileageTab = true">KM
+            </button>
+            <button
+              class="value-toggle_btn border-r rounded-r-md"
+              :class="{'active': !mileageTab}"
+              @click="mileageTab = false">M
+            </button>
+          </div>
         </div>
+        <ErrorMessage name="mileage_temp" />
       </div>
       <!-- Color exterior -->
       <label class="w-full sm:mb-2 mb-5">
         Color exterior
-        <input type="text" v-model="use_posts.exterior_color" class="form-control" />
+        <Field class="form-control" name="ext_color" placeholder="Color exterior" as="select">
+          <option value="">Selecciona un color</option>
+          <option value="blanco">Blanco</option>
+          <option value="negro">Negro</option>
+          <option value="gris">Gris</option>
+          <option value="plata">Plata</option>
+          <option value="azul">Azul</option>
+          <option value="rojo">Rojo</option>
+          <option value="verde">Verde</option>
+          <option value="amarillo">Amarillo</option>
+          <option value="marron">Marrón</option>
+          <option value="naranja">Naranja</option>
+          <option value="beige">Beige</option>
+          <option value="dorado">Dorado</option>
+          <option value="vino">Vino</option>
+          <option value="verde-oscuro">Verde oscuro</option>
+          <option value="verde-oliva">Verde oliva</option>
+          <option value="azul">Azul</option>
+          <option value="azul-marino">Azul marino</option>
+          <option value="celeste">Celeste / Azul cielo</option>
+          <option value="violeta">Violeta / Púrpura</option>
+        </Field>
+        <ErrorMessage name="ext_color" />
       </label>
       <!-- Color Interior -->
       <label class="w-full sm:mb-2 mb-5">
         Color interior
-        <input type="text" v-model="use_posts.interior_color" class="form-control" />
+        <Field class="form-control" name="inter_color" placeholder="Color exterior" as="select">
+          <option value="">Selecciona un color</option>
+          <option value="blanco">Blanco</option>
+          <option value="negro">Negro</option>
+          <option value="gris">Gris</option>
+          <option value="plata">Plata</option>
+          <option value="azul">Azul</option>
+          <option value="rojo">Rojo</option>
+          <option value="verde">Verde</option>
+          <option value="amarillo">Amarillo</option>
+          <option value="marron">Marrón</option>
+          <option value="naranja">Naranja</option>
+          <option value="beige">Beige</option>
+          <option value="dorado">Dorado</option>
+          <option value="vino">Vino</option>
+          <option value="verde-oscuro">Verde oscuro</option>
+          <option value="verde-oliva">Verde oliva</option>
+          <option value="azul">Azul</option>
+          <option value="azul-marino">Azul marino</option>
+          <option value="celeste">Celeste / Azul cielo</option>
+          <option value="violeta">Violeta / Púrpura</option>
+        </Field>
+        <ErrorMessage name="inter_color" />
       </label>
       <!-- Aire acondicionado -->
       <label class="w-full sm:mb-2 mb-5">
@@ -347,20 +424,26 @@ watch(price_temp,(new_price) => {
       <!-- Tracciön -->
       <label class="w-full sm:mb-2 mb-5">
         Tracción
-        <input type="text" v-model="use_posts.traction" class="form-control" />
+        <Field name="traction" as="select" class="form-control">
+          <option value="2WD">2WD</option>
+          <option value="4WD">4WD</option>
+        </Field>
+        <ErrorMessage name="traction" />
       </label>
       <!-- Transmisión -->
       <label class="w-full sm:mb-2 mb-5">
         Transmisión
-        <select v-model="use_posts.transmission" class="form-control">
+        <Field name="transmission" as="select" class="form-control">
           <option value="automática">Automática</option>
           <option value="mecánica">Mecánica</option>
-        </select>
+        </Field>
+        <ErrorMessage name="transmission" />
       </label>
       <!-- Motor -->
       <label class="w-full sm:mb-2 mb-5">
         Motor
-        <input type="text" v-model="use_posts.engine" class="form-control" />
+        <Field class="form-control" name="engine" type="text" />
+        <ErrorMessage name="engine" />
       </label>
       <!-- Bolsa de aire -->
       <label class="w-full sm:mb-2 mb-5">
@@ -373,13 +456,23 @@ watch(price_temp,(new_price) => {
       <!-- Combustible -->
       <label class="w-full sm:mb-2 mb-5">
         Combustible
-        <input type="text" v-model="use_posts.fuel_type" class="form-control" />
+        <Field class="form-control" name="fuel_type" as="select">
+          <option value="">Selecciona el tipo de combustible</option>
+          <option value="gasolina">Gasolina</option>
+          <option value="diesel">Diésel</option>
+          <option value="gas">Gas (GLP / GNC)</option>
+          <option value="hibrido">Híbrido (Gasolina + Eléctrico)</option>
+          <option value="hibrido-diesel">Híbrido Diésel</option>
+          <option value="electrico">Eléctrico</option>
+          <option value="hidrogeno">Hidrógeno</option>
+        </Field>
+        <ErrorMessage name="fuel_type" />
       </label>
     </div>   
   </div>
   <nav class="control-steps-PostVehicle">
     <AtomsButtons @click="$emit('back')" btn-style="outline-primary">
-      Atras
+      Atrás
     </AtomsButtons>
     <AtomsButtons @click="$emit('nexts')">
       Continuar

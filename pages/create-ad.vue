@@ -62,7 +62,7 @@ async function createAdvertisement() {
           showConfirmButton: false,
           timer: 4000
         });
-        step.value = 6;
+        step.value = 5;
         setTimeout(() => {
           useRouter().push("/profile?tab=anuncio");
         }, 3000);

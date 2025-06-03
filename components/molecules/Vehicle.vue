@@ -28,7 +28,7 @@
           <p :class="statusBackground">{{ statusMessage }}</p>
         </div>
         <NuxtImg
-          :src="`${property.image}`"
+          :src="property.image"
           placeholder="/img/logo-header.png"
           :alt="property.title"
           class="object-cover h-full w-full"

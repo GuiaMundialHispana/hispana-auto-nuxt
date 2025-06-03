@@ -20,6 +20,7 @@ const auth_store = useAuthStore();
 const { refresh_token } = useRefresh();
 const route = useRoute();
 const refer = useState<string>('refer', () => '');
+const isLogged = useState('isLogged');
 
 
 if(import.meta.client) {
@@ -37,7 +38,7 @@ if(import.meta.client) {
 
 onMounted(() => {
   setInterval(async () => {
-    if(auth_store.isLoggedIn) {
+    if(isLogged) {
       console.log('Refreshing token...');
       await refresh_token();
     }

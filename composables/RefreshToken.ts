@@ -2,7 +2,6 @@ export default function useRefresh() {
   const token = useState('token');
   
   async function refresh_token() {
-    console.log(token.value);
     await $fetch('auth/refresh',{
       method: 'POST',
       baseURL: useRuntimeConfig().public.API,

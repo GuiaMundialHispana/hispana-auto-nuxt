@@ -100,7 +100,7 @@ const addFavorite = async () => {
   const { data, error } = await useFetch('users/favorites', {
     method: 'post',
     headers: { 'Authorization': `Bearer ${token.value}`},
-    body: { property_id: props.property.id },
+    body: { auto_id: parseInt(props.property.id) },
     baseURL: config.public.API,
     onResponse({ response }) {
       if (response._data.code === 400) {
@@ -138,7 +138,7 @@ const deleteFavorite = async () => {
   const { data } = await useFetch('users/favorites', {
     method: 'delete',
     headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-    body: { property_id: props.property.id },
+    body: { auto_id: parseInt(props.property.id) },
     baseURL: config.public.API,
     onResponse({ response }) {
       if (response._data.code === 400) {
@@ -174,7 +174,7 @@ const toggleFavorite = () => {
   } else {
     Swal.fire({
       icon: 'error',
-      text: 'Necesitas iniciar sesion para poder agregar esta propiedad a favoritos',
+      text: 'Necesitas iniciar sesión para poder agregar esta propiedad a favoritos',
       showConfirmButton: true,
       timer: 2000
     });

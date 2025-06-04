@@ -6,10 +6,15 @@
         <h2 class="md:mb-12 mb-8 text-lg font-semibold">{{ property.condition === 'New' ? 'Nuevo' : 'Usado' }}</h2>
         <!-- Price -->
         <div class="flex md:items-center md:flex-row flex-col md:gap-6 gap-2 border-b border-gray-100 pb-4 mb-8">
-          <p class="text-neutral-black text-base font-normal">
+          <p v-if="currentPicked === 'usd'" class="text-neutral-black text-base font-normal">
             Precio
             <br>
             <span class="text-primary-100 xl:text-[28px] text-xl xl:leading-[28px] font-semibold mt-2">US${{ showParsedNumber(property.price_us) }}</span>
+          </p>
+          <p v-else class="text-neutral-black text-base font-normal">
+            Precio
+            <br>
+            <span class="text-primary-100 xl:text-[28px] text-xl xl:leading-[28px] font-semibold mt-2">RD${{ showParsedNumber(property.price) }}</span>
           </p>
           <a href="#loan" class="btn-loan">
             <AtomsIcon class="mr-2.5" name="general/price" :size=18 />
@@ -26,10 +31,6 @@
             <AtomsIcon name="general/mileage" :size=19 class="text-primary-100 mr-2.5" />
             {{ showParsedNumber(property.price_us) }} km
           </li>
-          <!-- <li class="xl:pl-14 md:pl-8">
-            <AtomsIcon name="general/share-location" :size=19 class="text-primary-100 mr-2.5" />
-            {{ property.address }}
-          </li> -->
         </ul>
       </div>
       <!-- User information -->
@@ -158,7 +159,8 @@ export default {
   data(){
     return {
       features: [],
-      config: useRuntimeConfig()
+      config: useRuntimeConfig(),
+      currentPicked: useState('currentPicked')
     }
   },
   computed: {

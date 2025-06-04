@@ -312,7 +312,9 @@ watch(sector,(sector_id) => {
   displayCity.value = true;
 });
 
+const currentPicked = useState('currentPicked', () => currency_picked.value);
 watch(currency_picked, (newPicked) => {
+  currentPicked.value = newPicked;
   emit('priceType', newPicked);
   if (newPicked === 'USD') {
     priceMinValue.value = 0,

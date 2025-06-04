@@ -46,16 +46,15 @@
       <!-- Price -->
       <div class="flex items-center gap-2">
         <p class="price-title">Desde:</p>
-        <p class="price">US${{formatCurrency(property.price_us)}}</p>
+        <p v-if="currentPicked === 'usd'" class="price">US${{formatCurrency(property.price_us)}}</p>
+        <p v-else class="price">RD${{formatCurrency(property.price)}}</p>
       </div>
     </NuxtLink>
   </article>
 </template>
 
 <script lang="ts" setup>
-import { useAuthStore } from '~/stores/Auth';
 import Swal from 'sweetalert2';
-import { useUserStore } from '~/stores/User';
 
 const props = defineProps({
   property: {
@@ -79,10 +78,8 @@ const props = defineProps({
   }
 });
 
+const currentPicked = useState('currentPicked')
 const config = useRuntimeConfig();
-const route = useRouter();
-const auth = useAuthStore();
-const user_store = useUserStore();
 const isFavorite = ref(false);
 const isLogged = useState('isLogged');
 

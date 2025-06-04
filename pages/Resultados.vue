@@ -1,5 +1,6 @@
 <template>
   <section class="lg:px-16 md:px-8 px-4 md:min-h-screen">
+    {{currentPicked }}
     <AtomsButtons
       v-show="viewport.isLessThan('xl')"
       class="mt-5 font-semibold w-full"
@@ -121,6 +122,7 @@ import { ref } from 'vue';
 const config = useRuntimeConfig();
 const viewport = useViewport();
 
+const currentPicked = useState('currentPicked')
 //Mostrar propiedades
 let properties = ref([]);
 let propertiesVip = ref([]);

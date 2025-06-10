@@ -215,6 +215,7 @@ function getAds() {
     transform(data) {
       properties.value = data.results.data;
       let response = data.results.data;
+      properties.value = [];
       propertiesVip.value = [];
       propertiesExclusive.value = [];
       propertiesSilver.value = [];

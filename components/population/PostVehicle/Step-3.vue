@@ -68,34 +68,6 @@ const { handleSubmit, setFieldValue} = useForm({
   validationSchema: schema,
 });
 
-function currencyFormat() {
-  let valor = priceInput.value.replace(/[^\d.]/g, '');
-  let numero = parseFloat(valor);
-  if (!isNaN(numero)) {
-    priceInput.value = numero.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    });
-    price_temp.value = numero;
-  }
-}
-
-function validateInput(event) {
-  const inputValue = event.target.value;
-  const regex = /^[0-9.]*$/;
-  if (inputValue === '' || event.inputType === 'deleteContentBackward') {
-    priceInput.value = inputValue;
-    return;
-  }
-  if (!regex.test(inputValue)) {
-    priceInput.value = inputValue.replace(/[^\d.]/g, '');
-  };
-  return {
-    priceInput,
-    validateInput,
-  };
-}
-
 // Marcas
 const { data: makes_data } = useFetch('generals/makes', {
   baseURL: config.public.API,
@@ -141,17 +113,6 @@ watch(sector,(sector_id) => {
   })
 });
 
-watch(currencyTab,(new_value) => {
-  priceInput.value = '';
-  price_temp.value = 0;
-  price.value = 0;
-  price_us.value = 0;
-  if (new_value === true) {
-    pricePlaceholder = "pesos dominicanos DOP";
-  } else{
-    pricePlaceholder = "dólares USD";
-  }
-});
 
 watch(mileageTab,(new_value) => {
   mileage_temp.value = 0;
@@ -174,13 +135,60 @@ watch(mileage_temp,(new_mileage) => {
   }
 });
 
+const { data:dollar } = useFetch('https://portal.guiamundialhispana.com/api/v1/dollar-rate', {
+  method: 'GET',
+  transform(data){
+    return data.results.rate;
+  }
+});
+
+function currencyFormat() {
+  let valor = priceInput.value.replace(/[^\d.]/g, '');
+  let numero = parseFloat(valor);
+  if (!isNaN(numero)) {
+    priceInput.value = numero.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+    price_temp.value = numero;
+  }
+}
+
+function validateInput(event) {
+  const inputValue = event.target.value;
+  const regex = /^[0-9.]*$/;
+  if (inputValue === '' || event.inputType === 'deleteContentBackward') {
+    priceInput.value = inputValue;
+    return;
+  }
+  if (!regex.test(inputValue)) {
+    priceInput.value = inputValue.replace(/[^\d.]/g, '');
+  };
+  return {
+    priceInput,
+    validateInput,
+  };
+}
+
+watch(currencyTab,(new_value) => {
+  priceInput.value = '';
+  price_temp.value = 0;
+  price.value = 0;
+  price_us.value = 0;
+  if (new_value === true) {
+    pricePlaceholder = "pesos dominicanos DOP";
+  } else{
+    pricePlaceholder = "dólares USD";
+  }
+});
+
 watch(price_temp,(new_price) => {
   if (currencyTab.value === true) {
     price.value = parseInt(new_price);
-    price_us.value = parseInt(new_price / 58);
+    price_us.value = parseInt(new_price / dollar.value);
   } else {
     price_us.value = parseInt(new_price);
-    price.value = parseInt(new_price * 58);
+    price.value = parseInt(new_price * dollar.value);
   }
 });
 

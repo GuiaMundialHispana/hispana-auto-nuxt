@@ -219,13 +219,19 @@ watch(mileage_temp,(new_mileage) => {
   }
 });
 
+const { data:dollar } = useFetch('https://portal.guiamundialhispana.com/api/v1/dollar-rate', {
+  method: 'GET',
+  transform(data){
+    return data.results.rate;
+  }
+});
 watch(price_temp,(new_price) => {
   if (currencyTab.value === true) {
     use_posts.price = parseInt(new_price);
-    use_posts.price_us = parseInt(new_price / 58);
+    use_posts.price_us = parseInt(new_price / dollar.value);
   } else {
     use_posts.price_us = parseInt(new_price);
-    use_posts.price = parseInt(new_price * 58);
+    use_posts.price = parseInt(new_price * dollar.value);
   }
 });
 

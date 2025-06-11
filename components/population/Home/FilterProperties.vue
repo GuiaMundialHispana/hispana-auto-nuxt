@@ -27,7 +27,7 @@
           <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
             <label class="checkbox-labels" :for="category.name" v-for="category in makes" :key="category.id">
               <input
-                type="checkbox"
+                type="radio"
                 class="checkbox"
                 name="category"
                 v-model="category_id"
@@ -292,12 +292,13 @@ export default {
       this.queryBody.year = year;
     },
     category_id(makes) {
-      this.queryBody.category = makes.join();
-      if(makes.length > 1) {
-        this.showModels = false;
-        return true;
-      } else {
-        this.getModels(makes);
+      console.log(makes);
+      this.queryBody.category = makes;
+      if(makes) {
+        this.getModels(makes).then(() => {
+          this.showModels = true;
+        });
+
       }
     },
     model_id(model) {

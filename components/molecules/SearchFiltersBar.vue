@@ -11,13 +11,13 @@
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label
             class="checkbox-labels"
+            v-for="make in makes_data"
             :for="make.name"
-            v-for="make in makes"
             :key="make.id"
             @click="make_name = make.name"
           >
             <input
-              type="checkbox"
+              type="radio"
               class="checkbox"
               :value="make.id"
               :id="make.name"
@@ -29,7 +29,7 @@
       </OnClickOutside>
     </div>
     <!-- Modelo -->
-    <div class="filter-content items-center" v-if="make_id.length === 1">
+    <div class="filter-content items-center" v-if="make_id">
       <button class="flex gap-2.5 filter-btn" @click="model = !model" :class="{'active': model}">
         <AtomsIcon name="general/car_model" class="text-primary-100" :size=20  />
         <p>{{ model_name != '' ? model_name : 'Modelo' }}</p>
@@ -39,8 +39,8 @@
         <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
           <label
             class="checkbox-labels"
-            :for="model.name"
             v-for="model in models"
+            :for="model.name"
             :key="model.id"
             @click="model_name = model.name"
           >
@@ -212,8 +212,7 @@ const dropYear = ref(false);
 const priceRange = ref(false);
 const mileageRange = ref(false);
 const category = ref(false);
-const makes = ref([]);
-const make_id = ref([]);
+const make_id = ref(null);
 const make_name = ref("");
 const models = ref([]);
 const model_id = ref(null);
@@ -246,21 +245,26 @@ const category_id = ref([])
 const { data: makes_data } = useFetch('generals/makes', {
   baseURL: config.public.API,
   transform(makes_data) {
-    makes.value = makes_data.results;
+    return makes_data.results;
   }
 });
+async function getModels(make_id) {
+  await $fetch(`generals/models/${make_id}`, {
+    baseURL: config.public.API,
+    onResponse({ response }) {
+      if(response.status === 200) {
+        const modelsResponse = response._data.results;
+        models.value = [];
+        models.value.push(modelsResponse);
+      }
+    },
+  });
+}
 
 watch(make_id,() => {
   emit('make', make_id.value);
-  if(make_id.value.length > 1 ){
-    return true;
-  } else {
-    const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
-      baseURL: config.public.API,
-      transform(models_data) {
-        models.value.push(models_data.results);
-      }
-    });
+  if(make_id.value){
+    getModels(make_id.value);
   }
 
   if(make_id.value.length <= 0) {
@@ -269,7 +273,8 @@ watch(make_id,() => {
 });
 
 watch(model_id, () => {
-  emit('model', model_id.value);
+  console.log('model_id', model_id.value);
+  // emit('model', model_id.value);
 });
 
 let countries = [];

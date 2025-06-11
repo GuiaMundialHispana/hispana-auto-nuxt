@@ -38,7 +38,7 @@
         />
       </div>
     </OnClickOutside>
-    <div v-if="!peending" class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
+    <div v-if="!pending" class="flex items-center justify-between mt-8 2xl:mt-11 text-sm font-normal">
       <p class="text-neutral-black">
         <span class="text-primary-100 font-semibold">
           {{ properties.length}} resultados
@@ -47,7 +47,7 @@
       </p>
     </div>
     <div class="mt-8 pb-14">
-      <ul class="property-list" v-if="!peending">
+      <ul class="property-list" v-if="!pending">
         <li v-for="property in propertiesVip" :key="property">
           <MoleculesVehicle
             :property="property.auto"
@@ -105,7 +105,7 @@
           <div class="skeleton-body"></div>
         </div>
       </div>
-      <div v-if="properties.length === 0 && !peending">
+      <div v-if="properties.length === 0 && !pending">
         <figure class="mb-4">
           <img src="/img/not-found.png" class="object-contain max-w-[308px] mx-auto" />
         </figure>
@@ -138,21 +138,21 @@ const unit = ref("");
 let year = useRoute().query.year || '';
 let category = useRoute().query.category || [];
 let model = useRoute().query.model || null;
-let peending = ref(true);
+let pending = ref(true);
 
-function getCondition(x: string) {
+async function getCondition(x: string) {
   condition = x;
-  getAds();
+  await getAds();
 }
 
-function getMake(make:null) {
-  makeId.value = make.join();
-  getAds();
+async function getMake(make:null) {
+  makeId.value = make;
+  await getAds();
 }
 
-function getModel(models:null) {
-  model = models.join();
-  getAds();
+async function getModel(models:null) {
+  model = models;
+  await getAds();
 }
 
 async function getPriceType(priceTypes:null) {
@@ -180,14 +180,14 @@ async function getYear(years:null) {
   await getAds();
 }
 
-function getCategory(categorys: null) {
+async function getCategory(categorys: null) {
   category = categorys.join();
-  getAds();
+  await getAds();
 }
 
 async function getAds() {
-  peending.value = true;
-  const { data,pending } = await useLazyFetch('advertisements/search', {
+  pending.value = true;
+  const { data } = await useLazyFetch('advertisements/search', {
     method: 'GET',
     baseURL: config.public.API,
     params: {
@@ -230,7 +230,7 @@ async function getAds() {
     },
     onResponse({response}) {
       if(response.status === 200 ) {
-        peending.value = false;
+        pending.value = false;
       }
     }
   });

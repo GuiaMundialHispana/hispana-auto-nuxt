@@ -54,8 +54,8 @@ async function createAdvertisement() {
     onResponse({ response }) {
       Swal.hideLoading();
       const res = response._data;
-      console.log(res)
       if(res.code === 200 ) {
+        use_posts.$reset();
         Swal.fire({
           icon: 'success',
           text:  `${res.message}`,

@@ -67,17 +67,19 @@
         <p>
           Año
         </p>
-        <MultiRangeSlider class="mx-auto mt-[14px] w-[200px]"
-          baseClassName="multi-range-slider-bar-only"
-          :min="minYear"
-          :max="maxYear"
-          :step="1"
-          :ruler="false"
-          :label="false"
-          :minValue="minYearValue"
-          :maxValue="maxYearValue"
-          @input="updateYears"
-        />
+        <div ref="yearDiv">
+          <MultiRangeSlider class="mx-auto mt-[14px] w-[200px]"
+            baseClassName="multi-range-slider-bar-only"
+            :min="minYear"
+            :max="maxYear"
+            :step="1"
+            :ruler="false"
+            :label="false"
+            :minValue="minYearValue"
+            :maxValue="maxYearValue"
+            @input="updateYears"
+          />
+        </div>
         <p class="whitespace-normal text-sm font-medium">
           Desde <b>{{ minYearValue }}</b>
           hasta <b>{{ maxYearValue }}</b>
@@ -101,17 +103,19 @@
             <input type="radio" id="USD" value="USD" name="currency" v-model="currency_picked">
           </label>
         </p>
-        <MultiRangeSlider class="mx-auto mt-[14px] md:w-[200px]"
-          baseClassName="multi-range-slider-bar-only"
-          :min="0"
-          :max="maxPrice"
-          :step="priceRangeSteps"
-          :ruler="false"
-          :label="false"
-          :minValue="priceMinValue"
-          :maxValue="priceMaxValue"
-          @input="updatePrice"
-        />
+        <div ref="el">
+          <MultiRangeSlider class="mx-auto mt-[14px] md:w-[200px]"
+            baseClassName="multi-range-slider-bar-only"
+            :min="0"
+            :max="maxPrice"
+            :step="priceRangeSteps"
+            :ruler="false"
+            :label="false"
+            :minValue="priceMinValue"
+            :maxValue="priceMaxValue"
+            @input="updatePrice"
+          />
+        </div>
         <p class="whitespace-normal text-sm font-medium max-w-[200px]">
           Desde <b>{{currency_picked}}${{ showpriceMinValue }}</b>
           hasta <b>{{currency_picked}}${{ showpriceMaxValue }}</b>+
@@ -135,18 +139,20 @@
             <input type="radio" id="M" value="M" name="mileage" v-model="mileage_picked">
           </label>
         </p>
-        <MultiRangeSlider class="mx-auto mt-[14px] md:w-[200px]"
-          baseClassName="multi-range-slider-bar-only"
-          :min="0"
-          :max="maxMileage"
-          :step="5000"
-          :ruler="false"
-          :label="false"
-          :minValue="mileageMinValue"
-          :maxValue="mileageMaxValue"
-          @input="updateMileage"
-        />
-        <p class="whitespace-normal text-sm font-medium max-w-[200px] ">
+        <div ref="mileageDiv">
+          <MultiRangeSlider class="mx-auto mt-[14px] md:w-[200px]"
+            baseClassName="multi-range-slider-bar-only"
+            :min="0"
+            :max="maxMileage"
+            :step="5000"
+            :ruler="false"
+            :label="false"
+            :minValue="mileageMinValue"
+            :maxValue="mileageMaxValue"
+            @input="updateMileage"
+          />
+        </div>
+        <p class="whitespace-normal text-sm font-medium max-w-[200px]">
           Desde <b>{{ showMileageMinValue }} {{mileage_picked}}</b>
           hasta <b>{{ showMileageMaxValue }} {{mileage_picked}}</b>+
         </p>
@@ -183,7 +189,11 @@
 </template>
 
 <script setup>
-import { OnClickOutside } from '@vueuse/components';
+import MultiRangeSlider from "multi-range-slider-vue";
+import { OnClickOutside, UseMousePressed } from '@vueuse/components';
+import { useMousePressed } from '@vueuse/core';
+import { useTemplateRef } from 'vue';
+
 const emit = defineEmits([
   'make',
   'model',
@@ -332,19 +342,8 @@ watch(currency_picked, (newPicked) => {
     priceRangeSteps.value = 500000;
   }
 })
-
-watch(price, (prices) => {
-  emit('price', prices);
-});
-
-watch(mileage_picked, (new_mileage_picked) => {
-  emit('unitType',new_mileage_picked);
-})
-
-watch(mileage, (new_mileage) => {
-  emit('unit',new_mileage);
-})
-
+const priceDiv = useTemplateRef('el')
+const { pressed } = useMousePressed({target: priceDiv})
 function updatePrice(e) {
   priceMinValue.value = e.minValue;
   priceMaxValue.value = e.maxValue;
@@ -353,13 +352,32 @@ function updatePrice(e) {
   price.value = priceMinValue.value.toString() + '-' + priceMaxValue.value.toString();
 }
 
+watch(pressed,(new_pressed_picked) => {
+  if(!new_pressed_picked && price.value !== '') {
+    emit('price', price.value);
+  }
+})
+
+const yearDiv = useTemplateRef('yearDiv')
+const { pressed: pressedYear } = useMousePressed({target: yearDiv})
 function updateYears(e) {
   minYearValue.value = e.minValue;
   maxYearValue.value = e.maxValue;
   year.value = minYearValue.value.toString() + '-' + maxYearValue.value.toString();
-  emit('year', year.value);
 }
+watch(pressedYear,(new_pressed_picked) => {
+  if(!new_pressed_picked && year.value !== '') {
+    emit('year', year.value);
+  }
+})
 
+
+watch(mileage_picked, (new_mileage_picked) => {
+  emit('unitType',new_mileage_picked);
+})
+
+const mileageDiv = useTemplateRef('mileageDiv')
+const { pressed: pressedMileage } = useMousePressed({target: mileageDiv})
 function updateMileage(e) {
   mileageMinValue.value = e.minValue;
   mileageMaxValue.value = e.maxValue;
@@ -368,13 +386,11 @@ function updateMileage(e) {
   mileage.value = mileageMinValue.value.toString() + '-' + mileageMaxValue.value.toString();
 }
 
-function toggleList(list) {
-  if (dropdownLists[list]) {
-    setTimeout(() => {
-      dropdownLists[list] = false;
-    }, 50);
-  } else { dropdownLists[list] = true; }
-}
+watch(pressedMileage,(new_pressed_picked) => {
+  if(!new_pressed_picked && mileage.value !== '') {
+    emit('unit',mileage.value);
+  }
+})
 
 function clearFilter() {
   emit('make', make_id.value = []);
@@ -386,15 +402,6 @@ function clearFilter() {
   emit('unit',mileage.value = '');
   emit('year', year.value = '');
 };
-</script>
-
-<script>
-import  MultiRangeSlider  from "multi-range-slider-vue";
-export default {
-  components: {
-    MultiRangeSlider
-  },
-}
 </script>
 
 <style lang="postcss" scoped>

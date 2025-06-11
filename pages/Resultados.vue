@@ -155,29 +155,29 @@ function getModel(models:null) {
   getAds();
 }
 
-function getPriceType(priceTypes:null) {
+async function getPriceType(priceTypes:null) {
   priceType = priceTypes;
-  getAds();
+  await getAds();
 }
 
-function getPrice(prices:null) {
+async function getPrice(prices:null) {
   price = prices;
-  getAds();
+  await getAds();
 }
 
-function getUnitType(unitTypes: null) {
+async function getUnitType(unitTypes: null) {
   unitType.value = unitTypes;
-  getAds();
+  await getAds();
 }
 
-function getUnit(units: null) {
+async function getUnit(units: null) {
   unit.value = units;
-  getAds();
+  await getAds();
 }
 
-function getYear(years:null) {
+async function getYear(years:null) {
   year = years;
-  getAds();
+  await getAds();
 }
 
 function getCategory(categorys: null) {
@@ -185,9 +185,9 @@ function getCategory(categorys: null) {
   getAds();
 }
 
-function getAds() {
+async function getAds() {
   peending.value = true;
-  const { data,pending } = useLazyFetch('advertisements/search', {
+  const { data,pending } = await useLazyFetch('advertisements/search', {
     method: 'GET',
     baseURL: config.public.API,
     params: {
@@ -236,7 +236,7 @@ function getAds() {
   });
 }
 
-getAds();
+await getAds();
 </script>
 
 <style lang="postcss" scoped>

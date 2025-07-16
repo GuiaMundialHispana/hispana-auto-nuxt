@@ -53,8 +53,8 @@
       <AtomsButtons v-if="$route.path === '/create-ad' && userQuantity > 0  || $route.path === '/edit-ad' && userQuantity > 0"
         btn-style="outline-gray"
         class="my-1 w-full"
-        :class="{active: active}"
-        @click="$emit('pay', plan.id, plan.pictures), active = !active"
+        :class="{active: use_posts.plan_id === plan.id}"
+        @click="$emit('pay', plan.id, plan.pictures), use_posts.plan_id = plan.id"
       >
         Seleccionar
       </AtomsButtons>
@@ -72,6 +72,7 @@
 import Swal from 'sweetalert2';
 import { ref, computed } from 'vue';
 import { useAuthStore } from '~/stores/Auth';
+import {usePostsStore} from "~/stores/Post";
 
 const user = useState('user');
 const isLogged = useState('isLogged');
@@ -83,16 +84,17 @@ const props = defineProps({
   },
   userQuantity: {
     type: Number
-},
-seleccionado: {
-  type: Boolean,
-default: false
-}
+  },
+  seleccionado: {
+    type: Boolean,
+  default: false
+  }
 });
 
 // Stores y router
 const auth = useAuthStore();
 const router = useRouter();
+const use_posts = usePostsStore();
 const route = useRoute();
 
 // Refs y estado local

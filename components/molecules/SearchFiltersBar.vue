@@ -274,7 +274,6 @@ watch(model_name, () => {
 let categories = ref([]);
 const categoriesApi = await $fetch(config.public.API+'generals/categories');
 categories.value = categoriesApi.results;
-
 watch(category_id, (new_category_id) => {
   emit('category', new_category_id);
 });
@@ -308,9 +307,8 @@ function updatePrice(e) {
   showpriceMaxValue.value = priceMaxValue.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   price.value = priceMinValue.value.toString() + '-' + priceMaxValue.value.toString();
 }
-
 watch(pressed,(new_pressed_picked) => {
-  if(!new_pressed_picked && price.value !== '') {
+  if(!new_pressed_picked && price.value !== '' && priceRange.value) {
     emit('price', price.value);
   }
 })
@@ -322,11 +320,13 @@ function updateYears(e) {
   maxYearValue.value = e.maxValue;
   year.value = minYearValue.value.toString() + '-' + maxYearValue.value.toString();
 }
-watch(pressedYear,(new_pressed_picked) => {
-  if(!new_pressed_picked && year.value !== '') {
+
+watch(pressedYear, (new_pressed_picked) => {
+  if (!new_pressed_picked && year.value !== '' && dropYear.value) {
     emit('year', year.value);
+    dropYear.value = false; // Opcional: cerrar el dropdown después de emitir
   }
-})
+});
 
 watch(mileage_picked, (new_mileage_picked) => {
   emit('unitType',new_mileage_picked);
@@ -343,7 +343,7 @@ function updateMileage(e) {
 }
 
 watch(pressedMileage,(new_pressed_picked) => {
-  if(!new_pressed_picked && mileage.value !== '') {
+  if(!new_pressed_picked && mileage.value !== '' && mileageRange.value) {
     emit('unit',mileage.value);
   }
 })
@@ -357,7 +357,6 @@ function clearFilter() {
   emit('unitType', '');
   emit('unit',mileage.value = '');
   emit('year', year.value = '');
-  models.value = [];
 }
 </script>
 

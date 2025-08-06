@@ -258,7 +258,7 @@ export default {
         }
       });
       if(!pending.value) {
-        this.models.push(data.value);
+        this.models = data.value;
         this.showModels = true;
       }
     },

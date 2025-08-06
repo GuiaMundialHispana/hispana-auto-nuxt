@@ -161,7 +161,7 @@ watchEffect(()=> {
     useFetch(`generals/models/${use_posts.make_id}`, {
       baseURL: config.public.API,
       transform(models_data) {
-        models.value.push(models_data.results);
+        models.value = models_data.results;
       }
     });
   }

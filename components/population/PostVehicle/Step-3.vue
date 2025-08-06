@@ -80,7 +80,7 @@ watch(make_id,() => {
   const { data: models_data } = useFetch(`generals/models/${make_id.value}`, {
     baseURL: config.public.API,
     transform(models_data) {
-      models.value.push(models_data.results);
+      models.value = models_data.results;
     }
   });
 });

@@ -11,63 +11,40 @@
     </div>
     <div class="filter-home-wrapper">
       <div class="h-full flex justify-center">
-        <button class="filter-btn" @click="toggleList('brand')">
-          <div class="icon-container">
+        <button class="filter-btn">
+          <div class="icon-container flex-none">
             <AtomsIcon class="text-primary-100" name="general/car" :size=20 />
           </div>
-          <div>
+          <div class="flex-grow">
             <h2>Marca</h2>
-            <p>
-              Todas las marcas 
-              <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
-            </p>
+            <v-select
+              v-if="makes"
+              placeholder="Seleccionar"
+              :options="makes"
+              v-model="category_id"
+              class="w-full !text-sm leading-[22px] style-chooser"
+            />
           </div>
         </button>
-        <OnClickOutside @trigger="toggleList('brand')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.brand">
-          <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="category.name" v-for="category in makes" :key="category.id">
-              <input
-                type="radio"
-                class="checkbox"
-                name="category"
-                v-model="category_id"
-                :value="category.id"
-                :id="category.name"
-              >
-              {{ category.name }}
-            </label>
-          </div>
-        </OnClickOutside>
       </div>
       <!-- Modelo -->
       <span class="buttons-separation" v-if="showModels"></span>
       <div class="flex justify-center" v-if="showModels">
         <button class="filter-btn" :class="{'active': dropdownLists.model}" @click="toggleList('model')">
           <div class="icon-container">
-            <AtomsIcon class="text-primary-100" name="general/car_model" :size=20 />
+            <AtomsIcon class="text-primary-100" name="general/car_model" :size=28 />
           </div>
-          <div>
+          <div class="flex-grow">
             <h2>Modelo</h2>
-            <p>Todos los modelos
-              <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
-            </p>
+            <v-select
+              v-if="models"
+              placeholder="Seleccionar"
+              :options="models"
+              v-model="model_id"
+              class="w-full !text-sm leading-[22px] style-chooser"
+            />
           </div>
         </button>
-        <OnClickOutside @trigger="toggleList('model')" class="absolute top-[95%] w-[288px] h-[273px]" v-if="dropdownLists.model">
-          <div class="dropdown-wrapper scrollbar mt-[5px] min-h-max max-h-[273px]">
-            <label class="checkbox-labels" :for="model.name" v-for="model in models" :key="model.id">
-              <input
-                type="radio"
-                class="checkbox"
-                name="model"
-                v-model="model_id"
-                :value="model.id"
-                :id="model.name"
-              >
-              {{ model.name }}
-            </label>
-          </div>
-        </OnClickOutside>
       </div>
       <!-- Año -->
       <span class="buttons-separation"></span>
@@ -112,8 +89,8 @@
           <AtomsIcon class="text-primary-100" name="general/price" :size=20 />
         </div>
         <div>
-          <h2>Rango de precio</h2>
-          <p>Selecciona el rango de precio
+          <h2 class="whitespace-nowrap">Rango de precio</h2>
+          <p>Seleccionar
             <AtomsIcon class="pl-2 text-primary-100" name="arrows/arrow-down" :size=15 />
           </p>
         </div>
@@ -161,6 +138,9 @@
 
 <script>
 import  MultiRangeSlider  from "multi-range-slider-vue";
+import VSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css'
+
 export default {
   data() {
     return {
@@ -209,7 +189,7 @@ export default {
       make_id: null,
       models: [],
       model_id:null,
-      showModels: false
+      showModels: false,
     }
   },
   components: {
@@ -238,7 +218,7 @@ export default {
     async searchProperties() {
       useRouter().push({
         path: '/resultados',
-        query: this.queryBody 
+        query: this.queryBody
       })
     },
     async getCategories() {
@@ -247,18 +227,29 @@ export default {
     },
     async getMakes() {
       const makes = await $fetch(this.config.public.API+'generals/makes');
-      this.makes = makes.results;
+      this.makes = makes.results.map((item) => {
+        return {
+          label: item.name,
+          value: item.id
+        }
+      })
     },
     async getModels(model) {
       this.models = [];
-      const { data,pending } = await useFetch(`generals/models/${model}`, {
+      const { data,pending } = await useFetch(`generals/models/${model.value}`, {
         baseURL: this.config.public.API,
         transform(data){
           return data.results;
         }
       });
+
       if(!pending.value) {
-        this.models = data.value;
+        this.models = data.value.map((item) => {
+          return {
+            label: item.name,
+            value: item.id
+          }
+        })
         this.showModels = true;
       }
     },
@@ -292,17 +283,15 @@ export default {
       this.queryBody.year = year;
     },
     category_id(makes) {
-      console.log(makes);
-      this.queryBody.category = makes;
+      this.queryBody.makes = makes.label;
       if(makes) {
         this.getModels(makes).then(() => {
           this.showModels = true;
         });
-
       }
     },
     model_id(model) {
-      this.queryBody.model = model;
+      this.queryBody.model = model.label;
     }
   },
   mounted() {
@@ -316,16 +305,16 @@ export default {
 
 <style lang="postcss" scoped>
 .filter-home-wrapper {
-  @apply overflow-hidden flex items-center w-fit h-[101px] bg-neutral-white rounded-2xl shadow-xl mt-3;
+  @apply flex items-center w-fit min-h-[101px] bg-neutral-white rounded-2xl shadow-xl mt-3;
 }
 .filter-btn{
-  @apply flex items-center h-full px-6 text-left;
+  @apply flex items-center h-full px-6 text-left min-w-[220px] ;
 
   & h2{ @apply text-xl leading-8 font-semibold; }
   & p { @apply text-sm leading-[22px] flex items-center whitespace-nowrap;}
 
   &.rounded-btn{
-    @apply justify-center rounded-full h-14 w-14 mx-6 px-0 bg-primary-100 hover:bg-primary-90 flex-none; 
+    @apply justify-center rounded-full min-w-14 max-w-14 h-14 w-14 mx-6 px-0 bg-primary-100 hover:bg-primary-90 flex-none;
   }
 }
 .icon-container{

@@ -187,7 +187,7 @@ async function getCategory(categorys: null) {
 
 async function getAds() {
   pending.value = true;
-  const { data } = await useLazyFetch('advertisements/search', {
+   await useLazyFetch('advertisements/search', {
     method: 'GET',
     baseURL: config.public.API,
     params: {
@@ -236,7 +236,10 @@ async function getAds() {
   });
 }
 
-await getAds();
+const route = useRoute();
+if(!route.query.makes && !route.query.models) {
+  await getAds();
+}
 </script>
 
 <style lang="postcss" scoped>

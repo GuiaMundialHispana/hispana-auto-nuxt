@@ -1,60 +1,25 @@
 <template>
   <div class="flex flex-wrap gap-2 xl:flex-row flex-col">
     <!-- Marca -->
-    <div class="filter-content items-center">
-      <button class="flex gap-2.5 filter-btn" @click="brand = true" :class="{'active': brand}">
-        <AtomsIcon name="general/car" class="text-primary-100" :size=20  />
-        <p>{{ make_name != '' ? make_name : 'Marca' }}</p>
-        <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
-      </button>
-      <OnClickOutside v-if="brand" @trigger="brand = false" class="dropdown w-full sm:w-[230px] h-fit">
-        <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
-          <label
-            class="checkbox-labels"
-            v-for="make in makes_data"
-            :for="make.name"
-            :key="make.id"
-            @click="make_name = make.name"
-          >
-            <input
-              type="radio"
-              class="checkbox"
-              :value="make.id"
-              :id="make.name"
-              v-model="make_id"
-            />
-            {{ make.name }}
-          </label>
-        </div>
-      </OnClickOutside>
+    <div class="relative">
+      <AtomsIcon name="general/car" class="text-primary-100 absolute top-3.5 left-3 z-10" :size=16  />
+      <v-select
+        v-if="makes_data"
+        placeholder="Marcas"
+        :options="makes_data"
+        v-model="make_name"
+        class="!text-sm leading-[22px] style-chooser-filter-btn"
+      />
     </div>
     <!-- Modelo -->
-    <div class="filter-content items-center" v-if="make_id">
-      <button class="flex gap-2.5 filter-btn" @click="model = !model" :class="{'active': model}">
-        <AtomsIcon name="general/car_model" class="text-primary-100" :size=20  />
-        <p>{{ model_name != '' ? model_name : 'Modelo' }}</p>
-        <AtomsIcon name="arrows/arrow-down" class="text-primary-100" :size=15 />
-      </button>
-      <OnClickOutside v-if="model" @trigger="model = false" class="dropdown w-full sm:w-[230px] h-fit">
-        <div class="dropdown-wrapper scrollbar border-none min-h-max max-h-[273px]">
-          <label
-            class="checkbox-labels"
-            v-for="model in models"
-            :for="model.name"
-            :key="model.id"
-            @click="model_name = model.name"
-          >
-            <input
-              type="radio"
-              class="checkbox"
-              :value="model.id"
-              :id="model.name"
-              v-model="model_id"
-            />
-            {{ model.name }}
-          </label>
-        </div>
-      </OnClickOutside>
+    <div class="relative" v-if="models">
+      <AtomsIcon name="general/car_model" class="text-primary-100 absolute top-1.5 left-3 z-10" :size=28  />
+      <v-select
+        placeholder="Modelos"
+        :options="models"
+        v-model="model_name"
+        class="!text-sm leading-[22px] style-chooser-filter-btn"
+      />
     </div>
     <!-- Año -->
     <div class="filter-content items-center">
@@ -193,6 +158,7 @@ import MultiRangeSlider from "multi-range-slider-vue";
 import { OnClickOutside, UseMousePressed } from '@vueuse/components';
 import { useMousePressed } from '@vueuse/core';
 import { useTemplateRef } from 'vue';
+import 'vue-select/dist/vue-select.css'
 
 const emit = defineEmits([
   'make',
@@ -206,27 +172,21 @@ const emit = defineEmits([
 ]);
 const config = useRuntimeConfig();
 const route = useRoute();
-const brand = ref(false);
-const model = ref(false);
 const dropYear = ref(false);
 const priceRange = ref(false);
 const mileageRange = ref(false);
 const category = ref(false);
-const make_id = ref(null);
 const make_name = ref("");
 const models = ref([]);
-const model_id = ref(null);
-const model_name = ref("");
+const model_name = ref([]);
 const priceMinValue = ref(0);
 const priceMaxValue = ref(10000000);
 const showpriceMinValue = ref('0');
 const showpriceMaxValue = ref("10,000,000");
 const maxPrice = ref(50000000);
-const country_name = ref('');
 const currency_picked = ref('RD');
 const price = ref('');
 const priceRangeSteps = ref(500000);
-const status = ref('');
 const filter = ref(true);
 const minYear = ref(1998);
 const maxYear = ref(2024);
@@ -245,46 +205,69 @@ const category_id = ref([])
 const { data: makes_data } = useFetch('generals/makes', {
   baseURL: config.public.API,
   transform(makes_data) {
-    return makes_data.results;
+    return makes_data.results.map((item) => {
+      return {
+        label: item.name,
+        value: item.id
+      }
+    })
   }
 });
+
 async function getModels(make_id) {
   await $fetch(`generals/models/${make_id}`, {
     baseURL: config.public.API,
     onResponse({ response }) {
       if(response.status === 200) {
         const modelsResponse = response._data.results;
-        models.value = [];
-        models.value.push(modelsResponse);
+        models.value = modelsResponse.map((item) => {
+          return {
+            label: item.name,
+            value: item.id
+          }
+        });
       }
     },
   });
 }
 
-watch(make_id,() => {
-  emit('make', make_id.value);
-  if(make_id.value){
-    getModels(make_id.value);
+if(route.query.makes) {
+  make_name.value = route.query.makes;
+  if(makes_data.value) {
+    makes_data.value.find((item) => {
+      if(item.label === make_name.value) {
+        getModels(item.value);
+        emit('make', item.value);
+      }
+    });
   }
+}
 
-  if(make_id.value.length <= 0) {
-    make_name.value = 'Marca';
+if(route.query.model) {
+  model_name.value = route.query.model;
+  // setTimeout(() => {
+  //   if(models.value) {
+  //     models.value.find((item) => {
+  //       if(item.label === model_name.value) {
+  //         emit('model', item.value);
+  //       }
+  //     });
+  //   }
+  // }, 1000);
+}
+
+watch(make_name,() => {
+  console.log('watch make_name', make_name.value);
+  if(make_name.value) {
+    getModels(make_name.value.value);
+    emit('make', make_name.value);
   }
 });
 
-watch(model_id, () => {
-  console.log('model_id', model_id.value);
-  // emit('model', model_id.value);
-});
-
-let countries = [];
-let country = ref(0);
-let countriesApi = await $fetch('generals/countries', {
-  baseURL: config.public.API
-});
-countriesApi.results.data.forEach(element => {
-  if(element.id === 63 || element.id === 236) {
-    countries.push(element)
+watch(model_name, () => {
+  console.log('watch model_name', model_name.value);
+  if(model_name.value) {
+    emit('model', model_name.value.value);
   }
 });
 
@@ -294,37 +277,6 @@ categories.value = categoriesApi.results;
 
 watch(category_id, (new_category_id) => {
   emit('category', new_category_id);
-});
-
-let sectors = reactive([]);
-let sector = ref(0);
-async function getStates(country_id) {
-  const statesApi = await $fetch(`generals/states/${country_id}`, {
-    baseURL: config.public.API
-  });
-  sectors.push(statesApi.results.data);
-};
-
-let cities = reactive([]);
-let city = ref([]);
-async function getCities(sector_id) {
-  const citiesApi = await $fetch(`generals/cities/${sector_id}`, {
-    baseURL: config.public.API
-  });
-  cities.push(citiesApi.results.data);
-};
-
-watch(country,(country_id) => {
-  getStates(country_id);
-  sectors = reactive([]);
-  cities = reactive([]);
-  displaySector.value = true;
-});
-
-watch(sector,(sector_id) => {
-  getCities(sector_id);
-  cities = reactive([]);
-  displayCity.value = true;
 });
 
 const currentPicked = useState('currentPicked', () => currency_picked.value);
@@ -376,7 +328,6 @@ watch(pressedYear,(new_pressed_picked) => {
   }
 })
 
-
 watch(mileage_picked, (new_mileage_picked) => {
   emit('unitType',new_mileage_picked);
 })
@@ -398,15 +349,16 @@ watch(pressedMileage,(new_pressed_picked) => {
 })
 
 function clearFilter() {
-  emit('make', make_id.value = []);
-  emit('model', model_id.value = []);
+  emit('make', make_name.value = []);
+  emit('model', model_name.value = []);
   emit('category', category_id.value = []);
   emit('priceType', '');
   emit('price', price.value = '');
   emit('unitType', '');
   emit('unit',mileage.value = '');
   emit('year', year.value = '');
-};
+  models.value = [];
+}
 </script>
 
 <style lang="postcss" scoped>
@@ -428,7 +380,7 @@ function clearFilter() {
 /*  */
 
 .filter-btn {
-  @apply flex justify-between w-full 2xl:w-[160px] items-center border-2 rounded-lg border-gray-100 mt-2.5 font-normal text-sm leading-[22px] h-10 px-2.5 first:mt-0 hover:bg-primary-50 hover:border-primary-100 bg-neutral-white whitespace-nowrap mx-auto text-neutral-black !important;
+  @apply flex justify-between w-full 2xl:w-[160px] items-center border-2 rounded-lg border-gray-100 mt-2.5 font-normal text-sm leading-[22px] h-10 px-2.5 first:mt-0 hover:border-primary-100 bg-neutral-white whitespace-nowrap mx-auto text-neutral-black !important;
   &.active { @apply border-primary-100 bg-neutral-white !important; }
   & p { @apply flex-none !important; }
 }

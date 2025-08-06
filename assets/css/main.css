@@ -127,3 +127,43 @@ span[role=alert] {
 }
 
 .control-steps-postProperty { @apply flex justify-center w-full gap-2.5 mt-6 mb-11; }
+
+.style-chooser .vs__search::placeholder,
+.style-chooser .vs__dropdown-toggle,
+.style-chooser .vs__dropdown-menu {
+  border: none;
+  color: #394066;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 0;
+  margin: 0;
+}
+.vs__search,
+.vs__selected-options{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.vs__dropdown-menu {
+  width: 230px !important;
+  left: -70px !important;
+  top: 56px !important;
+  border-radius: 10px !important;
+  border: 1px solid !important;
+  @apply border border-primary-100 !important;
+}
+
+.style-chooser-filter-btn{
+  @apply flex items-center min-w-[160px] border-2 rounded-lg border-gray-100 font-normal text-sm leading-[22px] h-10 px-2.5 first:mt-0  hover:border-primary-100 bg-neutral-white whitespace-nowrap text-neutral-black !pl-5 !important;
+}
+
+.style-chooser-filter-btn .vs__dropdown-toggle {
+  border: none !important;
+  width: 100% !important;
+  margin-left: 20px !important;
+  padding: 0 !important;
+}
+
+.style-chooser-filter-btn .vs__dropdown-menu {
+  left: 0 !important;
+}

@@ -19,6 +19,7 @@
         :options="models"
         v-model="model_name"
         class="!text-sm leading-[22px] style-chooser-filter-btn"
+        :resetOnOptionsChange="true"
       />
     </div>
     <!-- Año -->
@@ -256,16 +257,23 @@ if(route.query.model) {
   // }, 1000);
 }
 
+function resetModels() {
+  model_name.value = [];
+  models.value = [];
+}
+
 watch(make_name,() => {
-  console.log('watch make_name', make_name.value);
   if(make_name.value) {
     getModels(make_name.value.value);
     emit('make', make_name.value);
+  } else {
+    resetModels();
+    emit('make', []);
+    emit('model', []);
   }
 });
 
 watch(model_name, () => {
-  console.log('watch model_name', model_name.value);
   if(model_name.value) {
     emit('model', model_name.value.value);
   }

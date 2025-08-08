@@ -62,17 +62,9 @@ definePageMeta({
 });
 
 import useRefresh from '~/composables/RefreshToken';
-const isLogged = useState<boolean>('isLogged', () => false);
-const { refresh_token } = useRefresh();
 const { pendingUserData } = useUser();
 const user = useState('user');
 const route = useRoute();
-
-setInterval(async () => {
-  if (isLogged.value) {
-    await refresh_token();
-  }
-}, 120000);
 </script>
 
 <style lang="postcss" scoped>

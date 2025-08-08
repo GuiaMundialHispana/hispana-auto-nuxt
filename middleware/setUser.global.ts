@@ -1,12 +1,10 @@
-import { useUserStore } from '~/stores/User';
-import { useAuthStore } from '~/stores/Auth';
 import useUser from "~/composables/useUser";
+import useRefresh from "~/composables/RefreshToken";
 
 export default defineNuxtRouteMiddleware(async(to, from) => {
-  const user_store = useUserStore();
-  const use_auth = useAuthStore();
   const isLogged = useState('isLogged');
   const token = useState('token');
+  const { refresh_token } = useRefresh();
   const {getUser} = useUser();
   if (import.meta.client) {
     let tokenClient = window.localStorage.getItem('token');
@@ -17,19 +15,11 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
     } else {
       isLogged.value = false;
     }
+    
+    setInterval(async () => {
+      if(isLogged.value) {
+        await refresh_token();
+      }
+    }, 2400000); // 40 minutos en milisegundos
   }
-  // if(import.meta.client) {
-  //   let get_token = window.localStorage.getItem('token');
-  //   if(get_token !== null) {
-  //     user_store.token = get_token;
-  //     use_auth.isLoggedIn = true;
-  //     useState('token', user_store.token);
-  //     await useUser().getUser().catch(() => {
-  //       use_auth.isLoggedIn = false;
-  //       useErrorResponseLogOut();
-  //     });
-  //   } else {
-  //     use_auth.isLoggedIn = false;
-  //   }
-  // }
 });
